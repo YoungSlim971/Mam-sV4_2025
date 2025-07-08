@@ -67,57 +67,6 @@ final class ClientModel {
     }
 }
 
-// MARK: - Extension de conversion ClientModel <-> ClientDTO
-extension ClientModel {
-    func toDTO() -> ClientDTO {
-        return ClientDTO(
-            id: self.id,
-            nom: self.nom,
-            entreprise: self.entreprise,
-            email: self.email,
-            telephone: self.telephone,
-            siret: self.siret,
-            numeroTVA: self.numeroTVA,
-            adresse: self.adresse,
-            adresseRue: self.adresseRue,
-            adresseCodePostal: self.adresseCodePostal,
-            adresseVille: self.adresseVille,
-            adressePays: self.adressePays
-        )
-    }
-
-    static func fromDTO(_ dto: ClientDTO) -> ClientModel {
-        let client = ClientModel()
-        client.id = dto.id
-        client.nom = dto.nom
-        client.entreprise = dto.entreprise
-        client.email = dto.email
-        client.telephone = dto.telephone
-        client.siret = dto.siret
-        client.numeroTVA = dto.numeroTVA
-        client.adresse = dto.adresse
-        client.adresseRue = dto.adresseRue
-        client.adresseCodePostal = dto.adresseCodePostal
-        client.adresseVille = dto.adresseVille
-        client.adressePays = dto.adressePays
-        return client
-    }
-
-    func updateFromDTO(_ dto: ClientDTO) {
-        nom = dto.nom
-        entreprise = dto.entreprise
-        email = dto.email
-        telephone = dto.telephone
-        siret = dto.siret
-        numeroTVA = dto.numeroTVA
-        adresse = dto.adresse
-        adresseRue = dto.adresseRue
-        adresseCodePostal = dto.adresseCodePostal
-        adresseVille = dto.adresseVille
-        adressePays = dto.adressePays
-    }
-}
-
 // MARK: - Validation
 extension ClientModel {
     var isValidModel: Bool {
