@@ -24,6 +24,13 @@ final class UseCaseMappingTests: XCTestCase {
         XCTAssertEqual(facture.lignes.count, 0)
     }
 
+    @MainActor func testCreerFactureUseCase_InvalidClient() throws {
+        let client = Client()
+        XCTAssertThrowsError(try creerFacture.execute(client: client)) { error in
+            XCTAssertEqual(error as? FactureError, FactureError.invalidClient)
+        }
+    }
+
     @MainActor func testAjouterLigneUseCase() throws {
         let client = Client()
         let facture = try creerFacture.execute(client: client)
