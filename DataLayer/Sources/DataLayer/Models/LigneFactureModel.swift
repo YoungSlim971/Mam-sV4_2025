@@ -1,21 +1,20 @@
 import Foundation
 import SwiftData
-import DataLayer
 
 @Model
-final class LigneFacture {
-    @Attribute(.unique) var id: UUID = UUID()
-    var designation: String = ""
-    var quantite: Double = 1.0
-    var prixUnitaire: Double = 0.0
-    var referenceCommande: String?
-    var dateCommande: Date?
-    @Relationship var produit: ProduitModel?
-    @Relationship var facture: FactureModel?
+public final class LigneFacture {
+    @Attribute(.unique) public var id: UUID = UUID()
+    public var designation: String = ""
+    public var quantite: Double = 1.0
+    public var prixUnitaire: Double = 0.0
+    public var referenceCommande: String?
+    public var dateCommande: Date?
+    @Relationship public var produit: ProduitModel?
+    @Relationship public var facture: FactureModel?
 
-    init() {}
+    public init() {}
     
-    init(designation: String = "",
+    public init(designation: String = "",
          quantite: Double = 1.0,
          prixUnitaire: Double = 0.0,
          referenceCommande: String? = nil,
@@ -27,10 +26,10 @@ final class LigneFacture {
         self.dateCommande = dateCommande
     }
 
-    var total: Double {
+    public var total: Double {
         quantite * prixUnitaire
     }
-    var isValidModel: Bool {
+    public var isValidModel: Bool {
         !designation.isEmpty && quantite > 0 && prixUnitaire >= 0
     }
 }
