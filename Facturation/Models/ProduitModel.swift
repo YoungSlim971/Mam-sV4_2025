@@ -25,36 +25,3 @@ final class ProduitModel {
     }
 }
 
-// MARK: - Extension de conversion ProduitModel <-> ProduitDTO
-extension ProduitModel {
-    func toDTO() -> ProduitDTO {
-        return ProduitDTO(
-            id: self.id,
-            designation: self.designation,
-            details: self.details,
-            prixUnitaire: self.prixUnitaire,
-            icon: self.icon,
-            iconImageData: self.iconImageData
-        )
-    }
-
-    static func fromDTO(_ dto: ProduitDTO) -> ProduitModel {
-        let produit = ProduitModel()
-        produit.id = dto.id
-        produit.designation = dto.designation
-        produit.details = dto.details
-        produit.prixUnitaire = dto.prixUnitaire
-        produit.icon = dto.icon
-        produit.iconImageData = dto.iconImageData
-        return produit
-    }
-
-    func updateFromDTO(_ dto: ProduitDTO) {
-        designation = dto.designation
-        details = dto.details
-        prixUnitaire = dto.prixUnitaire
-        icon = dto.icon
-        iconImageData = dto.iconImageData
-    }
-}
-
