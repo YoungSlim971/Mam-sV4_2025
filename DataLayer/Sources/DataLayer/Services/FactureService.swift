@@ -13,18 +13,15 @@ public final class FactureService: ObservableObject {
         self.persistenceService = persistenceService
     }
     
-    public func fetchFactures<T: PersistentModel>(_ modelType: T.Type) async -> [FactureDTO] {
+    /// Fetch all invoices sorted by date (newest first)
+    public func fetchFactures() async -> [FactureDTO] {
         logger.info("Fetching factures")
         do {
-            let descriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.persistentModelID, order: .reverse)])
-            let models = try persistenceService.fetch(descriptor)
-            
-            // Convert models to DTOs - this would need to be implemented based on actual model structure
-            let dtos: [FactureDTO] = [] // TODO: Implement conversion
-            
-            await MainActor.run {
-                self.factures = dtos
-            }
+            let descriptor = FetchDescriptor<FactureModel>(sortBy: [SortDescriptor(\FactureModel.dateFacture, order: .reverse)])
+            let models: [FactureModel] = try persistenceService.fetch(descriptor)
+            let dtos = models.map { $0.toDTO() }
+
+            await MainActor.run { self.factures = dtos }
             logger.info("Fetched factures successfully", metadata: ["count": "\(dtos.count)"])
             return dtos
         } catch {
@@ -35,31 +32,48 @@ public final class FactureService: ObservableObject {
     
     public func addFacture(_ facture: FactureDTO) async throws {
         logger.info("Adding facture", metadata: ["factureId": "\(facture.id)", "numero": "\(facture.numero)"])
-        
-        // TODO: Convert DTO to model and insert
-        
+
+        let clientDescriptor = FetchDescriptor<ClientModel>(predicate: #Predicate { $0.id == facture.clientId })
+        let client = try? persistenceService.fetch(clientDescriptor).first
+
+        let ligneDescriptor = FetchDescriptor<LigneFacture>(predicate: #Predicate { ligne in
+            facture.ligneIds.contains(ligne.id)
+        })
+        let lignes = (try? persistenceService.fetch(ligneDescriptor)) ?? []
+
+        _ = FactureModel.fromDTO(facture, context: persistenceService.modelContext, client: client, lignes: lignes)
         try persistenceService.save()
-        // TODO: Refresh the list when model integration is complete
+        await fetchFactures()
         logger.info("Facture added successfully", metadata: ["factureId": "\(facture.id)"])
     }
     
     public func updateFacture(_ facture: FactureDTO) async throws {
         logger.info("Updating facture", metadata: ["factureId": "\(facture.id)", "numero": "\(facture.numero)"])
-        
-        // TODO: Find existing model and update from DTO
-        
-        try persistenceService.save()
-        // TODO: Refresh the list when model integration is complete
-        logger.info("Facture updated successfully", metadata: ["factureId": "\(facture.id)"])
+
+        let descriptor = FetchDescriptor<FactureModel>(predicate: #Predicate { $0.id == facture.id })
+        if let existing = try? persistenceService.fetch(descriptor).first {
+            existing.updateFromDTO(facture)
+            try persistenceService.save()
+            await fetchFactures()
+            logger.info("Facture updated successfully", metadata: ["factureId": "\(facture.id)"])
+        } else {
+            logger.warning("Facture not found", metadata: ["factureId": "\(facture.id)"])
+        }
     }
     
     public func deleteFacture(withId id: UUID) async throws {
         logger.info("Deleting facture", metadata: ["factureId": "\(id)"])
-        
-        // TODO: Find and delete model
-        
+
+        let descriptor = FetchDescriptor<FactureModel>(predicate: #Predicate { $0.id == id })
+        guard let facture = try? persistenceService.fetch(descriptor).first, facture.isValidModel else {
+            logger.warning("Facture not found", metadata: ["factureId": "\(id)"])
+            return
+        }
+
+        for ligne in facture.lignes { persistenceService.delete(ligne) }
+        persistenceService.delete(facture)
         try persistenceService.save()
-        // TODO: Refresh the list when model integration is complete
+        await fetchFactures()
         logger.info("Facture deleted successfully", metadata: ["factureId": "\(id)"])
     }
     
@@ -68,22 +82,29 @@ public final class FactureService: ObservableObject {
         
         logger.info("Generating invoice number", metadata: ["clientId": "\(clientId)", "year": "\(currentYear)"])
         
-        // TODO: Implement logic to get next invoice number based on existing invoices
-        let nextNumber = 1 // This should be calculated based on existing invoices for the year
-        
+        let descriptor = FetchDescriptor<FactureModel>(predicate: #Predicate { facture in
+            facture.client?.id == clientId && Calendar.current.component(.year, from: facture.dateFacture) == currentYear
+        })
+        let factures = (try? persistenceService.fetch(descriptor)) ?? []
+        let nextNumber = (factures.count + 1)
+
         let invoiceNumber = "F\(currentYear)-\(String(format: "%04d", nextNumber))"
         logger.info("Generated invoice number", metadata: ["number": "\(invoiceNumber)"])
-        
+
         return invoiceNumber
     }
     
     public func updateFactureStatus(_ factureId: UUID, to status: StatutFacture) async throws {
         logger.info("Updating facture status", metadata: ["factureId": "\(factureId)", "status": "\(status.rawValue)"])
         
-        // TODO: Find facture and update status
-        
-        try persistenceService.save()
-        // TODO: Refresh the list when model integration is complete
-        logger.info("Facture status updated successfully", metadata: ["factureId": "\(factureId)"])
+        let descriptor = FetchDescriptor<FactureModel>(predicate: #Predicate { $0.id == factureId })
+        if let facture = try? persistenceService.fetch(descriptor).first {
+            facture.statut = status
+            try persistenceService.save()
+            await fetchFactures()
+            logger.info("Facture status updated successfully", metadata: ["factureId": "\(factureId)"])
+        } else {
+            logger.warning("Facture not found", metadata: ["factureId": "\(factureId)"])
+        }
     }
 }
