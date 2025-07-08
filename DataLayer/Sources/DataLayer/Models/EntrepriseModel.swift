@@ -33,7 +33,7 @@ public final class EntrepriseModel {
     public var tvaTauxDefaut: Double = 20.0
     public var delaiPaiementDefaut: Int = 30 // en jours
 
-    init() {
+    public init() {
         self.nom = "ExoTROPIC"
         self.telephone = "0690 01 02 03"
         self.email = "entreprise@example.com"

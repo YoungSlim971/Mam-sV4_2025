@@ -4,7 +4,7 @@ import SwiftData
 @Model
 public final class FactureModel {
 
-    init(numero: String,
+    public init(numero: String,
          tva: Double = 20.0,
          conditionsPaiement: ConditionsPaiement = .virement,
          remisePourcentage: Double = 0.0,
@@ -50,7 +50,7 @@ public final class FactureModel {
     @Relationship(deleteRule: .cascade)
     public var lignes: [LigneFacture] = []
 
-    init() {
+    public init() {
         self.id = UUID()
         self.numero = ""
         self.dateFacture = Date()
@@ -66,7 +66,7 @@ public final class FactureModel {
         self.lignes = []
     }
     
-    init(client: ClientModel,
+    public init(client: ClientModel,
          numero: String,
          conditionsPaiement: ConditionsPaiement = ConditionsPaiement.virement,
          remisePourcentage: Double = 0.0) {
@@ -99,7 +99,7 @@ public final class FactureModel {
 }
 
 // MARK: - Validation
-extension FactureModel {
+public extension FactureModel {
     public var isValidModel: Bool {
         guard let client = client else { return false }
         return !numero.isEmpty && totalTTC > 0 && client.isValidModel

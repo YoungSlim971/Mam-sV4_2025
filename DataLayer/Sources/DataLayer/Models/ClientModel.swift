@@ -22,7 +22,7 @@ public final class ClientModel {
     // Relation avec Factures
     @Relationship public var factures: [FactureModel] = []
     
-    init() {}
+    public init() {}
 
     public var nomCompletClient: String {
         if entreprise.isEmpty {
@@ -79,7 +79,7 @@ public final class ClientModel {
 }
 
 // MARK: - Validation
-extension ClientModel {
+public extension ClientModel {
     public var isValidModel: Bool {
         return !nom.isEmpty && !email.isEmpty
     }

@@ -10,9 +10,9 @@ public final class ProduitModel {
     public var icon: String? = nil
     public var iconImageData: Data? = nil
 
-    init() {}
+    public init() {}
     
-    init(designation: String, details: String? = nil, prixUnitaire: Double, icon: String? = nil, iconImageData: Data? = nil) {
+    public init(designation: String, details: String? = nil, prixUnitaire: Double, icon: String? = nil, iconImageData: Data? = nil) {
         self.designation = designation
         self.details = details
         self.prixUnitaire = prixUnitaire
