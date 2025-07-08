@@ -7,9 +7,11 @@
 //
 
 import SwiftUI
+import DataLayer
 
 struct ClientFactureDetailView: View {
-    let facture: FactureModel
+    let facture: FactureDTO
+    @EnvironmentObject private var dataService: DataService
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -23,8 +25,8 @@ struct ClientFactureDetailView: View {
                 if let dateEcheance = facture.dateEcheance {
                     Text("Échéance : \(dateEcheance.formatted(date: .abbreviated, time: .omitted))")
                 }
-                Text("Montant total : \(facture.totalTTC.formatted(.currency(code: "EUR")))")
-                Text("Statut : \(facture.statut.description)")
+                Text("Montant total : \(facture.calculateTotalTTC(with: dataService.lignes).formatted(.currency(code: "EUR")))")
+                Text("Statut : \(facture.statutDisplay)")
             }
 
             Divider()
@@ -32,7 +34,7 @@ struct ClientFactureDetailView: View {
             Text("Lignes de facture")
                 .font(.headline)
 
-            List(facture.lignes) { ligne in
+            List(dataService.lignes.filter { facture.ligneIds.contains($0.id) }) { ligne in
                 VStack(alignment: .leading) {
                     Text(ligne.designation)
                         .font(.subheadline)

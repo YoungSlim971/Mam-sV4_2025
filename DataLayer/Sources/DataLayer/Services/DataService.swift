@@ -1081,6 +1081,20 @@ extension DataService {
         }
     }
 
+    /// Récupère la facture DTO à partir de l'UUID.
+    func fetchFactureDTO(id: UUID) async -> FactureDTO? {
+        let descriptor = FetchDescriptor<FactureModel>(predicate: #Predicate { $0.id == id })
+        do {
+            if let facture = try modelContext.fetch(descriptor).first, facture.isValidModel {
+                return facture.toDTO()
+            }
+            return nil
+        } catch {
+            logger.error("Failed to fetch invoice", metadata: ["error": "\(error)"])
+            return nil
+        }
+    }
+
     /// Récupère le modèle Produit persistant à partir de l'UUID.
     func fetchProduitModel(id: UUID) async -> ProduitModel? {
         let descriptor = FetchDescriptor<ProduitModel>(predicate: #Predicate { $0.id == id })
