@@ -82,11 +82,15 @@ public final class FactureService: ObservableObject {
         
         logger.info("Generating invoice number", metadata: ["clientId": "\(clientId)", "year": "\(currentYear)"])
         
+        // Fetch all factures for this client and filter by year in-memory
         let descriptor = FetchDescriptor<FactureModel>(predicate: #Predicate { facture in
-            facture.client?.id == clientId && Calendar.current.component(.year, from: facture.dateFacture) == currentYear
+            facture.client?.id == clientId
         })
-        let factures = (try? persistenceService.fetch(descriptor)) ?? []
-        let nextNumber = (factures.count + 1)
+        let allFactures = (try? persistenceService.fetch(descriptor)) ?? []
+        let facturesForYear = allFactures.filter { 
+            Calendar.current.component(.year, from: $0.dateFacture) == currentYear
+        }
+        let nextNumber = (facturesForYear.count + 1)
 
         let invoiceNumber = "F\(currentYear)-\(String(format: "%04d", nextNumber))"
         logger.info("Generated invoice number", metadata: ["number": "\(invoiceNumber)"])

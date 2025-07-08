@@ -1,4 +1,5 @@
 import Foundation
+import DataLayer
 
 enum LigneFactureError: Error {
     case invalidQuantite

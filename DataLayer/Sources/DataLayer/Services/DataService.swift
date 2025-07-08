@@ -3,26 +3,25 @@
 @preconcurrency import SwiftData
 import SwiftUI
 import Utilities
-import DataLayer
 import Logging
 
 
 @MainActor
-class DataService: ObservableObject {
-    static let shared = DataService()
+public class DataService: ObservableObject {
+    public static let shared = DataService()
     
     private let logger = Logger(label: "com.facturation.dataservice")
 
-    @Published var modelContainer: ModelContainer
-    @Published var modelContext: ModelContext
+    @Published public var modelContainer: ModelContainer
+    @Published public var modelContext: ModelContext
 
-    @Published var clients: [ClientDTO] = []
-    @Published var factures: [FactureDTO] = []
-    @Published var produits: [ProduitDTO] = []
-    @Published var lignes: [LigneFactureDTO] = []
-    @Published var entreprise: EntrepriseDTO?
+    @Published public var clients: [ClientDTO] = []
+    @Published public var factures: [FactureDTO] = []
+    @Published public var produits: [ProduitDTO] = []
+    @Published public var lignes: [LigneFactureDTO] = []
+    @Published public var entreprise: EntrepriseDTO?
 
-    init() {
+    public init() {
         do {
             let schema = Schema([ClientModel.self, EntrepriseModel.self, FactureModel.self, ProduitModel.self, LigneFacture.self])
             
@@ -64,7 +63,7 @@ class DataService: ObservableObject {
         }
     }
 
-    func resetContainer() {
+    public func resetContainer() {
         do {
             let schema = Schema([ClientModel.self, EntrepriseModel.self, FactureModel.self, ProduitModel.self, LigneFacture.self])
             let newContainer = try ModelContainer(for: schema)
@@ -77,12 +76,12 @@ class DataService: ObservableObject {
         }
     }
 
-    var container: ModelContainer {
+    public var container: ModelContainer {
         return modelContainer
     }
     
     /// Vérifie si la persistance sur disque est active ou si on utilise le stockage en mémoire
-    var isPersistenceActive: Bool {
+    public var isPersistenceActive: Bool {
         // Vérifier si le container utilise un stockage persistant
         return !modelContainer.configurations.contains { config in
             config.isStoredInMemoryOnly
@@ -90,7 +89,7 @@ class DataService: ObservableObject {
     }
     
     /// Retourne le statut de persistance pour information
-    func getPersistenceStatus() -> String {
+    public func getPersistenceStatus() -> String {
         if isPersistenceActive {
             return "✅ Persistance sur disque active - Données sauvegardées"
         } else {
@@ -100,7 +99,7 @@ class DataService: ObservableObject {
 
 
     // MARK: - Data Fetching
-    func fetchData() async {
+    public func fetchData() async {
         async let clientsTask = fetchClientDTOs()
         async let facturesTask = fetchFactureDTOs()
         async let produitsTask = fetchProduitDTOs()
@@ -175,7 +174,7 @@ class DataService: ObservableObject {
     }
 
     // MARK: - Sauvegarde
-    func saveContext() async {
+    public func saveContext() async {
         do {
             try modelContext.save()
             logger.info("Data saved successfully", metadata: ["storage": "\(isPersistenceActive ? "disk" : "memory")"])
@@ -185,7 +184,7 @@ class DataService: ObservableObject {
     }
 
     // MARK: - CRUD Entreprise DTO
-    func fetchEntreprises() async -> [EntrepriseModel] {
+    public func fetchEntreprises() async -> [EntrepriseModel] {
         do {
             let descriptor = FetchDescriptor<EntrepriseModel>()
             return try modelContext.fetch(descriptor)
@@ -195,7 +194,7 @@ class DataService: ObservableObject {
         }
     }
 
-    func updateEntrepriseDTO(_ dto: EntrepriseDTO) async {
+    public func updateEntrepriseDTO(_ dto: EntrepriseDTO) async {
         // Validate SIRET, TVA, and IBAN before updating
         guard Validator.isValidSIRET(dto.siret) else {
             logger.warning("Invalid SIRET for company", metadata: ["company": "\(dto.nom)"])
@@ -224,7 +223,7 @@ class DataService: ObservableObject {
 
     // MARK: - CRUD Clients (Version simplifiée)
     @preconcurrency
-    func fetchClients() async -> [ClientDTO] {
+    public func fetchClients() async -> [ClientDTO] {
         do {
             let descriptor = FetchDescriptor<ClientModel>(sortBy: [SortDescriptor(\ClientModel.nom)])
             let clients = try modelContext.fetch(descriptor)
@@ -256,7 +255,7 @@ class DataService: ObservableObject {
         await fetchData()
     }*/
 
-    func searchClients(searchText: String) -> [ClientDTO] {
+    public func searchClients(searchText: String) -> [ClientDTO] {
         // La recherche se fera désormais sur les données publiées
         guard !searchText.isEmpty else { return clients }
 
@@ -268,7 +267,7 @@ class DataService: ObservableObject {
     }
     
     // MARK: - CRUD Clients DTO (Nouvelles méthodes)
-    func addClientDTO(_ dto: ClientDTO) async {
+    public func addClientDTO(_ dto: ClientDTO) async {
         // Validate SIRET and TVA before adding
         guard Validator.isValidSIRET(dto.siret) else {
             logger.warning("Invalid SIRET for client", metadata: ["client": "\(dto.nom)"])
@@ -285,7 +284,7 @@ class DataService: ObservableObject {
         await fetchData()
     }
 
-    func updateClientDTO(_ dto: ClientDTO) async {
+    public func updateClientDTO(_ dto: ClientDTO) async {
         // Validate SIRET and TVA before updating
         guard Validator.isValidSIRET(dto.siret) else {
             logger.warning("Invalid SIRET for client", metadata: ["client": "\(dto.nom)"])
@@ -308,7 +307,7 @@ class DataService: ObservableObject {
         }
     }
 
-    func deleteClientDTO(id: UUID) async {
+    public func deleteClientDTO(id: UUID) async {
         do {
             // Vérifier d'abord que le client existe et est valide
             let clientDescriptor = FetchDescriptor<ClientModel>(predicate: #Predicate { $0.id == id })
@@ -343,7 +342,7 @@ class DataService: ObservableObject {
     }
 
     // MARK: - CRUD Factures (Version simplifiée)
-    func fetchFactures() async -> [FactureModel] {
+    public func fetchFactures() async -> [FactureModel] {
         do {
             let descriptor = FetchDescriptor<FactureModel>(sortBy: [SortDescriptor(\FactureModel.dateFacture, order: .reverse)])
             return try modelContext.fetch(descriptor)
@@ -353,7 +352,7 @@ class DataService: ObservableObject {
         }
     }
 
-    func getFacturesWithDynamicStatus() -> [FactureDTO] {
+    public func getFacturesWithDynamicStatus() -> [FactureDTO] {
         let now = Date()
         return factures.map { facture in
             var copy = facture
@@ -400,7 +399,7 @@ class DataService: ObservableObject {
     }
     */
 
-    func searchFactures(searchText: String = "", statut: StatutFacture? = nil) -> [FactureDTO] {
+    public func searchFactures(searchText: String = "", statut: StatutFacture? = nil) -> [FactureDTO] {
         var filteredFactures = getFacturesWithDynamicStatus()
 
         // Filtrage par texte de recherche
@@ -422,7 +421,7 @@ class DataService: ObservableObject {
 
 
     // MARK: - Statistiques (Version simplifiée)
-    func getStatistiques() -> (totalCA: Double, facturesEnAttente: Int, facturesEnRetard: Int, totalFactures: Int) {
+    public func getStatistiques() -> (totalCA: Double, facturesEnAttente: Int, facturesEnRetard: Int, totalFactures: Int) {
         let currentFactures = getFacturesWithDynamicStatus()
 
         let totalCA = currentFactures
@@ -442,7 +441,7 @@ class DataService: ObservableObject {
         return (totalCA, facturesEnAttente, facturesEnRetard, totalFactures)
     }
 
-    func getMonthlyRevenueData() -> [(month: String, total: Double)] {
+    public func getMonthlyRevenueData() -> [(month: String, total: Double)] {
         let calendar = Calendar.current
         let now = Date()
         var monthlyData: [String: Double] = [:]
@@ -476,7 +475,7 @@ class DataService: ObservableObject {
         return sortedData.map { (month: $0.key, total: $0.value) }
     }
 
-    func getInvoiceStatusCounts() -> [(status: StatutFacture, count: Int)] {
+    public func getInvoiceStatusCounts() -> [(status: StatutFacture, count: Int)] {
         let currentFactures = getFacturesWithDynamicStatus()
         var statusCounts: [StatutFacture: Int] = [:]
 
@@ -494,12 +493,12 @@ class DataService: ObservableObject {
     }
 
     // MARK: - CRUD Produits
-    func fetchProduits() async -> [ProduitDTO] {
+    public func fetchProduits() async -> [ProduitDTO] {
         let models = await fetchProduitModels()
         return models.map { $0.toDTO() }
     }
 
-    func addProduitDTO(_ dto: ProduitDTO) async {
+    public func addProduitDTO(_ dto: ProduitDTO) async {
         do {
             // Validation des données
             guard !dto.designation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
@@ -520,7 +519,7 @@ class DataService: ObservableObject {
         }
     }
 
-    func updateProduitDTO(_ dto: ProduitDTO) async {
+    public func updateProduitDTO(_ dto: ProduitDTO) async {
         do {
             let descriptor = FetchDescriptor<ProduitModel>(predicate: #Predicate { $0.id == dto.id })
             if let produit = try modelContext.fetch(descriptor).first {
@@ -533,7 +532,7 @@ class DataService: ObservableObject {
         }
     }
 
-    func deleteProduitDTO(id: UUID) async {
+    public func deleteProduitDTO(id: UUID) async {
         do {
             let descriptor = FetchDescriptor<ProduitModel>(predicate: #Predicate { $0.id == id })
             guard let produit = try modelContext.fetch(descriptor).first,
@@ -561,17 +560,17 @@ class DataService: ObservableObject {
         }
     }
 
-    func searchProduits(searchText: String) -> [ProduitDTO] {
+    public func searchProduits(searchText: String) -> [ProduitDTO] {
         return produits.filter { produit in
             produit.designation.localizedCaseInsensitiveContains(searchText) ||
             (produit.details ?? "").localizedCaseInsensitiveContains(searchText)
         }
     }
-    func getEntreprise() async -> EntrepriseDTO? {
+    public func getEntreprise() async -> EntrepriseDTO? {
         return entreprise
     }
     
-    func genererNumeroFacture(client: ClientModel) async -> String {
+    public func genererNumeroFacture(client: ClientModel) async -> String {
         guard let entrepriseModel = await fetchEntreprise() else {
             let currentDate = Date()
             let currentMonth = Calendar.current.component(.month, from: currentDate)
@@ -586,13 +585,13 @@ class DataService: ObservableObject {
     }
 
     // MARK: - Utilitaires
-    func getDatabaseInfo() async -> (clientsCount: Int, facturesCount: Int, entreprisesCount: Int) {
+    public func getDatabaseInfo() async -> (clientsCount: Int, facturesCount: Int, entreprisesCount: Int) {
         let entreprises = await fetchEntreprises()
         return (clients.count, factures.count, entreprises.count)
     }
 
     // MARK: - Export/Import
-    func exportFacturesAsJSON() -> Data? {
+    public func exportFacturesAsJSON() -> Data? {
         let facturesData = factures.map { facture in
             [
                 "id": facture.id.uuidString,
@@ -616,7 +615,7 @@ class DataService: ObservableObject {
         }
     }
 
-    func exportClientsAsJSON() -> Data? {
+    public func exportClientsAsJSON() -> Data? {
         let clientsData = clients.map { $0.toDictionary() }
 
         do {
@@ -632,7 +631,7 @@ class DataService: ObservableObject {
 extension DataService {
 
     /// Nettoie la base de données (pour les tests ou le développement)
-      func clearAllData() async {
+      public func clearAllData() async {
           // Delete all persistent models
           let allFactures = await fetchFactureModels()
           for facture in allFactures {
@@ -654,13 +653,13 @@ extension DataService {
       }
 
     /// Compte le nombre d'éléments dans chaque table
-    func getDataCounts() async -> String {
+    public func getDataCounts() async -> String {
         let info = await getDatabaseInfo()
         return "Clients: \(info.clientsCount), Factures: \(info.facturesCount), Entreprises: \(info.entreprisesCount)"
     }
 
     /// Vérifie l'intégrité des données
-    func checkDataIntegrity() -> [String] {
+    public func checkDataIntegrity() -> [String] {
         var issues: [String] = []
 
         // Vérifier les factures sans client valide
@@ -693,7 +692,7 @@ extension DataService {
 
     /// Génère un jeu de données réalistes pour les tests ou démonstrations.
     /// - Creates realistic company data, supermarket clients, fruits/vegetables products and invoices
-    func generateTrainingData() async {
+    public func generateTrainingData() async {
         // Nettoie d'abord toutes les données existantes
         await clearAllData()
         
@@ -989,7 +988,7 @@ extension DataService {
 
 // MARK: - CRUD Factures DTO
 extension DataService {
-    func addFactureDTO(_ dto: FactureDTO) async {
+    public func addFactureDTO(_ dto: FactureDTO) async {
         do {
             let clientDescriptor = FetchDescriptor<ClientModel>(predicate: #Predicate { $0.id == dto.clientId })
             let client = try modelContext.fetch(clientDescriptor).first
@@ -1007,7 +1006,7 @@ extension DataService {
         }
     }
 
-    func updateFactureDTO(_ dto: FactureDTO) async {
+    public func updateFactureDTO(_ dto: FactureDTO) async {
         do {
             let descriptor = FetchDescriptor<FactureModel>(predicate: #Predicate { $0.id == dto.id })
             if let facture = try modelContext.fetch(descriptor).first {
@@ -1020,7 +1019,7 @@ extension DataService {
         }
     }
 
-    func deleteFactureDTO(id: UUID) async {
+    public func deleteFactureDTO(id: UUID) async {
         do {
             let descriptor = FetchDescriptor<FactureModel>(predicate: #Predicate { $0.id == id })
             guard let facture = try modelContext.fetch(descriptor).first,
@@ -1045,7 +1044,7 @@ extension DataService {
         }
     }
     
-    func addLigneDTO(_ dto: LigneFactureDTO) async {
+    public func addLigneDTO(_ dto: LigneFactureDTO) async {
         let ligne = LigneFacture.fromDTO(dto)
         modelContext.insert(ligne)
         await saveContext()
@@ -1053,7 +1052,7 @@ extension DataService {
     }
     
     /// Récupère le modèle Client persistant à partir de l'UUID.
-    func fetchClientModel(id: UUID) async -> ClientModel? {
+    public func fetchClientModel(id: UUID) async -> ClientModel? {
         let descriptor = FetchDescriptor<ClientModel>(predicate: #Predicate { $0.id == id })
         do {
             if let client = try modelContext.fetch(descriptor).first {
@@ -1067,7 +1066,7 @@ extension DataService {
     }
 
     /// Récupère le modèle Facture persistant à partir de l'UUID.
-    func fetchFactureModel(id: UUID) async -> FactureModel? {
+    public func fetchFactureModel(id: UUID) async -> FactureModel? {
         let descriptor = FetchDescriptor<FactureModel>(predicate: #Predicate { $0.id == id })
         do {
             if let facture = try modelContext.fetch(descriptor).first {
@@ -1082,7 +1081,7 @@ extension DataService {
     }
 
     /// Récupère la facture DTO à partir de l'UUID.
-    func fetchFactureDTO(id: UUID) async -> FactureDTO? {
+    public func fetchFactureDTO(id: UUID) async -> FactureDTO? {
         let descriptor = FetchDescriptor<FactureModel>(predicate: #Predicate { $0.id == id })
         do {
             if let facture = try modelContext.fetch(descriptor).first, facture.isValidModel {
@@ -1096,7 +1095,7 @@ extension DataService {
     }
 
     /// Récupère le modèle Produit persistant à partir de l'UUID.
-    func fetchProduitModel(id: UUID) async -> ProduitModel? {
+    public func fetchProduitModel(id: UUID) async -> ProduitModel? {
         let descriptor = FetchDescriptor<ProduitModel>(predicate: #Predicate { $0.id == id })
         do {
             if let produit = try modelContext.fetch(descriptor).first {
@@ -1110,7 +1109,7 @@ extension DataService {
     }
 
     /// Récupère le modèle LigneFacture persistant à partir de l'UUID.
-    func fetchLigneModel(id: UUID) async -> LigneFacture? {
+    public func fetchLigneModel(id: UUID) async -> LigneFacture? {
         let descriptor = FetchDescriptor<LigneFacture>(predicate: #Predicate { $0.id == id })
         do {
             return try modelContext.fetch(descriptor).first
@@ -1121,7 +1120,7 @@ extension DataService {
     }
     
     /// Récupère le modèle Entreprise persistant à partir de l'UUID.
-    func fetchEntrepriseModel(id: UUID) async -> EntrepriseModel? {
+    public func fetchEntrepriseModel(id: UUID) async -> EntrepriseModel? {
         let descriptor = FetchDescriptor<EntrepriseModel>(predicate: #Predicate { $0.id == id })
         do {
             return try modelContext.fetch(descriptor).first
@@ -1151,7 +1150,7 @@ extension ClientDTO {
 
 // MARK: - CRUD LignesFactures DTO
 extension DataService {
-    func fetchLignesFactures() async -> [LigneFactureDTO] {
+    public func fetchLignesFactures() async -> [LigneFactureDTO] {
         do {
             let lignes = try modelContext.fetch(FetchDescriptor<LigneFacture>())
             return lignes.map { $0.toDTO() }
@@ -1172,7 +1171,7 @@ extension DataService {
         }
     }
 
-     func fetchFactureDTOs() async -> [FactureDTO] {
+     public func fetchFactureDTOs() async -> [FactureDTO] {
         do {
             let descriptor = FetchDescriptor<FactureModel>(sortBy: [SortDescriptor(\FactureModel.dateFacture, order: .reverse)])
             let models = try modelContext.fetch(descriptor)
@@ -1206,7 +1205,7 @@ extension DataService {
     }
 
     // MARK: - Public DTO Fetcher
-    func fetchEntrepriseDTO() async -> EntrepriseDTO? {
+    public func fetchEntrepriseDTO() async -> EntrepriseDTO? {
         do {
             let descriptor = FetchDescriptor<EntrepriseModel>()
             if let model = try modelContext.fetch(descriptor).first {
@@ -1285,7 +1284,7 @@ extension EntrepriseDTO {
 }
 
 extension DataService {
-    static func previewMock() -> DataService {
+    public static func previewMock() -> DataService {
         let mock = DataService()
         mock.factures = [FactureDTO.mock()]
         mock.lignes = []

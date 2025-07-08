@@ -82,7 +82,7 @@ struct ClientDetailView: View {
 }
 
 // Extension pour rendre UUID conforme à Identifiable
-extension UUID: Identifiable {
+extension UUID: @retroactive Identifiable {
     public var id: UUID { self }
 }
 

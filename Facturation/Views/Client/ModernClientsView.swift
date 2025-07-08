@@ -1,7 +1,7 @@
 import SwiftUI
 import DataLayer
 struct ModernClientsView: View {
-    @EnvironmentObject private var dataService: DataService
+    @EnvironmentObject private var clientUseCase: ClientUseCase
     @Binding var searchText: String
     
     @State private var selectedClients = Set<UUID>()

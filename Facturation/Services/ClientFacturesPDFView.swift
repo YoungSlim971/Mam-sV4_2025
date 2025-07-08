@@ -1,5 +1,6 @@
 
 import SwiftUI
+import DataLayer
 
 struct ClientFacturesPDFView: View {
     let client: ClientModel

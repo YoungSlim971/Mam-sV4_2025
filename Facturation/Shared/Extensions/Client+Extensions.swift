@@ -1,6 +1,7 @@
 // Extensions/Client+Extensions.swift
 import Foundation
 import AppKit
+import DataLayer
 
 // MARK: - Extensions pour le modèle Client SwiftData
 extension ClientModel {

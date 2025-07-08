@@ -1,5 +1,6 @@
 import SwiftUI
 import Charts
+import DataLayer
 
 struct EvolutionCASection: View {
     let stats: [MonthStat]

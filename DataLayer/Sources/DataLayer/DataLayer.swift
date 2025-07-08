@@ -4,6 +4,9 @@ import Logging
 
 // Main types are defined in this module and available via import
 
+// MARK: - Public Model Re-exports
+// Models are now part of DataLayer module and available via import DataLayer
+
 /// Main coordinator for all data layer services
 @MainActor
 public final class DataLayer: ObservableObject {

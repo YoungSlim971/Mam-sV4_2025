@@ -1,5 +1,6 @@
 // App/FacturationApp.swift
 import SwiftUI
+import DataLayer
 
 @main
 struct FacturationApp: App {

@@ -1,4 +1,5 @@
 import Foundation
+import DataLayer
 
 protocol FactureRepository {
     func genererNumeroFacture(client: ClientModel) throws -> String

@@ -246,6 +246,10 @@
       "inputs" : [
         {
           "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Bridges/ModelDTOBridge.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Core/DataTypes.swift"
         },
         {
@@ -278,11 +282,51 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/ClientModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/EntrepriseModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/FactureModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/LigneFactureModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/ProduitModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/Statistiques.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Protocols/DataLayerProtocol.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Protocols/FactureRepository.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ClientService.swift"
         },
         {
           "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/DataService.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ExcelImporter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/FactureRepositorySwiftData.swift"
         },
         {
           "kind" : "file",
@@ -329,6 +373,7 @@
       "moduleName" : "DataLayer",
       "moduleOutputPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/Modules/DataLayer.swiftmodule",
       "objects" : [
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ModelDTOBridge.swift.o",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataTypes.swift.o",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientDTO.swift.o",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/EntrepriseDTO.swift.o",
@@ -337,8 +382,18 @@
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitDTO.swift.o",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/StatistiquesDTO.swift.o",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataLayer.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientModel.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/EntrepriseModel.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureModel.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/LigneFactureModel.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitModel.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/Statistiques.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataLayerProtocol.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureRepository.swift.o",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientService.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataService.swift.o",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ExcelImporter.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureRepositorySwiftData.swift.o",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureService.swift.o",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/PersistenceService.swift.o",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitService.swift.o"
@@ -397,6 +452,10 @@
       "outputs" : [
         {
           "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ModelDTOBridge.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataTypes.swift.o"
         },
         {
@@ -429,11 +488,51 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/EntrepriseModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/LigneFactureModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitModel.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/Statistiques.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataLayerProtocol.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureRepository.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientService.swift.o"
         },
         {
           "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataService.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ExcelImporter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureRepositorySwiftData.swift.o"
         },
         {
           "kind" : "file",
@@ -454,6 +553,7 @@
       ],
       "prepareForIndexing" : false,
       "sources" : [
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Bridges/ModelDTOBridge.swift",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Core/DataTypes.swift",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/ClientDTO.swift",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/EntrepriseDTO.swift",
@@ -462,8 +562,18 @@
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/ProduitDTO.swift",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/StatistiquesDTO.swift",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DataLayer.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/ClientModel.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/EntrepriseModel.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/FactureModel.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/LigneFactureModel.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/ProduitModel.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/Statistiques.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Protocols/DataLayerProtocol.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Protocols/FactureRepository.swift",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ClientService.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/DataService.swift",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ExcelImporter.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/FactureRepositorySwiftData.swift",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/FactureService.swift",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/PersistenceService.swift",
         "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ProduitService.swift"
@@ -1809,6 +1919,7 @@
       "datalayer",
       "-incremental",
       "-c",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Bridges/ModelDTOBridge.swift",
       "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Core/DataTypes.swift",
       "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/ClientDTO.swift",
       "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/EntrepriseDTO.swift",
@@ -1817,8 +1928,18 @@
       "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/ProduitDTO.swift",
       "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/StatistiquesDTO.swift",
       "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DataLayer.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/ClientModel.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/EntrepriseModel.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/FactureModel.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/LigneFactureModel.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/ProduitModel.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/Statistiques.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Protocols/DataLayerProtocol.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Protocols/FactureRepository.swift",
       "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ClientService.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/DataService.swift",
       "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ExcelImporter.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/FactureRepositorySwiftData.swift",
       "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/FactureService.swift",
       "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/PersistenceService.swift",
       "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ProduitService.swift",
@@ -2376,6 +2497,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Bridges/ModelDTOBridge.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Core/DataTypes.swift"
         },
         {
@@ -2408,11 +2533,51 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/ClientModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/EntrepriseModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/FactureModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/LigneFactureModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/ProduitModel.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Models/Statistiques.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Protocols/DataLayerProtocol.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Protocols/FactureRepository.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ClientService.swift"
         },
         {
           "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/DataService.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ExcelImporter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/FactureRepositorySwiftData.swift"
         },
         {
           "kind" : "file",

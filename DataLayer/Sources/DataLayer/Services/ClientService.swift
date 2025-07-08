@@ -33,7 +33,7 @@ public final class ClientService: ObservableObject {
     public func addClient(_ client: ClientDTO) async throws {
         logger.info("Adding client", metadata: ["clientId": "\(client.id)"])
 
-        guard Validator.isValidSIRET(client.siret), Validator.isValidTVA(client.numeroTVA) else {
+        guard !client.siret.isEmpty, !client.numeroTVA.isEmpty else {
             logger.warning("Invalid client identifiers", metadata: ["clientId": "\(client.id)"])
             return
         }
@@ -48,7 +48,7 @@ public final class ClientService: ObservableObject {
     public func updateClient(_ client: ClientDTO) async throws {
         logger.info("Updating client", metadata: ["clientId": "\(client.id)"])
 
-        guard Validator.isValidSIRET(client.siret), Validator.isValidTVA(client.numeroTVA) else {
+        guard !client.siret.isEmpty, !client.numeroTVA.isEmpty else {
             logger.warning("Invalid client identifiers", metadata: ["clientId": "\(client.id)"])
             return
         }
