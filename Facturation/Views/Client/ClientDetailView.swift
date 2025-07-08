@@ -149,11 +149,11 @@ private struct FactureRowForClient: View {
     }
 }
 
-// MARK: - Wrapper pour charger le FactureModel avant de présenter la vue de détail.
+// MARK: - Wrapper pour charger le FactureDTO avant de présenter la vue de détail.
 private struct ClientFactureViewWrapper: View {
     let factureID: UUID
     @EnvironmentObject private var dataService: DataService
-    @State private var facture: FactureModel?
+    @State private var facture: FactureDTO?
     @State private var isLoading = true
 
     var body: some View {
@@ -166,11 +166,7 @@ private struct ClientFactureViewWrapper: View {
         if isLoading {
             ProgressView("Chargement de la facture...")
         } else if let facture = facture {
-            if facture.isValidModel {
-                ClientFactureDetailView(facture: facture)
-            } else {
-                invalidDataView
-            }
+            ClientFactureDetailView(facture: facture)
         } else {
             invalidDataView
         }
@@ -191,7 +187,7 @@ private struct ClientFactureViewWrapper: View {
     private func loadFactureModel() {
         Task {
             isLoading = true
-            self.facture = await dataService.fetchFactureModel(id: factureID)
+            self.facture = await dataService.fetchFactureDTO(id: factureID)
             isLoading = false
         }
     }
