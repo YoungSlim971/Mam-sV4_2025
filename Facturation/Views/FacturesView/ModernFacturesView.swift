@@ -1,4 +1,5 @@
 import SwiftUI
+import DataLayer
 struct ModernFacturesView: View {
     @EnvironmentObject private var dataService: DataService
     @Binding var searchText: String

@@ -1,6 +1,7 @@
 // Extensions/Extensions.swift
 import SwiftUI
 import Foundation
+import DataLayer
 
 // MARK: - Double Extensions
 extension Double {

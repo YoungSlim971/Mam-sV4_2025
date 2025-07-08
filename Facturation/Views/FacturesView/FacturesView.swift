@@ -2,6 +2,8 @@
 // Views/Factures/FacturesView.swift
 import SwiftUI
 import UniformTypeIdentifiers
+import DataLayer
+import PDFEngine
 
 
 struct FacturesView: View {
@@ -98,9 +100,12 @@ struct FacturesView: View {
             do {
                 guard let url = try result.get().first else { return }
                 if url.pathExtension.lowercased() == "pdf" {
+                    // PDF import handles saving to dataService directly
                     try await pdfImporter.importFacture(from: url, dataService: dataService)
                 } else {
-                    try await excelImporter.importFacture(from: url, dataService: dataService)
+                    // Excel import returns DTOs that need to be saved  
+                    let facturesDTO = try await excelImporter.importFactures(from: url)
+                    // TODO: Convert DTOs to models and save using dataService
                 }
             } catch {
                 importError = error

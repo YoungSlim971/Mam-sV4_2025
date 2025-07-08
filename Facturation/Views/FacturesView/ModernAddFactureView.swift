@@ -1,5 +1,6 @@
 import SwiftUI
 import Foundation
+import DataLayer
 
 // Note fixe appliquée à toutes les factures
 private let defaultFactureNote = """

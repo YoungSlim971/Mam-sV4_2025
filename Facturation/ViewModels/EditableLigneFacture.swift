@@ -1,4 +1,5 @@
 import Foundation
+import DataLayer
 
 struct EditableLigneFacture: Identifiable {
     let id: UUID

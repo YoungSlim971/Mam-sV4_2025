@@ -1,5 +1,6 @@
 // Views/Clients/ClientRowView.swift
 import SwiftUI
+import DataLayer
 
 struct ClientRowView: View {
     let client: ClientDTO

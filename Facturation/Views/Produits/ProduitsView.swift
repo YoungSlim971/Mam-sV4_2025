@@ -1,4 +1,5 @@
 import SwiftUI
+import DataLayer
 struct ProduitsView: View {
     @EnvironmentObject var dataService: DataService
     @Binding var searchText: String

@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import DataLayer
 
 @Model
 final class EntrepriseModel {

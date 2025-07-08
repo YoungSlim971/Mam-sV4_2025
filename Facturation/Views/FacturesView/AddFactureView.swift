@@ -1,6 +1,7 @@
 // Views/Factures/AddFactureView.swift
 import SwiftUI
 import Foundation // Ajouté pour Date
+import DataLayer
 
 // Note fixe appliquée à toutes les factures
 private let defaultFactureNote = """

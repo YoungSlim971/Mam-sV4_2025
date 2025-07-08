@@ -1,0 +1,4 @@
+module CoreXLSX {
+    header "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/.build/arm64-apple-macosx/debug/CoreXLSX.build/CoreXLSX-Swift.h"
+    requires objc
+}

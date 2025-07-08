@@ -1,5 +1,6 @@
 // Views/Clients/ClientAvatar.swift
 import SwiftUI
+import DataLayer
 
 struct ClientAvatar: View {
     let client: ClientDTO

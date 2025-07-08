@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/master.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.derived/runner.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/runner.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/runner.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/runner.swiftdeps"
+  }
+}

@@ -1,5 +1,7 @@
 // Views/Parametres/ParametresView.swift
 import SwiftUI
+import Utilities
+import DataLayer
 struct ParametresView: View {
     var onClose: () -> Void
     @EnvironmentObject private var dataService: DataService

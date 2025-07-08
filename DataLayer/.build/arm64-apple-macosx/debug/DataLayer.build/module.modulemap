@@ -1,0 +1,4 @@
+module DataLayer {
+    header "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/.build/arm64-apple-macosx/debug/DataLayer.build/DataLayer-Swift.h"
+    requires objc
+}

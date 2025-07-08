@@ -1,5 +1,6 @@
 import SwiftUI
 import Charts
+import DataLayer
 
 struct StatsView: View {
     @ObservedObject private var dataService = DataService.shared

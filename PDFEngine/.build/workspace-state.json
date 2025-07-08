@@ -1,0 +1,109 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "corexlsx",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/CoreOffice/CoreXLSX",
+          "name" : "CoreXLSX"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "1391f3832ea2eeee5186ea8abb81ea49ed0609cc",
+            "version" : "0.14.2"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "CoreXLSX"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "datalayer",
+          "kind" : "fileSystem",
+          "location" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer",
+          "name" : "DataLayer"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer"
+        },
+        "subpath" : "datalayer"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "swift-log",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/apple/swift-log.git",
+          "name" : "swift-log"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "3d8596ed08bd13520157f0355e35caed215ffbfa",
+            "version" : "1.6.3"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "swift-log"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "utilities",
+          "kind" : "fileSystem",
+          "location" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities",
+          "name" : "Utilities"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities"
+        },
+        "subpath" : "utilities"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "xmlcoder",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/maxdesiatov/XMLCoder.git",
+          "name" : "XMLCoder"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "ca932442d7481700f5434a7b138c47dd42d9902b",
+            "version" : "0.14.0"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "XMLCoder"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "zipfoundation",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/weichsel/ZIPFoundation.git",
+          "name" : "ZIPFoundation"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "02b6abe5f6eef7e3cbd5f247c5cc24e246efcfe0",
+            "version" : "0.9.19"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "ZIPFoundation"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

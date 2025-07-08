@@ -1,6 +1,7 @@
 import SwiftUI
 import Charts
 import AppKit
+import DataLayer
 
 struct InvoiceStatusChartView: View {
     @ObservedObject var statsService: StatistiquesService

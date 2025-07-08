@@ -1,4 +1,5 @@
 import SwiftUI
+import DataLayer
 
 struct FactureDetailView: View {
     @EnvironmentObject private var dataService: DataService

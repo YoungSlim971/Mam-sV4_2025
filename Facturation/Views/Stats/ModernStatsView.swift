@@ -1,5 +1,6 @@
 import SwiftUI
 import Charts
+import DataLayer
 
 struct ModernStatsView: View {
     @EnvironmentObject private var dataService: DataService

@@ -1,0 +1,83 @@
+{
+  "": {
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/master.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Core/DataTypes.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataTypes.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataTypes.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataTypes~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataTypes.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/ClientDTO.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientDTO.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientDTO.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientDTO~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientDTO.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/EntrepriseDTO.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/EntrepriseDTO.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/EntrepriseDTO.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/EntrepriseDTO~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/EntrepriseDTO.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/FactureDTO.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureDTO.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureDTO.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureDTO~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureDTO.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/LigneFactureDTO.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/LigneFactureDTO.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/LigneFactureDTO.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/LigneFactureDTO~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/LigneFactureDTO.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/ProduitDTO.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitDTO.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitDTO.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitDTO~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitDTO.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DTOs/StatistiquesDTO.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/StatistiquesDTO.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/StatistiquesDTO.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/StatistiquesDTO~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/StatistiquesDTO.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/DataLayer.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataLayer.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataLayer.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataLayer~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/DataLayer.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ClientService.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientService.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientService.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientService~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ClientService.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ExcelImporter.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ExcelImporter.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ExcelImporter.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ExcelImporter~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ExcelImporter.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/FactureService.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureService.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureService.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureService~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/FactureService.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/PersistenceService.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/PersistenceService.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/PersistenceService.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/PersistenceService~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/PersistenceService.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/Sources/DataLayer/Services/ProduitService.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitService.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitService.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitService~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/DataLayer.build/ProduitService.swiftdeps"
+  }
+}

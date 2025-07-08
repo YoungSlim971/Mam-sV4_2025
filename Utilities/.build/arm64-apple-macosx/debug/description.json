@@ -1,0 +1,895 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.xctest/Contents/MacOS/UtilitiesPackageTests",
+      "packagePath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities",
+      "productName" : "UtilitiesPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.Logging-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/sources",
+      "importPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/Locks.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/LogHandler.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/Logging.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/MetadataProvider.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "Logging",
+      "moduleOutputPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules/Logging.swiftmodule",
+      "objects" : [
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/Locks.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/LogHandler.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/Logging.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/MetadataProvider.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-enable-batch-mode",
+        "-index-store-path",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-module-cache-path",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/Logging-Swift.h",
+        "-swift-version",
+        "5",
+        "-enable-experimental-feature",
+        "StrictConcurrency=complete",
+        "-enable-upcoming-feature",
+        "MemberImportVisibility",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-suppress-warnings",
+        "-package-name",
+        "swift_log"
+      ],
+      "outputFileMapPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/Locks.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/LogHandler.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/Logging.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/MetadataProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules/Logging.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/Locks.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/LogHandler.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/Logging.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/MetadataProvider.swift"
+      ],
+      "tempsPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.Utilities-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/sources",
+      "importPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/Extensions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/ModelValidationService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/Validator.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules/Logging.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "Utilities",
+      "moduleOutputPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules/Utilities.swiftmodule",
+      "objects" : [
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Extensions.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/ModelValidationService.swift.o",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Validator.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-enable-batch-mode",
+        "-index-store-path",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-module-cache-path",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Utilities-Swift.h",
+        "-swift-version",
+        "5",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "utilities"
+      ],
+      "outputFileMapPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Extensions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/ModelValidationService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Validator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules/Utilities.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/Extensions.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/ModelValidationService.swift",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/Validator.swift"
+      ],
+      "tempsPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.UtilitiesPackageTests-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/sources",
+      "importPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules/UtilitiesTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "UtilitiesPackageTests",
+      "moduleOutputPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules/UtilitiesPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-enable-batch-mode",
+        "-index-store-path",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-module-cache-path",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/UtilitiesPackageTests-Swift.h",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "utilities"
+      ],
+      "outputFileMapPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules/UtilitiesPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.UtilitiesTests-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesTests.build/sources",
+      "importPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Tests/UtilitiesTests/ValidatorTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules/Utilities.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "UtilitiesTests",
+      "moduleOutputPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules/UtilitiesTests.swiftmodule",
+      "objects" : [
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesTests.build/ValidatorTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-enable-batch-mode",
+        "-index-store-path",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-module-cache-path",
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "5",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "utilities"
+      ],
+      "outputFileMapPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesTests.build/ValidatorTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules/UtilitiesTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Tests/UtilitiesTests/ValidatorTests.swift"
+      ],
+      "tempsPath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesTests.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "Logging" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "Logging",
+      "-package-name",
+      "swift_log",
+      "-incremental",
+      "-c",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/Locks.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/LogHandler.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/Logging.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/MetadataProvider.swift",
+      "-I",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-enable-batch-mode",
+      "-index-store-path",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-module-cache-path",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/Logging-Swift.h",
+      "-swift-version",
+      "5",
+      "-enable-experimental-feature",
+      "StrictConcurrency=complete",
+      "-enable-upcoming-feature",
+      "MemberImportVisibility",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-suppress-warnings",
+      "-package-name",
+      "swift_log",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "Utilities" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "Utilities",
+      "-package-name",
+      "utilities",
+      "-incremental",
+      "-c",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/Extensions.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/ModelValidationService.swift",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/Validator.swift",
+      "-I",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-enable-batch-mode",
+      "-index-store-path",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-module-cache-path",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Utilities-Swift.h",
+      "-swift-version",
+      "5",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "utilities",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "UtilitiesPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "UtilitiesPackageTests",
+      "-package-name",
+      "utilities",
+      "-incremental",
+      "-c",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-enable-batch-mode",
+      "-index-store-path",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-module-cache-path",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/UtilitiesPackageTests-Swift.h",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "utilities",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "UtilitiesTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "UtilitiesTests",
+      "-package-name",
+      "utilities",
+      "-incremental",
+      "-c",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Tests/UtilitiesTests/ValidatorTests.swift",
+      "-I",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-enable-batch-mode",
+      "-index-store-path",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-module-cache-path",
+      "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "5",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "utilities",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "Logging" : [
+
+    ],
+    "Utilities" : [
+      "Logging"
+    ],
+    "UtilitiesPackageTests" : [
+      "UtilitiesTests",
+      "Utilities",
+      "Logging"
+    ],
+    "UtilitiesTests" : [
+      "Utilities",
+      "Logging"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "enableAllTraits" : false
+  },
+  "writeCommands" : {
+    "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/Locks.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/LogHandler.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/Logging.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/checkouts/swift-log/Sources/Logging/MetadataProvider.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/sources"
+    },
+    "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/Extensions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/ModelValidationService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/Validator.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/sources"
+    },
+    "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/sources"
+    },
+    "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/Locks.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/LogHandler.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/Logging.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Logging.build/MetadataProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Extensions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/ModelValidationService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Validator.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesTests.build/ValidatorTests.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Tests/UtilitiesTests/ValidatorTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/UtilitiesTests.build/sources"
+    },
+    "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

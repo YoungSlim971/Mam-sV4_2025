@@ -1,4 +1,5 @@
 import Foundation
+import DataLayer
 
 struct EditableFacture {
     var dateFacture: Date

@@ -1,0 +1,29 @@
+{
+  "": {
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/master.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/Sources/PDFEngine/Core/PDFDocument.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFDocument.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFDocument.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFDocument~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFDocument.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/Sources/PDFEngine/PDFEngine.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFEngine.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFEngine.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFEngine~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFEngine.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/Sources/PDFEngine/Services/PDFService.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFService.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFService.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFService~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFService.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/Sources/PDFEngine/Services/PageLayoutCalculator.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PageLayoutCalculator.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PageLayoutCalculator.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PageLayoutCalculator~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PageLayoutCalculator.swiftdeps"
+  }
+}

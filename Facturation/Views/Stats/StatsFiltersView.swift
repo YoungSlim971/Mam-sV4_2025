@@ -1,4 +1,5 @@
 import SwiftUI
+import DataLayer
 
 struct StatsFiltersView: View {
     @Binding var type: StatistiqueType

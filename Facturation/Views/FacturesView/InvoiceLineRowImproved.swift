@@ -1,4 +1,5 @@
 import SwiftUI
+import DataLayer
 
 struct InvoiceLineRowImproved: View {
     let ligne: LigneFactureDTO

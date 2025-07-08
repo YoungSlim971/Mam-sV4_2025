@@ -1,0 +1,23 @@
+{
+  "": {
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/master.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/Extensions.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Extensions.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Extensions.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Extensions~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Extensions.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/ModelValidationService.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/ModelValidationService.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/ModelValidationService.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/ModelValidationService~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/ModelValidationService.swiftdeps"
+  },
+  "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/Sources/Utilities/Validator.swift": {
+    "dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Validator.d",
+    "object": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Validator.swift.o",
+    "swiftmodule": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Validator~partial.swiftmodule",
+    "swift-dependencies": "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/Utilities/.build/arm64-apple-macosx/debug/Utilities.build/Validator.swiftdeps"
+  }
+}

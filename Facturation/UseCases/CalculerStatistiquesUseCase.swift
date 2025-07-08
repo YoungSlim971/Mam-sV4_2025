@@ -8,6 +8,7 @@
 
 
 import Foundation
+import DataLayer
 
 final class CalculerStatistiquesUseCase {
 

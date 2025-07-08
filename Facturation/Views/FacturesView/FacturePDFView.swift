@@ -1,5 +1,16 @@
 import SwiftUI
 import PDFKit
+import DataLayer
+import PDFEngine
+
+// MARK: - PDF Constants
+private enum PDFConstants {
+    static let pageWidth: CGFloat = 595
+    static let pageHeight: CGFloat = 842
+    static let horizontalMargin: CGFloat = 40
+    static let topMargin: CGFloat = 50
+    static let bottomMargin: CGFloat = 50
+}
 // MARK: - FacturePDFView avec mise en page améliorée
 struct FacturePDFView: View {
     let pageContent: InvoicePageContent
@@ -536,14 +547,18 @@ struct FacturePDFView: View {
         let totalTTC = brut - remise
         print("   - Total TTC direct: \(totalTTC)")
         
-        let calculator = PageLayoutCalculator(facture: facture, entreprise: entreprise, client: client, lines: lignes)
-        let pageContents = calculator.generatePages()
+        // For now, create a simple single-page content
+        // TODO: Implement proper page layout calculation
+        let simpleContent = InvoicePageContent(
+            facture: facture,
+            entreprise: entreprise,
+            client: client,
+            lines: lignes,
+            isFirstPage: true,
+            isLastPage: true
+        )
         
-        print("   - Pages générées: \(pageContents.count)")
-        
-        return pageContents.enumerated().map { index, content in
-            FacturePDFView(pageContent: content, pageNumber: index + 1, totalPages: pageContents.count)
-        }
+        return [FacturePDFView(pageContent: simpleContent, pageNumber: 1, totalPages: 1)]
     }
 }
 

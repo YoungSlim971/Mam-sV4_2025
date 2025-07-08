@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import DataLayer
 
 struct RecentFacturesSection: View {
     let factures: [FactureDTO]

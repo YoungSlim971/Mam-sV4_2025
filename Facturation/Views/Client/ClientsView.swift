@@ -1,5 +1,6 @@
 // Views/Clients/ClientsView.swift
 import SwiftUI
+import DataLayer
 struct ClientsView: View {
     @EnvironmentObject private var dataService: DataService
     @Binding var searchText: String

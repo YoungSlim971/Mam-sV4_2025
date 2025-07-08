@@ -1,4 +1,5 @@
 import SwiftUI
+import DataLayer
 
 
 /// Carte affichant un produit avec actions édition, suppression, navigation

@@ -1,4 +1,5 @@
 import SwiftUI
+import DataLayer
 
 struct DashboardView: View {
     @EnvironmentObject private var dataService: DataService

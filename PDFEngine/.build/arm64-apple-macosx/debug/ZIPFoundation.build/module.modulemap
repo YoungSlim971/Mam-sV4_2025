@@ -1,0 +1,4 @@
+module ZIPFoundation {
+    header "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/ZIPFoundation.build/ZIPFoundation-Swift.h"
+    requires objc
+}

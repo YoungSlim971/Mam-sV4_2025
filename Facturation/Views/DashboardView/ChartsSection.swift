@@ -1,4 +1,5 @@
 import SwiftUI
+import DataLayer
 
 struct ChartsSection: View {
     @ObservedObject var statsService: StatistiquesService

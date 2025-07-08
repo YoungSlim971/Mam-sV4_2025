@@ -1,4 +1,6 @@
 import SwiftUI
+import DataLayer
+import PDFEngine
 
 struct EditFactureView: View {
     @EnvironmentObject private var dataService: DataService

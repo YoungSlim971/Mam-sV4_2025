@@ -2,51 +2,9 @@
 @preconcurrency import Foundation
 @preconcurrency import SwiftData
 import SwiftUI
+import Utilities
+import DataLayer
 
-// MARK: - Enums
-enum StatutFacture: String, CaseIterable, Codable {
-    case brouillon = "Brouillon"
-    case envoyee = "Envoyée"
-    case payee = "Payée"
-    case enRetard = "En Retard"
-    case annulee = "Annulée"
-    
-    var color: Color {
-        switch self {
-        case .brouillon: return .gray
-        case .envoyee: return .blue
-        case .payee: return .green
-        case .enRetard: return .red
-        case .annulee: return .red
-        }
-    }
-
-    var systemImage: String {
-        switch self {
-        case .brouillon: return "doc.text"
-        case .envoyee: return "paperplane"
-        case .payee: return "checkmark.circle.fill"
-        case .enRetard: return "clock.fill"
-        case .annulee: return "xmark.circle.fill"
-        }
-    }
-}
-
-enum ConditionsPaiement: String, CaseIterable, Codable {
-    case virement = "Virement"
-    case cheque   = "Chèque"
-    case espece   = "Espèces"
-    case carte    = "Carte"
-
-    var systemImage: String {
-        switch self {
-        case .virement: return "eurosign"
-        case .cheque:   return "rectangle.portrait.and.arrow.right"
-        case .espece:   return "banknote"
-        case .carte:    return "creditcard"
-        }
-    }
-}
 
 @MainActor
 class DataService: ObservableObject {
@@ -1179,7 +1137,7 @@ extension DataService {
     func fetchLignesFactures() async -> [LigneFactureDTO] {
         do {
             let lignes = try modelContext.fetch(FetchDescriptor<LigneFacture>())
-            return lignes.map { LigneFactureDTO(from: $0) }
+            return lignes.map { $0.toDTO() }
         } catch {
             print("Erreur lors de la récupération des lignes de facture: \(error)")
             return []
@@ -1223,7 +1181,7 @@ extension DataService {
         do {
             let descriptor = FetchDescriptor<LigneFacture>()
             let models = try modelContext.fetch(descriptor)
-            return models.map { LigneFactureDTO(from: $0) }
+            return models.map { $0.toDTO() }
         } catch {
             print("Erreur lors de la récupération des lignes: \(error)")
             return []

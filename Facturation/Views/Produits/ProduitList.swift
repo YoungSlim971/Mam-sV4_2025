@@ -1,5 +1,6 @@
 // Views/Produits/ProduitList.swift
 import SwiftUI
+import DataLayer
 
 struct ProduitList: View {
     @EnvironmentObject var dataService: DataService

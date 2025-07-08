@@ -1,5 +1,6 @@
 import SwiftUI
 import Charts
+import DataLayer
 
 struct TopClientsSection: View {
     let clients: [StatistiquesService.ClientStatistique]

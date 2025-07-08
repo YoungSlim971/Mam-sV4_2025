@@ -1,5 +1,6 @@
 import SwiftUI
 import Charts
+import DataLayer
 
 struct ClientsStatsView: View {
     @ObservedObject var statistiquesService: StatistiquesService

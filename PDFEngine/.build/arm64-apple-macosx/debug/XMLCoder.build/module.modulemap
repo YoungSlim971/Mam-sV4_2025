@@ -1,0 +1,4 @@
+module XMLCoder {
+    header "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/XMLCoder.build/XMLCoder-Swift.h"
+    requires objc
+}

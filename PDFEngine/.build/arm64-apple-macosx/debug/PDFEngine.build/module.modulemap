@@ -1,0 +1,4 @@
+module PDFEngine {
+    header "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/PDFEngine/.build/arm64-apple-macosx/debug/PDFEngine.build/PDFEngine-Swift.h"
+    requires objc
+}

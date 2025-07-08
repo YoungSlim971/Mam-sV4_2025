@@ -1,5 +1,6 @@
 // Views/Clients/ClientsList.swift
 import SwiftUI
+import DataLayer
 
 struct ClientsList: View {
     let clients: [ClientDTO]

@@ -1,4 +1,6 @@
 import SwiftUI
+import Utilities
+import DataLayer
 
 struct ModernParametresView: View {
     @EnvironmentObject private var dataService: DataService

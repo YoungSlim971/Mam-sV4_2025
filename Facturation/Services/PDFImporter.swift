@@ -8,6 +8,8 @@
 import Foundation
 import PDFKit
 import Vision
+import DataLayer
+import Utilities
 
 @preconcurrency
 struct PDFImporter {

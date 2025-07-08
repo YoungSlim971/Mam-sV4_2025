@@ -1,5 +1,6 @@
 import UniformTypeIdentifiers
 import SwiftUI
+import DataLayer
 
 
 struct AddProduitView: View {

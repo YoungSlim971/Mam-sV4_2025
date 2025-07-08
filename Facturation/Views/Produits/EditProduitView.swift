@@ -1,5 +1,6 @@
 // Views/Produits/EditProduitView.swift
 import SwiftUI
+import DataLayer
 
 struct EditProduitView: View {
     @Environment(\.dismiss) var dismiss

@@ -1,5 +1,7 @@
 // Views/Clients/EditClientView.swift
 import SwiftUI
+import Utilities
+import DataLayer
 struct EditClientView: View {
     @Environment(\.dismiss) private var dismiss
 
