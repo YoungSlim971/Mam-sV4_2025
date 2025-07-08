@@ -4,11 +4,14 @@
 import SwiftUI
 import Utilities
 import DataLayer
+import Logging
 
 
 @MainActor
 class DataService: ObservableObject {
     static let shared = DataService()
+    
+    private let logger = Logger(label: "com.facturation.dataservice")
 
     @Published var modelContainer: ModelContainer
     @Published var modelContext: ModelContext
@@ -33,10 +36,10 @@ class DataService: ObservableObject {
             self.modelContainer = container
             self.modelContext = container.mainContext
             
-            print("✅ Persistance SwiftData initialisée avec succès sur disque")
+            logger.info("SwiftData persistence initialized successfully on disk")
             
         } catch {
-            print("❌ Erreur lors de l'initialisation de la persistance principale: \(error)")
+            logger.error("Failed to initialize main persistence", metadata: ["error": "\(error)"])
             
             // Tentative avec configuration par défaut
             do {
@@ -44,7 +47,7 @@ class DataService: ObservableObject {
                 let container = try ModelContainer(for: schema)
                 self.modelContainer = container
                 self.modelContext = container.mainContext
-                print("⚠️ Utilisation de la configuration par défaut SwiftData")
+                logger.warning("Using default SwiftData configuration")
                 
             } catch {
                 // Dernier recours: stockage en mémoire seulement
@@ -53,7 +56,7 @@ class DataService: ObservableObject {
                     let container = try ModelContainer(for: schema, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
                     self.modelContainer = container
                     self.modelContext = container.mainContext
-                    print("🔴 ATTENTION: Utilisation du stockage en mémoire uniquement. Les données ne seront PAS persistées!")
+                    logger.critical("WARNING: Using in-memory storage only. Data will NOT be persisted!")
                 } catch {
                     fatalError("Impossible d'initialiser SwiftData: \(error)")
                 }
@@ -70,7 +73,7 @@ class DataService: ObservableObject {
                 self.modelContext = newContainer.mainContext
             }
         } catch {
-            print("Failed to reset ModelContainer: \(error)")
+            logger.error("Failed to reset ModelContainer", metadata: ["error": "\(error)"])
         }
     }
 
@@ -116,7 +119,7 @@ class DataService: ObservableObject {
             let descriptor = FetchDescriptor<ClientModel>(sortBy: [SortDescriptor(\ClientModel.nom)])
             return try modelContext.fetch(descriptor)
         } catch {
-            print("Erreur lors de la récupération des clients: \(error)")
+            logger.error("Failed to fetch clients", metadata: ["error": "\(error)"])
             return []
         }
     }
@@ -126,7 +129,7 @@ class DataService: ObservableObject {
             let descriptor = FetchDescriptor<FactureModel>(sortBy: [SortDescriptor(\FactureModel.dateFacture, order: .reverse)])
             return try modelContext.fetch(descriptor)
         } catch {
-            print("Erreur lors de la récupération des factures: \(error)")
+            logger.error("Failed to fetch invoices", metadata: ["error": "\(error)"])
             return []
         }
     }
@@ -136,7 +139,7 @@ class DataService: ObservableObject {
             let descriptor = FetchDescriptor<ProduitModel>(sortBy: [SortDescriptor(\ProduitModel.designation)])
             return try modelContext.fetch(descriptor)
         } catch {
-            print("Erreur lors de la récupération des produits: \(error)")
+            logger.error("Failed to fetch products", metadata: ["error": "\(error)"])
             return []
         }
     }
@@ -146,7 +149,7 @@ class DataService: ObservableObject {
             let descriptor = FetchDescriptor<LigneFacture>()
             return try modelContext.fetch(descriptor)
         } catch {
-            print("Erreur lors de la récupération des lignes: \(error)")
+            logger.error("Failed to fetch invoice lines", metadata: ["error": "\(error)"])
             return []
         }
     }
@@ -156,7 +159,7 @@ class DataService: ObservableObject {
             let descriptor = FetchDescriptor<EntrepriseModel>()
             return try modelContext.fetch(descriptor).first
         } catch {
-            print("Erreur lors de la récupération de l'entreprise: \(error)")
+            logger.error("Failed to fetch company", metadata: ["error": "\(error)"])
             return nil
         }
     }
@@ -175,9 +178,9 @@ class DataService: ObservableObject {
     func saveContext() async {
         do {
             try modelContext.save()
-            print("💾 Données sauvegardées avec succès (\(isPersistenceActive ? "disque" : "mémoire"))")
+            logger.info("Data saved successfully", metadata: ["storage": "\(isPersistenceActive ? "disk" : "memory")"])
         } catch {
-            print("❌ Erreur lors de la sauvegarde: \(error)")
+            logger.error("Failed to save data", metadata: ["error": "\(error)"])
         }
     }
 
@@ -187,7 +190,7 @@ class DataService: ObservableObject {
             let descriptor = FetchDescriptor<EntrepriseModel>()
             return try modelContext.fetch(descriptor)
         } catch {
-            print("Erreur lors de la récupération des entreprises: \(error)")
+            logger.error("Failed to fetch companies", metadata: ["error": "\(error)"])
             return []
         }
     }
@@ -195,15 +198,15 @@ class DataService: ObservableObject {
     func updateEntrepriseDTO(_ dto: EntrepriseDTO) async {
         // Validate SIRET, TVA, and IBAN before updating
         guard Validator.isValidSIRET(dto.siret) else {
-            print("Erreur: SIRET invalide pour l'entreprise \(dto.nom)")
+            logger.warning("Invalid SIRET for company", metadata: ["company": "\(dto.nom)"])
             return
         }
         guard Validator.isValidTVA(dto.numeroTVA) else {
-            print("Erreur: Numéro TVA invalide pour l'entreprise \(dto.nom)")
+            logger.warning("Invalid VAT number for company", metadata: ["company": "\(dto.nom)"])
             return
         }
         guard Validator.isValidIBAN(dto.iban) else {
-            print("Erreur: IBAN invalide pour l'entreprise \(dto.nom)")
+            logger.warning("Invalid IBAN for company", metadata: ["company": "\(dto.nom)"])
             return
         }
 
@@ -215,7 +218,7 @@ class DataService: ObservableObject {
                 await fetchData()
             }
         } catch {
-            print("Erreur lors de la mise à jour de l'entreprise: \(error)")
+            logger.error("Failed to update company", metadata: ["error": "\(error)"])
         }
     }
 
@@ -227,7 +230,7 @@ class DataService: ObservableObject {
             let clients = try modelContext.fetch(descriptor)
             return clients.map { $0.toDTO() }
         } catch {
-            print("Erreur lors de la récupération des clients: \(error)")
+            logger.error("Failed to fetch clients", metadata: ["error": "\(error)"])
             return []
         }
     }
@@ -268,11 +271,11 @@ class DataService: ObservableObject {
     func addClientDTO(_ dto: ClientDTO) async {
         // Validate SIRET and TVA before adding
         guard Validator.isValidSIRET(dto.siret) else {
-            print("Erreur: SIRET invalide pour le client \(dto.nom)")
+            logger.warning("Invalid SIRET for client", metadata: ["client": "\(dto.nom)"])
             return
         }
         guard Validator.isValidTVA(dto.numeroTVA) else {
-            print("Erreur: Numéro TVA invalide pour le client \(dto.nom)")
+            logger.warning("Invalid VAT number for client", metadata: ["client": "\(dto.nom)"])
             return
         }
 
@@ -285,11 +288,11 @@ class DataService: ObservableObject {
     func updateClientDTO(_ dto: ClientDTO) async {
         // Validate SIRET and TVA before updating
         guard Validator.isValidSIRET(dto.siret) else {
-            print("Erreur: SIRET invalide pour le client \(dto.nom)")
+            logger.warning("Invalid SIRET for client", metadata: ["client": "\(dto.nom)"])
             return
         }
         guard Validator.isValidTVA(dto.numeroTVA) else {
-            print("Erreur: Numéro TVA invalide pour le client \(dto.nom)")
+            logger.warning("Invalid VAT number for client", metadata: ["client": "\(dto.nom)"])
             return
         }
 
@@ -301,7 +304,7 @@ class DataService: ObservableObject {
                 await fetchData()
             }
         } catch {
-            print("Erreur lors de la mise à jour du client: \(error)")
+            logger.error("Failed to update client", metadata: ["error": "\(error)"])
         }
     }
 
@@ -311,7 +314,7 @@ class DataService: ObservableObject {
             let clientDescriptor = FetchDescriptor<ClientModel>(predicate: #Predicate { $0.id == id })
             guard let client = try modelContext.fetch(clientDescriptor).first,
                   client.isValidModel else {
-                print("⚠️ Client non trouvé ou invalidé: \(id)")
+                logger.warning("Client not found or invalidated", metadata: ["id": "\(id)"])
                 return
             }
             
@@ -335,7 +338,7 @@ class DataService: ObservableObject {
             await saveContext()
             await fetchData()
         } catch {
-            print("Erreur lors de la suppression du client: \(error)")
+            logger.error("Failed to delete client", metadata: ["error": "\(error)"])
         }
     }
 
@@ -345,7 +348,7 @@ class DataService: ObservableObject {
             let descriptor = FetchDescriptor<FactureModel>(sortBy: [SortDescriptor(\FactureModel.dateFacture, order: .reverse)])
             return try modelContext.fetch(descriptor)
         } catch {
-            print("Erreur lors de la récupération des factures: \(error)")
+            logger.error("Failed to fetch invoices", metadata: ["error": "\(error)"])
             return []
         }
     }
@@ -500,11 +503,11 @@ class DataService: ObservableObject {
         do {
             // Validation des données
             guard !dto.designation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                print("Erreur: Désignation vide")
+                logger.warning("Empty product designation")
                 return
             }
             guard dto.prixUnitaire > 0 else {
-                print("Erreur: Prix unitaire invalide")
+                logger.warning("Invalid unit price")
                 return
             }
             
@@ -513,7 +516,7 @@ class DataService: ObservableObject {
             try modelContext.save()
             await fetchData()
         } catch {
-            print("Erreur lors de l'ajout du produit: \(error)")
+            logger.error("Failed to add product", metadata: ["error": "\(error)"])
         }
     }
 
@@ -526,7 +529,7 @@ class DataService: ObservableObject {
                 await fetchData()
             }
         } catch {
-            print("Erreur lors de la mise à jour du produit: \(error)")
+            logger.error("Failed to update product", metadata: ["error": "\(error)"])
         }
     }
 
@@ -535,7 +538,7 @@ class DataService: ObservableObject {
             let descriptor = FetchDescriptor<ProduitModel>(predicate: #Predicate { $0.id == id })
             guard let produit = try modelContext.fetch(descriptor).first,
                   produit.isValidModel else {
-                print("⚠️ Produit non trouvé ou invalidé: \(id)")
+                logger.warning("Product not found or invalidated", metadata: ["id": "\(id)"])
                 return
             }
             
@@ -554,7 +557,7 @@ class DataService: ObservableObject {
             await saveContext()
             await fetchData()
         } catch {
-            print("Erreur lors de la suppression du produit: \(error)")
+            logger.error("Failed to delete product", metadata: ["error": "\(error)"])
         }
     }
 
@@ -1150,7 +1153,7 @@ extension DataService {
             let models = try modelContext.fetch(descriptor)
             return models.map { $0.toDTO() }
         } catch {
-            print("Erreur lors de la récupération des clients: \(error)")
+            logger.error("Failed to fetch clients", metadata: ["error": "\(error)"])
             return []
         }
     }
@@ -1161,7 +1164,7 @@ extension DataService {
             let models = try modelContext.fetch(descriptor)
             return models.map { $0.toDTO() }
         } catch {
-            print("Erreur lors de la récupération des factures: \(error)")
+            logger.error("Failed to fetch invoices", metadata: ["error": "\(error)"])
             return []
         }
     }
@@ -1172,7 +1175,7 @@ extension DataService {
             let models = try modelContext.fetch(descriptor)
             return models.map { $0.toDTO() }
         } catch {
-            print("Erreur lors de la récupération des produits: \(error)")
+            logger.error("Failed to fetch products", metadata: ["error": "\(error)"])
             return []
         }
     }
@@ -1183,7 +1186,7 @@ extension DataService {
             let models = try modelContext.fetch(descriptor)
             return models.map { $0.toDTO() }
         } catch {
-            print("Erreur lors de la récupération des lignes: \(error)")
+            logger.error("Failed to fetch invoice lines", metadata: ["error": "\(error)"])
             return []
         }
     }
@@ -1198,7 +1201,7 @@ extension DataService {
                 return nil
             }
         } catch {
-            print("Erreur lors de la récupération de l'entreprise: \(error)")
+            logger.error("Failed to fetch company", metadata: ["error": "\(error)"])
             return nil
         }
     }

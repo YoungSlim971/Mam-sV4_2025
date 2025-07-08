@@ -2,9 +2,12 @@ import Foundation
 import DataLayer
 import Combine
 import SwiftUI
+import Logging
 
 @MainActor
 class StatistiquesService: ObservableObject {
+    
+    private let logger = Logger(label: "com.facturation.statistics")
     
     @Published var topClients: [ClientStatistique] = []
     @Published var topProduits: [ProduitStatistique] = []
@@ -280,7 +283,7 @@ class StatistiquesService: ObservableObject {
         var lignesSansProduitId = 0
         var totalLignesAnalysees = 0
         
-        print("🔍 [StatistiquesService] Début de l'analyse des produits...")
+        logger.debug("Starting product analysis")
         
         for facture in factures {
             let factureLignes = dataService.lignes.filter { facture.ligneIds.contains($0.id) }
@@ -293,13 +296,13 @@ class StatistiquesService: ObservableObject {
                     stats[produitId, default: (0, 0, 0)].ventes += 1
                 } else {
                     lignesSansProduitId += 1
-                    print("⚠️ Ligne sans produitId trouvée: \(ligne.designation)")
+                    logger.debug("Line without productId found", metadata: ["designation": "\(ligne.designation)"])
                 }
             }
         }
         
-        print("📊 [StatistiquesService] \(factures.count) factures analysées – \(lignesSansProduitId) erreur\(lignesSansProduitId > 1 ? "s" : "")")
-        print("📈 [StatistiquesService] Total lignes: \(totalLignesAnalysees), Lignes avec produitId: \(totalLignesAnalysees - lignesSansProduitId)")
+        logger.info("Product analysis completed", metadata: ["invoices_analyzed": "\(factures.count)", "errors": "\(lignesSansProduitId)"])
+        logger.debug("Line analysis summary", metadata: ["total_lines": "\(totalLignesAnalysees)", "lines_with_product_id": "\(totalLignesAnalysees - lignesSansProduitId)"])
         
         return stats.compactMap { (produitId, totals) in
             guard let produit = dataService.produits.first(where: { $0.id == produitId }) else { return nil }
