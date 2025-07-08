@@ -11,7 +11,7 @@ import Foundation
 
 /// Représente les statistiques aggrégées pour un client.
 struct StatParClient: Identifiable, Hashable {
-    var id: UUID { client.id }
+    public var id: UUID { client.id }
     let client: ClientModel
     let montantTotal: Double
     let facturesCount: Int
@@ -19,7 +19,7 @@ struct StatParClient: Identifiable, Hashable {
 
 /// Représente les statistiques aggrégées pour un produit.
 struct StatParProduit: Identifiable, Hashable {
-    var id: UUID { produit.id }
+    public var id: UUID { produit.id }
     let produit: ProduitModel
     let quantiteTotale: Double
     let montantTotal: Double
@@ -39,7 +39,7 @@ enum StatistiqueType: String, CaseIterable, Identifiable {
     case clients = "Clients"
     case produits = "Produits"
     
-    var id: String { self.rawValue }
+    public var id: String { self.rawValue }
 
     static func == (lhs: StatistiqueType, rhs: StatistiqueType) -> Bool {
         lhs.rawValue == rhs.rawValue
@@ -54,10 +54,10 @@ enum PeriodePredefinie: String, CaseIterable, Identifiable {
     case unAn = "1 an"
     case personnalise = "Personnalisé"
     
-    var id: String { self.rawValue }
+    public var id: String { self.rawValue }
     
     /// Calcule l'intervalle de date correspondant à la période.
-    var dateInterval: DateInterval? {
+    public var dateInterval: DateInterval? {
         let now = Date()
         let calendar = Calendar.current
         switch self {

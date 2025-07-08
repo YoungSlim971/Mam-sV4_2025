@@ -1,40 +1,39 @@
 import Foundation
 import SwiftData
-import DataLayer
 
 @Model
-final class EntrepriseModel {
-    @Attribute(.unique) var id: UUID = UUID()
-    var nom: String = ""
-    var nomContact: String? = nil
-    var nomDirigeant: String? = nil
-    var telephone: String = ""
-    var email: String = ""
-    var siret: String = ""
-    var numeroTVA: String = ""
-    var iban: String = ""
-    var bic: String? = nil
+public final class EntrepriseModel {
+    @Attribute(.unique) public var id: UUID = UUID()
+    public var nom: String = ""
+    public var nomContact: String? = nil
+    public var nomDirigeant: String? = nil
+    public var telephone: String = ""
+    public var email: String = ""
+    public var siret: String = ""
+    public var numeroTVA: String = ""
+    public var iban: String = ""
+    public var bic: String? = nil
     
     // Adresse de l'entreprise
-    var adresseRue: String = ""
-    var adresseCodePostal: String = ""
-    var adresseVille: String = ""
-    var adressePays: String = ""
+    public var adresseRue: String = ""
+    public var adresseCodePostal: String = ""
+    public var adresseVille: String = ""
+    public var adressePays: String = ""
     // Certification éventuelle (ex : « Certification Biologique »)
-    var certificationTexte: String = ""
+    public var certificationTexte: String = ""
     // Domaine d'activité de l'entreprise
-    var domaine: String? = nil
+    public var domaine: String? = nil
     
     // Logo de l'entreprise (optionnel)
-    var logo: Data? = nil
+    public var logo: Data? = nil
     
     // Paramètres de facturation
-    var prefixeFacture: String = ""
-    var prochainNumero: Int = 1
-    var tvaTauxDefaut: Double = 20.0
-    var delaiPaiementDefaut: Int = 30 // en jours
+    public var prefixeFacture: String = ""
+    public var prochainNumero: Int = 1
+    public var tvaTauxDefaut: Double = 20.0
+    public var delaiPaiementDefaut: Int = 30 // en jours
 
-    init() {
+    public init() {
         self.nom = "ExoTROPIC"
         self.telephone = "0690 01 02 03"
         self.email = "entreprise@example.com"
@@ -50,7 +49,7 @@ final class EntrepriseModel {
         self.prefixeFacture = "F"
     }
     
-    var adresseComplete: String {
+    public var adresseComplete: String {
         var components: [String] = []
 
         if !adresseRue.isEmpty {
@@ -76,7 +75,7 @@ final class EntrepriseModel {
         return components.joined(separator: "\n")
     }
 
-    func genererNumeroFacture(client: ClientModel) -> String {
+    public func genererNumeroFacture(client: ClientModel) -> String {
         let currentDate = Date()
         let currentMonth = Calendar.current.component(.month, from: currentDate)
         let currentYear = Calendar.current.component(.year, from: currentDate) % 100 // Derniers 2 chiffres de l'année
@@ -91,7 +90,7 @@ final class EntrepriseModel {
         return numero
     }
 
-    func resetNumerotationAnnuelle() {
+    public func resetNumerotationAnnuelle() {
         _ = Calendar.current.component(.year, from: Date())
         // Reset si nouvelle année
         prochainNumero = 1

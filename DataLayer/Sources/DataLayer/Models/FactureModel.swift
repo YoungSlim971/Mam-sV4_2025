@@ -1,11 +1,10 @@
 import Foundation
 import SwiftData
-import DataLayer
 
 @Model
-final class FactureModel {
+public final class FactureModel {
 
-    init(numero: String,
+    public init(numero: String,
          tva: Double = 20.0,
          conditionsPaiement: ConditionsPaiement = .virement,
          remisePourcentage: Double = 0.0,
@@ -26,32 +25,31 @@ final class FactureModel {
         self.client = client
         self.lignes = []
     }
-    @Attribute(.unique) var id: UUID = UUID()
-    var numero: String = ""
-    var dateFacture: Date = Date()
-    var dateEcheance: Date?
-    var datePaiement: Date? {
+    @Attribute(.unique) public var id: UUID = UUID()
+    public var numero: String = ""
+    public var dateFacture: Date = Date()
+    public var dateEcheance: Date?
+    public var datePaiement: Date? {
         didSet {
             if let paiement = datePaiement, paiement <= Date() {
                 statut = .payee
             }
         }
     }
-    var tva: Double = 0.0
-    var conditionsPaiement: ConditionsPaiement = ConditionsPaiement.virement
-    var remisePourcentage: Double = 0.0
-    var statut: StatutFacture = StatutFacture.brouillon
-    var notes: String = ""
-    var notesCommentaireFacture: String?
+    public var tva: Double = 0.0
+    public var conditionsPaiement: ConditionsPaiement = ConditionsPaiement.virement
+    public var remisePourcentage: Double = 0.0
+    public var statut: StatutFacture = StatutFacture.brouillon
+    public var notes: String = ""
+    public var notesCommentaireFacture: String?
     
     // Relation avec Client
-    @Relationship var client: ClientModel?
+    @Relationship public var client: ClientModel?
 
     // Relation avec lignes avec cascade delete
-    @Relationship(deleteRule: .cascade)
-    var lignes: [LigneFacture] = []
+    @Relationship(deleteRule: .cascade) public var lignes: [LigneFacture] = []
 
-    init() {
+    public init() {
         self.id = UUID()
         self.numero = ""
         self.dateFacture = Date()
@@ -67,7 +65,7 @@ final class FactureModel {
         self.lignes = []
     }
     
-    init(client: ClientModel,
+    public init(client: ClientModel,
          numero: String,
          conditionsPaiement: ConditionsPaiement = ConditionsPaiement.virement,
          remisePourcentage: Double = 0.0) {
@@ -84,15 +82,15 @@ final class FactureModel {
         self.notes = ""
     }
 
-    var sousTotal: Double {
+    public var sousTotal: Double {
         lignes.reduce(0) { $0 + $1.total }
     }
 
-    var montantTVA: Double {
+    public var montantTVA: Double {
         sousTotal * (tva / 100)
     }
 
-    var totalTTC: Double {
+    public var totalTTC: Double {
         let brut = sousTotal + montantTVA
         let remise = brut * (remisePourcentage / 100)
         return brut - remise
@@ -100,8 +98,8 @@ final class FactureModel {
 }
 
 // MARK: - Validation
-extension FactureModel {
-    var isValidModel: Bool {
+public extension FactureModel {
+    public var isValidModel: Bool {
         guard let client = client else { return false }
         return !numero.isEmpty && totalTTC > 0 && client.isValidModel
     }

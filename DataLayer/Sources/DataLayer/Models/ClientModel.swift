@@ -1,30 +1,29 @@
 import Foundation
 import SwiftData
-import DataLayer
 
 @Model
-final class ClientModel {
-    @Attribute(.unique) var id: UUID = UUID()
-    var nom: String = ""
-    var entreprise: String = ""
-    var email: String = ""
-    var telephone: String = ""
-    var siret: String = ""
-    var numeroTVA: String = ""
-    var adresse: String = ""
+public final class ClientModel {
+    @Attribute(.unique) public var id: UUID = UUID()
+    public var nom: String = ""
+    public var entreprise: String = ""
+    public var email: String = ""
+    public var telephone: String = ""
+    public var siret: String = ""
+    public var numeroTVA: String = ""
+    public var adresse: String = ""
 
     // Adresse intégrée
-    var adresseRue: String = ""
-    var adresseCodePostal: String = ""
-    var adresseVille: String = ""
-    var adressePays: String = "France"
+    public var adresseRue: String = ""
+    public var adresseCodePostal: String = ""
+    public var adresseVille: String = ""
+    public var adressePays: String = "France"
 
     // Relation avec Factures
-    @Relationship var factures: [FactureModel] = []
+    @Relationship public var factures: [FactureModel] = []
     
-    init() {}
+    public init() {}
 
-    var nomCompletClient: String {
+    public var nomCompletClient: String {
         if entreprise.isEmpty {
             return nom
         } else {
@@ -32,7 +31,7 @@ final class ClientModel {
         }
     }
 
-    var adresseComplete: String {
+    public var adresseComplete: String {
         var components: [String] = []
 
         if !adresseRue.isEmpty {
@@ -58,18 +57,18 @@ final class ClientModel {
         return components.joined(separator: "\n")
     }
 
-    var facturesCount: Int {
+    public var facturesCount: Int {
         factures.count
     }
 
-    var chiffreAffaires: Double {
+    public var chiffreAffaires: Double {
         factures.filter { $0.statut == .payee }.reduce(0.0) { $0 + $1.sousTotal + $1.montantTVA }
     }
 }
 
 // MARK: - Validation
-extension ClientModel {
-    var isValidModel: Bool {
+public extension ClientModel {
+    public var isValidModel: Bool {
         return !nom.isEmpty && !email.isEmpty
     }
 }
