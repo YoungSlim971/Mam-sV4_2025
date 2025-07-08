@@ -6,6 +6,7 @@ struct DashboardView: View {
     @State private var facturesRecentes: [FactureDTO] = []
     @State private var selectedInvoiceStatusFilter: StatutFacture? = nil
     @State private var showingSettings = false
+    @State private var selectedPeriode: StatistiquesService.PeriodePredefinie = .trentejours
 
     init() {
         _statsService = StateObject(wrappedValue: StatistiquesService())
@@ -13,9 +14,18 @@ struct DashboardView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 30) {
+            VStack(spacing: 9) {
                 // En-tête
                 DashboardHeaderSection()
+
+                // Sélecteur de période
+                Picker("Période", selection: $selectedPeriode) {
+                    ForEach(statsService.periodes) { periode in
+                        Text(periode.rawValue).tag(periode)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
 
                 // Widgets
                 VStack(spacing: 12) {
@@ -43,12 +53,7 @@ struct DashboardView: View {
                 .padding(.bottom, 12)
 
                 // Cartes statistiques
-                StatisticsSection(statistiques: (
-                    totalCA: statsService.caMensuel.values.reduce(0, +),
-                    facturesEnAttente: statsService.repartitionStatuts[.envoyee, default: []].count,
-                    facturesEnRetard: statsService.repartitionStatuts[.enRetard, default: []].count,
-                    totalFactures: statsService.repartitionStatuts.values.reduce(0) { $0 + $1.count }
-                ))
+                StatisticsSection(statsService: statsService)
                     .animation(.easeOut(duration: 0.5), value: statsService.caMensuel)
 
                 // Graphiques et tendances
@@ -68,12 +73,21 @@ struct DashboardView: View {
             .padding()
         }
         .task {
-            statsService.updateStatistiques(interval: DateInterval(start: .distantPast, end: .distantFuture), type: .clients)
+            if let interval = selectedPeriode.dateInterval {
+                statsService.updateStatistiques(interval: interval, type: .clients)
+            }
             facturesRecentes = dataService.factures.sorted { $0.dateFacture > $1.dateFacture }
         }
         .refreshable {
-            statsService.updateStatistiques(interval: DateInterval(start: .distantPast, end: .distantFuture), type: .clients)
+            if let interval = selectedPeriode.dateInterval {
+                statsService.updateStatistiques(interval: interval, type: .clients)
+            }
             facturesRecentes = dataService.factures.sorted { $0.dateFacture > $1.dateFacture }
+        }
+        .onChange(of: selectedPeriode) {
+            if let interval = selectedPeriode.dateInterval {
+                statsService.updateStatistiques(interval: interval, type: .clients)
+            }
         }
     }
 }

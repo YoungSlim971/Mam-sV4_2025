@@ -21,6 +21,8 @@ final class EntrepriseModel {
     var adressePays: String = ""
     // Certification éventuelle (ex : « Certification Biologique »)
     var certificationTexte: String = ""
+    // Domaine d'activité de l'entreprise
+    var domaine: String? = nil
     
     // Logo de l'entreprise (optionnel)
     var logo: Data? = nil
@@ -73,9 +75,17 @@ final class EntrepriseModel {
         return components.joined(separator: "\n")
     }
 
-    func genererNumeroFacture() -> String {
-        let currentYear = Calendar.current.component(.year, from: Date())
-        let numero = String(format: "%@%04d-%04d", prefixeFacture, currentYear, prochainNumero)
+    func genererNumeroFacture(client: ClientModel) -> String {
+        let currentDate = Date()
+        let currentMonth = Calendar.current.component(.month, from: currentDate)
+        let currentYear = Calendar.current.component(.year, from: currentDate) % 100 // Derniers 2 chiffres de l'année
+        
+        let monthStr = String(format: "%02d", currentMonth)
+        let yearStr = String(format: "%02d", currentYear)
+        let numeroStr = String(format: "%04d", prochainNumero)
+        let clientInitials = client.initialesFacturation
+        
+        let numero = "\(monthStr)/\(yearStr)-\(numeroStr)-\(clientInitials)"
         prochainNumero += 1
         return numero
     }
@@ -110,7 +120,8 @@ extension EntrepriseModel {
             prefixeFacture: self.prefixeFacture,
             prochainNumero: self.prochainNumero,
             tvaTauxDefaut: self.tvaTauxDefaut,
-            delaiPaiementDefaut: self.delaiPaiementDefaut
+            delaiPaiementDefaut: self.delaiPaiementDefaut,
+            domaine: self.domaine
         )
     }
 
@@ -130,6 +141,7 @@ extension EntrepriseModel {
         entreprise.iban = dto.iban
         entreprise.bic = dto.bic
         entreprise.logo = dto.logo
+        entreprise.domaine = dto.domaine
         return entreprise
     }
 
@@ -147,5 +159,6 @@ extension EntrepriseModel {
         iban = dto.iban
         bic = dto.bic
         logo = dto.logo
+        domaine = dto.domaine
     }
 }

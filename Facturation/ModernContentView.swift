@@ -21,6 +21,11 @@ struct ModernContentView: View {
                 ToolbarActions(selectedTab: selectedTab)
             }
         }
+        .task {
+            // Charger les données persistées au démarrage de l'app
+            await dataService.fetchData()
+            print("🔄 Données chargées au démarrage: \(dataService.clients.count) clients, \(dataService.factures.count) factures, \(dataService.produits.count) produits")
+        }
     }
 }
 

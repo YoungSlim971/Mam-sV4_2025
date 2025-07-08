@@ -64,19 +64,41 @@ class DataService: ObservableObject {
     init() {
         do {
             let schema = Schema([ClientModel.self, EntrepriseModel.self, FactureModel.self, ProduitModel.self, LigneFacture.self])
-            let container = try ModelContainer(for: schema)
+            
+            // Configuration explicite pour la persistance sur disque
+            let configuration = ModelConfiguration(
+                schema: schema,
+                isStoredInMemoryOnly: false // Forcer la persistance sur disque
+            )
+            
+            let container = try ModelContainer(for: schema, configurations: configuration)
             self.modelContainer = container
             self.modelContext = container.mainContext
+            
+            print("✅ Persistance SwiftData initialisée avec succès sur disque")
+            
         } catch {
-            // Fallback vers conteneur in-memory en cas d'erreur
+            print("❌ Erreur lors de l'initialisation de la persistance principale: \(error)")
+            
+            // Tentative avec configuration par défaut
             do {
                 let schema = Schema([ClientModel.self, EntrepriseModel.self, FactureModel.self, ProduitModel.self, LigneFacture.self])
-                let container = try ModelContainer(for: schema, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+                let container = try ModelContainer(for: schema)
                 self.modelContainer = container
                 self.modelContext = container.mainContext
-                print("⚠️ Using in-memory storage due to error: \(error)")
+                print("⚠️ Utilisation de la configuration par défaut SwiftData")
+                
             } catch {
-                fatalError("Failed to initialize fallback ModelContainer: \(error)")
+                // Dernier recours: stockage en mémoire seulement
+                do {
+                    let schema = Schema([ClientModel.self, EntrepriseModel.self, FactureModel.self, ProduitModel.self, LigneFacture.self])
+                    let container = try ModelContainer(for: schema, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+                    self.modelContainer = container
+                    self.modelContext = container.mainContext
+                    print("🔴 ATTENTION: Utilisation du stockage en mémoire uniquement. Les données ne seront PAS persistées!")
+                } catch {
+                    fatalError("Impossible d'initialiser SwiftData: \(error)")
+                }
             }
         }
     }
@@ -96,6 +118,23 @@ class DataService: ObservableObject {
 
     var container: ModelContainer {
         return modelContainer
+    }
+    
+    /// Vérifie si la persistance sur disque est active ou si on utilise le stockage en mémoire
+    var isPersistenceActive: Bool {
+        // Vérifier si le container utilise un stockage persistant
+        return !modelContainer.configurations.contains { config in
+            config.isStoredInMemoryOnly
+        }
+    }
+    
+    /// Retourne le statut de persistance pour information
+    func getPersistenceStatus() -> String {
+        if isPersistenceActive {
+            return "✅ Persistance sur disque active - Données sauvegardées"
+        } else {
+            return "🔴 Stockage en mémoire seulement - Données perdues à la fermeture"
+        }
     }
 
 
@@ -178,8 +217,9 @@ class DataService: ObservableObject {
     func saveContext() async {
         do {
             try modelContext.save()
+            print("💾 Données sauvegardées avec succès (\(isPersistenceActive ? "disque" : "mémoire"))")
         } catch {
-            print("Erreur lors de la sauvegarde: \(error)")
+            print("❌ Erreur lors de la sauvegarde: \(error)")
         }
     }
 
@@ -570,18 +610,18 @@ class DataService: ObservableObject {
         return entreprise
     }
     
-    func genererNumeroFacture() async -> String {
-        guard let entreprise = await getEntreprise() else {
-            return "F\(Calendar.current.component(.year, from: Date()))-0001"
+    func genererNumeroFacture(client: ClientModel) async -> String {
+        guard let entrepriseModel = await fetchEntreprise() else {
+            let currentDate = Date()
+            let currentMonth = Calendar.current.component(.month, from: currentDate)
+            let currentYear = Calendar.current.component(.year, from: currentDate) % 100
+            let monthStr = String(format: "%02d", currentMonth)
+            let yearStr = String(format: "%02d", currentYear)
+            let clientInitials = client.initialesFacturation
+            return "\(monthStr)/\(yearStr)-0001-\(clientInitials)"
         }
 
-        let currentYear = Calendar.current.component(.year, from: Date())
-        let facturesAnneeEnCours = factures.filter { facture in
-            Calendar.current.component(.year, from: facture.dateFacture) == currentYear
-        }
-
-        let numeroSuivant = facturesAnneeEnCours.count + 1
-        return "\(entreprise.prefixeFacture)\(currentYear)-\(String(format: "%04d", numeroSuivant))"
+        return entrepriseModel.genererNumeroFacture(client: client)
     }
 
     // MARK: - Utilitaires
@@ -690,19 +730,49 @@ extension DataService {
 // MARK: - Données d'entraînement
 extension DataService {
 
-    /// Génère un jeu de données fictives pour les tests ou démonstrations.
-    /// - Creates 10 products, 30 clients and 100 factures linked to them.
+    /// Génère un jeu de données réalistes pour les tests ou démonstrations.
+    /// - Creates realistic company data, supermarket clients, fruits/vegetables products and invoices
     func generateTrainingData() async {
+        // Nettoie d'abord toutes les données existantes
+        await clearAllData()
+        
         var createdProduits: [ProduitModel] = []
         var createdClients: [ClientModel] = []
 
-        // Produits
+        // 1. Génération d'une entreprise fictive réaliste
+        await generateRealisticCompany()
+
+        // 2. Produits fruits et légumes
         do {
-            for i in 1...10 {
+            let fruitsLegumes = [
+                ("Tomates grappe", "Tomates fraîches de saison", 2.50),
+                ("Courgettes", "Courgettes vertes bio", 1.80),
+                ("Pommes Golden", "Pommes Golden délicieuses", 1.95),
+                ("Bananes", "Bananes des Antilles", 2.20),
+                ("Poivrons rouges", "Poivrons rouges croquants", 3.50),
+                ("Carottes", "Carottes nouvelles", 1.40),
+                ("Oranges", "Oranges de Valencia", 2.10),
+                ("Salade verte", "Salade batavia fraîche", 1.25),
+                ("Pommes de terre", "Pommes de terre Charlotte", 1.60),
+                ("Citrons", "Citrons de Sicile", 2.80),
+                ("Aubergines", "Aubergines violettes", 2.90),
+                ("Brocolis", "Brocolis frais", 2.40),
+                ("Poires", "Poires Conference", 2.65),
+                ("Radis", "Radis roses en botte", 1.15),
+                ("Épinards", "Épinards frais en barquette", 1.85),
+                ("Concombres", "Concombres longs", 1.70),
+                ("Fraises", "Fraises de Plougastel", 4.50),
+                ("Kiwis", "Kiwis de l'Adour", 3.20),
+                ("Mangues", "Mangues du Sénégal", 3.80),
+                ("Avocats", "Avocats Hass", 4.20)
+            ]
+            
+            for (designation, details, prix) in fruitsLegumes {
+                let prixVariation = Double.random(in: 0.8...1.2)
                 let produit = ProduitModel(
-                    designation: "Produit \(i)",
-                    details: "Produit fictif \(i)",
-                    prixUnitaire: Double.random(in: 5...100)
+                    designation: designation,
+                    details: details,
+                    prixUnitaire: prix * prixVariation
                 )
                 modelContext.insert(produit)
                 if produit.isValidModel {
@@ -712,68 +782,247 @@ extension DataService {
                 }
             }
             try modelContext.save()
+            print("✅ \(createdProduits.count) produits fruits/légumes créés")
         } catch {
             print("⚠️ Erreur création produits : \(error)")
         }
 
-        // Clients
+        // 3. Clients grandes enseignes
         do {
-            for i in 1...30 {
+            let grandesEnseignes = [
+                ("Cora Nancy", "contact.nancy@cora.fr", "54000", "Nancy"),
+                ("Super U Laxou", "direction@superu-laxou.fr", "54520", "Laxou"),
+                ("Carrefour Basse-Terre", "magasin.basseterre@carrefour.fr", "97100", "Basse-Terre"),
+                ("Intermarché Lille", "contact@intermarche-lille.fr", "59000", "Lille"),
+                ("Leclerc Metz", "direction@leclerc-metz.fr", "57000", "Metz"),
+                ("Auchan Strasbourg", "contact.strasbourg@auchan.fr", "67000", "Strasbourg"),
+                ("Casino Lyon", "direction@casino-lyon.fr", "69000", "Lyon"),
+                ("Monoprix Marseille", "contact@monoprix-marseille.fr", "13000", "Marseille"),
+                ("Franprix Toulouse", "direction@franprix-toulouse.fr", "31000", "Toulouse"),
+                ("Leader Price Nantes", "contact@leaderprice-nantes.fr", "44000", "Nantes"),
+                ("Géant Casino Bordeaux", "direction@geant-bordeaux.fr", "33000", "Bordeaux"),
+                ("Hyper U Rennes", "contact@hyperu-rennes.fr", "35000", "Rennes"),
+                ("Carrefour Market Dijon", "direction@carrefour-dijon.fr", "21000", "Dijon"),
+                ("Super U Angers", "contact@superu-angers.fr", "49000", "Angers"),
+                ("Leclerc Poitiers", "direction@leclerc-poitiers.fr", "86000", "Poitiers")
+            ]
+            
+            for (entreprise, email, codePostal, ville) in grandesEnseignes {
                 let client = ClientModel()
-                client.nom = "Client \(i)"
-                client.entreprise = "Entreprise \(i)"
-                client.email = "client\(i)@example.com"
+                client.nom = "Responsable Achats"
+                client.entreprise = entreprise
+                client.email = email
+                client.telephone = generateRandomPhone()
+                client.adresseRue = generateRandomAddress()
+                client.adresseCodePostal = codePostal
+                client.adresseVille = ville
+                client.adressePays = "France"
+                
                 modelContext.insert(client)
                 if client.isValidModel {
                     createdClients.append(client)
                 } else {
-                    print("⚠️ Client non valide ignoré: \(client.nom)")
+                    print("⚠️ Client non valide ignoré: \(client.entreprise)")
                 }
             }
             try modelContext.save()
+            print("✅ \(createdClients.count) clients grandes enseignes créés")
         } catch {
             print("⚠️ Erreur création clients : \(error)")
         }
 
-        // Factures
+        // 4. Factures avec 2-5 factures par client
         do {
-            for _ in 1...100 {
-                guard let client = createdClients.randomElement(),
-                      let produit = createdProduits.randomElement() else { continue }
+            let calendar = Calendar.current
+            let today = Date()
+            let sixMonthsAgo = calendar.date(byAdding: .month, value: -6, to: today) ?? today
+            
+            var totalFactures = 0
+            var totalLignes = 0
+            
+            for client in createdClients {
+                let nombreFactures = Int.random(in: 2...5)
+                
+                for _ in 0..<nombreFactures {
+                    let numero = await genererNumeroFacture(client: client)
+                    let facture = FactureModel(client: client, numero: numero)
+                    
+                    // Date aléatoire dans les 6 derniers mois
+                    let randomTimeInterval = TimeInterval.random(in: sixMonthsAgo.timeIntervalSince1970...today.timeIntervalSince1970)
+                    facture.dateFacture = Date(timeIntervalSince1970: randomTimeInterval)
+                    
+                    // Date d'échéance (30 jours après la facture)
+                    facture.dateEcheance = calendar.date(byAdding: .day, value: 30, to: facture.dateFacture)
+                    
+                    // Statut aléatoire pondéré (plus de factures payées)
+                    let statuts = [
+                        StatutFacture.payee,
+                        StatutFacture.payee,
+                        StatutFacture.payee,
+                        StatutFacture.envoyee,
+                        StatutFacture.envoyee,
+                        StatutFacture.brouillon,
+                        StatutFacture.enRetard
+                    ]
+                    facture.statut = statuts.randomElement() ?? StatutFacture.envoyee
+                    
+                    // TVA française réaliste (0%, 5.5%, 10%, 20% selon la réglementation)
+                    let tvaOptions = [
+                        20.0, 20.0, 20.0, 20.0, // 20% - Taux normal (majorité)
+                        10.0, 10.0,              // 10% - Taux intermédiaire
+                        5.5,                     // 5.5% - Taux réduit
+                        0.0                      // 0% - Entreprises exonérées
+                    ]
+                    facture.tva = tvaOptions.randomElement() ?? 20.0
+                    
+                    // Insérer la facture en premier
+                    modelContext.insert(facture)
 
-                let numero = await genererNumeroFacture()
-                let facture = FactureModel(client: client, numero: numero)
-                modelContext.insert(facture)
-
-                guard facture.isValidModel else {
-                    print("❌ FactureModel invalidée juste après création")
-                    continue
-                }
-
-                let lignes = Int.random(in: 1...3)
-                for _ in 0..<lignes {
-                    let p = createdProduits.randomElement() ?? produit
-                    let ligne = LigneFacture(
-                        designation: p.designation,
-                        quantite: Double.random(in: 1...5),
-                        prixUnitaire: p.prixUnitaire
-                    )
-                    modelContext.insert(ligne)
-                    if ligne.isValidModel {
-                        ligne.facture = facture
-                        guard facture.isValidModel else { continue }
-                        facture.lignes.append(ligne)
-                    } else {
-                        print("⚠️ LigneFacture non valide ignorée: \(ligne.designation)")
+                    // 3-10 lignes par facture
+                    let nombreLignes = Int.random(in: 3...10)
+                    var lignesCreees: [LigneFacture] = []
+                    
+                    for _ in 0..<nombreLignes {
+                        guard let produit = createdProduits.randomElement() else { continue }
+                        
+                        let quantite = Double.random(in: 5...50) // Quantités importantes pour grandes enseignes
+                        let prixAvecVariation = produit.prixUnitaire * Double.random(in: 0.95...1.05) // Petite variation de prix
+                        
+                        let ligne = LigneFacture(
+                            designation: produit.designation,
+                            quantite: quantite,
+                            prixUnitaire: prixAvecVariation
+                        )
+                        
+                        modelContext.insert(ligne)
+                        
+                        if ligne.isValidModel {
+                            // Établir la relation bidirectionnelle
+                            ligne.facture = facture
+                            ligne.produit = produit  // Ajouter la relation produit
+                            facture.lignes.append(ligne)
+                            lignesCreees.append(ligne)
+                            totalLignes += 1
+                            
+                            // Vérifier que produitId est bien défini
+                            assert(ligne.produit?.id != nil, "ProduitID manquant")
+                        } else {
+                            print("⚠️ LigneFacture non valide ignorée: \(ligne.designation)")
+                        }
                     }
+                    
+                    // Valider la facture APRÈS avoir ajouté les lignes
+                    if !lignesCreees.isEmpty && facture.isValidModel {
+                        totalFactures += 1
+                        let sousTotal = lignesCreees.reduce(0) { $0 + ($1.quantite * $1.prixUnitaire) }
+                        print("  ✓ Facture \(numero): \(lignesCreees.count) lignes, sous-total: \(String(format: "%.2f", sousTotal))€, total TTC: \(String(format: "%.2f", facture.totalTTC))€")
+                    } else if lignesCreees.isEmpty {
+                        print("⚠️ Facture \(numero) créée sans lignes")
+                    } else {
+                        print("⚠️ Facture \(numero) invalide après ajout des lignes")
+                    }
+                    
+                    // Sauvegarder après chaque facture pour assurer la persistance des relations
+                    try modelContext.save()
                 }
             }
-            try modelContext.save()
+            
+            print("✅ \(totalFactures) factures créées avec \(totalLignes) lignes produits au total")
         } catch {
             print("⚠️ Erreur création factures : \(error)")
         }
 
         await fetchData()
+        print("🎉 Génération de données réalistes terminée!")
+    }
+    
+    /// Génère une entreprise fictive réaliste
+    private func generateRealisticCompany() async {
+        let entreprises = [
+            ("SARL Bio Vert", "Distribution", "Fruits et légumes biologiques"),
+            ("SAS Les Primeurs", "Agroalimentaire", "Primeurs et maraîchage"),
+            ("EURL Jardin Frais", "Distribution", "Produits frais de saison"),
+            ("SA Terroir & Saveurs", "Grande surface", "Grossiste en fruits et légumes")
+        ]
+        
+        guard let (nom, domaine, certification) = entreprises.randomElement() else { return }
+        
+        do {
+            let descriptor = FetchDescriptor<EntrepriseModel>()
+            let entreprises = try modelContext.fetch(descriptor)
+            
+            if let entreprise = entreprises.first {
+                // Met à jour l'entreprise existante
+                entreprise.nom = nom
+                entreprise.domaine = domaine
+                entreprise.telephone = "0590 12 34 56"
+                entreprise.email = "contact@\(nom.lowercased().replacingOccurrences(of: " ", with: "")).fr"
+                entreprise.siret = generateRandomSIRET()
+                entreprise.numeroTVA = generateRandomTVA()
+                entreprise.adresseRue = "Zone Industrielle Les Jardins"
+                entreprise.adresseCodePostal = "97110"
+                entreprise.adresseVille = "Pointe-à-Pitre"
+                entreprise.adressePays = "Guadeloupe"
+                entreprise.certificationTexte = certification
+                entreprise.iban = "FR76 1234 5678 9012 3456 7890 123"
+                entreprise.bic = "AGRIFRPP"
+            } else {
+                // Crée une nouvelle entreprise
+                let entreprise = EntrepriseModel()
+                entreprise.nom = nom
+                entreprise.domaine = domaine
+                entreprise.telephone = "0590 12 34 56"
+                entreprise.email = "contact@\(nom.lowercased().replacingOccurrences(of: " ", with: "")).fr"
+                entreprise.siret = generateRandomSIRET()
+                entreprise.numeroTVA = generateRandomTVA()
+                entreprise.adresseRue = "Zone Industrielle Les Jardins"
+                entreprise.adresseCodePostal = "97110"
+                entreprise.adresseVille = "Pointe-à-Pitre"
+                entreprise.adressePays = "Guadeloupe"
+                entreprise.certificationTexte = certification
+                entreprise.iban = "FR76 1234 5678 9012 3456 7890 123"
+                entreprise.bic = "AGRIFRPP"
+                modelContext.insert(entreprise)
+            }
+            
+            try modelContext.save()
+            print("✅ Entreprise fictive créée: \(nom)")
+        } catch {
+            print("⚠️ Erreur création entreprise : \(error)")
+        }
+    }
+    
+    /// Génère un numéro de téléphone aléatoire
+    private func generateRandomPhone() -> String {
+        let prefixes = ["01", "02", "03", "04", "05", "06", "07", "09"]
+        let prefix = prefixes.randomElement() ?? "01"
+        let numbers = (0..<8).map { _ in String(Int.random(in: 0...9)) }.joined()
+        return "\(prefix) \(numbers.prefix(2)) \(numbers.dropFirst(2).prefix(2)) \(numbers.dropFirst(4).prefix(2)) \(numbers.suffix(2))"
+    }
+    
+    /// Génère une adresse aléatoire
+    private func generateRandomAddress() -> String {
+        let rues = [
+            "Avenue du Commerce", "Rue des Halles", "Boulevard de la Liberté",
+            "Place du Marché", "Rue de la République", "Avenue Jean Jaurès",
+            "Rue Victor Hugo", "Boulevard des Alliés", "Place de la Gare",
+            "Rue du Général de Gaulle", "Avenue de la Paix", "Rue Gambetta"
+        ]
+        let numero = Int.random(in: 1...200)
+        let rue = rues.randomElement() ?? "Rue du Commerce"
+        return "\(numero) \(rue)"
+    }
+    
+    /// Génère un SIRET fictif mais au bon format
+    private func generateRandomSIRET() -> String {
+        let numbers = (0..<14).map { _ in String(Int.random(in: 0...9)) }.joined()
+        return "\(numbers.prefix(3)) \(numbers.dropFirst(3).prefix(3)) \(numbers.dropFirst(6).prefix(3)) \(numbers.suffix(5))"
+    }
+    
+    /// Génère un numéro de TVA fictif mais au bon format
+    private func generateRandomTVA() -> String {
+        let numbers = (0..<11).map { _ in String(Int.random(in: 0...9)) }.joined()
+        return "FR\(numbers)"
     }
 }
 

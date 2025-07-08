@@ -83,7 +83,12 @@ struct AddFactureView: View {
         Task {
             let numero: String
             if editableFacture.numerotationAutomatique {
-                numero = await dataService.genererNumeroFacture()
+                // Get client model for numbering
+                guard let clientModel = await dataService.fetchClientModel(id: client.id) else {
+                    print("Erreur: Client non trouvé pour la génération du numéro")
+                    return
+                }
+                numero = await dataService.genererNumeroFacture(client: clientModel)
             } else {
                 // We use the custom number, ensuring it's not empty (already validated by isFactureValid)
                 numero = editableFacture.numeroPersonnalise ?? ""
@@ -822,6 +827,20 @@ struct FactureTotalsView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .frame(width: 80)
                 }
+                // Helper text for TVA input
+                HStack {
+                    Text("Entrez le taux de TVA en pourcentage (ex : 20 pour 20%).")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                }
+                // Optionally, still show valid rates for info
+                HStack {
+                    Text("Taux valides : 0%, 2.1%, 5.5%, 10%, 20%")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                    Spacer()
+                }
 
                 Divider()
 
@@ -835,7 +854,8 @@ struct FactureTotalsView: View {
                 HStack {
                     Text("TVA (\(String(format: "%.1f", editableFacture.tva))%)")
                     Spacer()
-                    Text(editableFacture.montantTVA.euroFormatted)
+                    // Use .tva / 100 for calculation
+                    Text((editableFacture.sousTotal * (editableFacture.tva / 100)).euroFormatted)
                         .fontWeight(.medium)
                 }
 
@@ -846,7 +866,8 @@ struct FactureTotalsView: View {
                         .font(.title3)
                         .fontWeight(.bold)
                     Spacer()
-                    Text(editableFacture.totalTTC.euroFormatted)
+                    // Use .tva / 100 for calculation
+                    Text((editableFacture.sousTotal * (1 + (editableFacture.tva / 100))).euroFormatted)
                         .font(.title3)
                         .fontWeight(.bold)
                         .foregroundColor(.green)
@@ -1065,14 +1086,14 @@ struct FacturePreviewContent: View {
                 HStack {
                     Text("TVA (\(String(format: "%.1f", editableFacture.tva))%):")
                     Spacer()
-                    Text(editableFacture.montantTVA.euroFormatted)
+                    Text((editableFacture.sousTotal * (editableFacture.tva / 100)).euroFormatted)
                 }
 
                 if editableFacture.remisePourcentage > 0 {
                     HStack {
                         Text("Remise (\(editableFacture.remisePourcentage.formatted(.number.precision(.fractionLength(0...2))))%):")
                         Spacer()
-                        Text("-\( (editableFacture.sousTotal + editableFacture.montantTVA) * (editableFacture.remisePourcentage / 100)).euroFormatted)")
+                        Text("-\(((editableFacture.sousTotal + (editableFacture.sousTotal * (editableFacture.tva / 100))) * (editableFacture.remisePourcentage / 100)).euroFormatted)")
                     }
                 }
 
@@ -1080,7 +1101,7 @@ struct FacturePreviewContent: View {
                     Text("Total TTC:")
                         .fontWeight(.bold)
                     Spacer()
-                    Text(editableFacture.totalTTC.euroFormatted)
+                    Text((editableFacture.sousTotal * (1 + (editableFacture.tva / 100))).euroFormatted)
                         .fontWeight(.bold)
                         .foregroundColor(.green)
                 }

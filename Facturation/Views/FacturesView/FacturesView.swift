@@ -113,13 +113,28 @@ struct FacturesView: View {
         Task {
             isGeneratingPDF = true
             defer { isGeneratingPDF = false }
+            
+            // Debug: Vérifier quelle facture est sélectionnée
+            print("🔍 Exportation PDF pour facture: \(facture.numero) (ID: \(facture.id))")
+            
+            // Récupérer les données fraîches pour s'assurer qu'elles sont à jour
+            await dataService.fetchData()
+            
             guard let entreprise = dataService.entreprise,
-                  let client = dataService.clients.first(where: { $0.id == facture.clientId }) else { return }
+                  let client = dataService.clients.first(where: { $0.id == facture.clientId }) else { 
+                print("❌ Données manquantes: entreprise=\(dataService.entreprise != nil), client trouvé=\(dataService.clients.contains { $0.id == facture.clientId })")
+                return 
+            }
             
             let lignes = dataService.lignes.filter { $0.factureId == facture.id }
+            print("📄 Export facture \(facture.numero) avec \(lignes.count) lignes pour client \(client.nom)")
+            
             if let pdfData = await pdfService.generatePDF(for: facture, lignes: lignes, client: client, entreprise: entreprise) {
                 pdfDocument = GeneratedPDFDocument(data: pdfData)
                 showingSavePanel = true
+                print("✅ PDF généré avec succès pour facture \(facture.numero)")
+            } else {
+                print("❌ Échec de génération PDF pour facture \(facture.numero)")
             }
         }
     }
@@ -155,31 +170,12 @@ struct FacturesView: View {
     }
 }
 
-private struct FactureRow: View {
-    let facture: FactureDTO
-    @EnvironmentObject private var dataService: DataService
-
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(facture.numero)
-                    .font(.headline)
-                Text(facture.dateFacture, style: .date)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-            Spacer()
-            Text(facture.statut)
-        }
-    }
-}
-
-// MARK: - FacturesList (Utilise maintenant un Binding sur l'ID)
 private struct FacturesList: View {
     let factures: [FactureDTO]
     @Binding var selectedFactureID: UUID?
     let exportPDF: (FactureDTO) -> Void
     let isGeneratingPDF: Bool
+    @EnvironmentObject private var dataService: DataService
 
     var body: some View {
         ScrollView {
@@ -194,19 +190,103 @@ private struct FacturesList: View {
                 }
                 .padding()
             } else {
-                LazyVStack(spacing: 8) {
+                LazyVStack(spacing: 10) {
                     ForEach(factures) { facture in
-                        FactureRow(facture: facture)
-                            .onTapGesture {
-                                selectedFactureID = facture.id // On assigne l'ID
-                            }
-                            .contextMenu {
-                                FactureContextMenu(facture: facture, exportPDF: exportPDF, isGeneratingPDF: isGeneratingPDF)
-                            }
+                        FactureRow(
+                            facture: facture,
+                            client: dataService.clients.first(where: { $0.id == facture.clientId }),
+                            total: facture.calculateTotalTTC(with: dataService.lignes),
+                            onTap: { selectedFactureID = facture.id },
+                            onExport: { exportPDF(facture) },
+                            isGeneratingPDF: isGeneratingPDF
+                        )
+                        .padding(.horizontal, 6)
                     }
                 }
-                .padding(.horizontal)
+                .padding(.vertical)
             }
+        }
+    }
+}
+
+private struct FactureRow: View {
+    let facture: FactureDTO
+    let client: ClientDTO?
+    let total: Double
+    let onTap: () -> Void
+    let onExport: () -> Void
+    let isGeneratingPDF: Bool
+
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: 14) {
+                // Bloc numéro/date
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(facture.numero)
+                        .font(.headline)
+                    Text(facture.dateFacture.frenchFormatted)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .frame(minWidth: 100, idealWidth: 120, maxWidth: 150, alignment: .leading)
+
+                // Bloc client
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(client?.nomCompletClient ?? "Client inconnu")
+                        .font(.subheadline)
+                        .lineLimit(1)
+                    if let ent = client?.entreprise, !ent.isEmpty {
+                        Text(ent)
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                    }
+                }
+                .frame(minWidth: 120, maxWidth: .infinity, alignment: .leading)
+
+                Spacer()
+
+                // Bloc montant + statut
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(total.euroFormatted)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.green)
+                    Text(facture.statutDisplay)
+                        .font(.caption)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 3)
+                        .background(facture.statutColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                        .lineLimit(1)
+                }
+
+                // Bouton export rapide (optionnel)
+                Menu {
+                    Button("Exporter PDF", action: onExport)
+                        .disabled(isGeneratingPDF)
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .foregroundColor(.primary)
+                        .font(.title3)
+                        .padding(.leading, 5)
+                }
+                .menuStyle(.borderlessButton)
+            }
+            .padding(.vertical, 10)
+            .padding(.horizontal, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(NSColor.controlBackgroundColor))
+                    .shadow(color: Color.black.opacity(0.03), radius: 2, x: 0, y: 1)
+            )
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PlainButtonStyle())
+        .contextMenu {
+            Button("Exporter PDF", action: onExport)
+                .disabled(isGeneratingPDF)
         }
     }
 }

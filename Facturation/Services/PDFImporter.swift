@@ -18,6 +18,7 @@ struct PDFImporter {
         case ocrFailed(Error)
         case facturXParsingFailed(Error)
         case invalidData(message: String)
+        case clientNotFound
 
         var errorDescription: String? {
             switch self {
@@ -33,6 +34,8 @@ struct PDFImporter {
                 return "L'extraction des données Factur-X a échoué : \(error.localizedDescription)"
             case .invalidData(let message):
                 return message
+            case .clientNotFound:
+                return "Le client n'a pas été trouvé lors de la génération du numéro de facture."
             }
         }
     }
@@ -291,7 +294,11 @@ struct PDFImporter {
             ligneIds.append(ligneDTO.id)
         }
 
-        let numero = await dataService.genererNumeroFacture()
+        // Get the client model for numbering
+        guard let client = await dataService.fetchClientModel(id: clientId) else {
+            throw ImportError.clientNotFound
+        }
+        let numero = await dataService.genererNumeroFacture(client: client)
         let factureDTO = FactureDTO(
             id: UUID(),
             numero: numero,

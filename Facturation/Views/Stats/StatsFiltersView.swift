@@ -12,49 +12,79 @@ struct StatsFiltersView: View {
     var resetAction: () -> Void
 
     var body: some View {
-        HStack(spacing: 16) {
-            Picker("Type de Statistique", selection: $type) {
-                ForEach(StatistiqueType.allCases, id: \.self) { type in
-                    Text(type.rawValue).tag(type)
+        VStack(alignment: .leading, spacing: 16) {
+            // 1. Type de statistique (en haut, section distincte, segmented)
+            GroupBox {
+                Picker("Type de Statistique", selection: $type) {
+                    ForEach(StatistiqueType.allCases, id: \.self) {
+                        Text($0.rawValue).tag($0)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+            }
+            .padding(.horizontal)
+
+            // 2. Filtre spécifique (client ou produit)
+            GroupBox {
+                HStack {
+                    Text("Filtre spécifique:")
+                        .font(.headline)
+                    Spacer()
+                    switch type {
+                    case .clients:
+                        Picker("Client", selection: $selectedClient) {
+                            Text("Tous les clients").tag(nil as ClientDTO?)
+                            ForEach(clients, id: \.id) { client in
+                                Text(client.nomCompletClient).tag(client as ClientDTO?)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .frame(maxWidth: 250)
+                    case .produits:
+                        Picker("Produit", selection: $selectedProduit) {
+                            Text("Tous les produits").tag(ProduitDTO?.none)
+                            ForEach(produits) { produit in
+                                Text(produit.designation).tag(Optional(produit))
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .frame(maxWidth: 250)
+                    }
                 }
             }
-            .pickerStyle(.segmented)
+            .padding(.horizontal)
 
-            Group {
-                switch type {
-                case .clients:
-                    Picker("Client", selection: $selectedClient) {
-                        Text("Tous les clients").tag(nil as ClientDTO?)
-                        ForEach(clients, id: \.id) { client in
-                            Text(client.nomCompletClient).tag(client as ClientDTO?)
+            // 3. Période et bouton de reset
+            GroupBox {
+                HStack {
+                    Picker("Période", selection: $periode) {
+                        ForEach(PeriodePredefinie.allCases, id: \.self) { period in
+                            Text(period.rawValue).tag(period)
                         }
                     }
                     .pickerStyle(.menu)
-                case .produits:
-                    Picker("Produit", selection: $selectedProduit) {
-                        Text("Tous les produits").tag(ProduitDTO?.none)
-                        ForEach(produits) { produit in
-                            Text(produit.designation).tag(Optional(produit))
-                        }
+                    .frame(maxWidth: 200)
+
+                    if periode == .personnalise {
+                        DatePicker("Début", selection: $dateDebut, displayedComponents: .date)
+                            .labelsHidden()
+                        DatePicker("Fin", selection: $dateFin, displayedComponents: .date)
+                            .labelsHidden()
                     }
-                    .pickerStyle(.menu)
+
+                    Spacer()
+
+                    Button(action: resetAction) {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.title2)
+                    }
+                    .buttonStyle(.borderless)
+                    .help("Réinitialiser les filtres")
                 }
             }
-
-            Picker("Période", selection: $periode) {
-                ForEach(PeriodePredefinie.allCases, id: \.self) { period in
-                    Text(period.rawValue).tag(period)
-                }
-            }
-
-            if periode == .personnalise {
-                DatePicker("Début", selection: $dateDebut, displayedComponents: .date)
-                DatePicker("Fin", selection: $dateFin, displayedComponents: .date)
-            }
-
-            Button(action: resetAction) {
-                Image(systemName: "arrow.clockwise")
-            }
+            .padding(.horizontal)
         }
+        .padding(.vertical)
     }
 }

@@ -25,10 +25,10 @@ struct FacturePDFView: View {
         VStack(alignment: .leading, spacing: 0) {
             if pageContent.isFirstPage {
                 headerSection
-                    .padding(.bottom, 30)
+                    .padding(.bottom, 20)
                 
                 clientSection
-                    .padding(.bottom, 30)
+                    .padding(.bottom, 20)
             }
             
             if !pageContent.lines.isEmpty {
@@ -55,38 +55,21 @@ struct FacturePDFView: View {
     
     // MARK: - Header Section - Mise en page améliorée
     private var headerSection: some View {
-        VStack(spacing: 0) {
-            headerDecorativeLine
+        HStack(alignment: .top, spacing: 25) {
+            companySection
+                .frame(maxWidth: .infinity, alignment: .leading)
             
-            HStack(alignment: .top, spacing: 25) {
-                companySection
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                invoiceInfoSection
-                    .frame(width: 250)
-            }
+            invoiceInfoSection
+                .frame(width: 250)
         }
     }
     
     // MARK: - Header Sub-components
-    private var headerDecorativeLine: some View {
-        Rectangle()
-            .fill(
-                LinearGradient(
-                    gradient: Gradient(colors: [.blue, .blue.opacity(0.7)]),
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-            )
-            .frame(height: 4)
-            .padding(.bottom, 20)
-    }
-    
     private var companySection: some View {
         VStack(alignment: .leading, spacing: 0) {
             companyLogoAndName
             
-            Spacer().frame(height: 15)
+            Spacer().frame(height: 8)
             
             companyDetails
         }
@@ -213,38 +196,38 @@ struct FacturePDFView: View {
                 HStack {
                     Rectangle()
                         .fill(Color.blue)
-                        .frame(width: 5, height: 30)
+                        .frame(width: 4, height: 20)
                     
                     Text("FACTURÉ À")
-                        .font(.headline)
+                        .font(.subheadline)
                         .fontWeight(.bold)
                         .foregroundColor(.blue)
-                        .padding(.leading, 10)
+                        .padding(.leading, 8)
                     
                     Spacer()
                 }
-                .padding(.bottom, 12)
+                .padding(.bottom, 8)
                 
                 // Informations client
                 if let client = pageContent.client {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 2) {
                         // Nom et entreprise
                         Text(client.nom)
-                            .font(.title3)
+                            .font(.subheadline)
                             .fontWeight(.bold)
                             .foregroundColor(.primary)
                         
                         if !client.entreprise.isEmpty {
                             Text(client.entreprise)
-                                .font(.subheadline)
+                                .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundColor(.secondary)
                         }
                         
-                        Spacer().frame(height: 8)
+                        Spacer().frame(height: 4)
                         
                         // Adresse
-                        VStack(alignment: .leading, spacing: 2) {
+                        VStack(alignment: .leading, spacing: 1) {
                             if !client.adresseRue.isEmpty {
                                 Text(client.adresseRue)
                             }
@@ -252,13 +235,13 @@ struct FacturePDFView: View {
                                 Text(client.adresseVilleComplete)
                             }
                         }
-                        .font(.caption)
+                        .font(.caption2)
                         .foregroundColor(.primary)
                         
-                        Spacer().frame(height: 8)
+                        Spacer().frame(height: 4)
                         
                         // Contact
-                        VStack(alignment: .leading, spacing: 2) {
+                        VStack(alignment: .leading, spacing: 1) {
                             if !client.email.isEmpty {
                                 Text(client.email)
                                     .foregroundColor(.blue)
@@ -267,7 +250,7 @@ struct FacturePDFView: View {
                                 Text("Tél : \(client.telephone)")
                             }
                         }
-                        .font(.caption)
+                        .font(.caption2)
                         .foregroundColor(.secondary)
                     }
                 } else {
@@ -277,8 +260,8 @@ struct FacturePDFView: View {
                         .foregroundColor(.red)
                 }
             }
-            .padding(20)
-            .frame(width: 320, alignment: .leading)
+            .padding(15)
+            .frame(width: 280, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: 12)
                     .fill(Color.blue.opacity(0.03))
@@ -400,7 +383,7 @@ struct FacturePDFView: View {
                 
                 // Totaux (droite)
                 VStack(alignment: .trailing, spacing: 8) {
-                    TotalRow(label: "Sous-total HT", amount: pageContent.facture.calculateSousTotal(with: pageContent.lines), isMain: false)
+                    TotalRow(label: "Sous-total HT", amount: calculateDirectSousTotal(), isMain: false)
                     
                     if pageContent.facture.remisePourcentage > 0 {
                         TotalRow(
@@ -413,7 +396,7 @@ struct FacturePDFView: View {
                     
                     TotalRow(
                         label: "TVA (\(tvaFormat)%) ",
-                        amount: pageContent.facture.calculateMontantTVA(with: pageContent.lines),
+                        amount: calculateDirectMontantTVA(),
                         isMain: false
                     )
                     
@@ -426,7 +409,7 @@ struct FacturePDFView: View {
                     
                     TotalRow(
                         label: "TOTAL TTC",
-                        amount: pageContent.facture.calculateTotalTTC(with: pageContent.lines),
+                        amount: calculateDirectTotalTTC(),
                         isMain: true,
                         color: .blue
                     )
@@ -521,14 +504,42 @@ struct FacturePDFView: View {
     }
     
     // MARK: - Helper Methods
+    private func calculateDirectSousTotal() -> Double {
+        return pageContent.lines.reduce(0) { $0 + ($1.quantite * $1.prixUnitaire) }
+    }
+    
+    private func calculateDirectMontantTVA() -> Double {
+        return calculateDirectSousTotal() * (pageContent.facture.tva / 100)
+    }
+    
+    private func calculateDirectTotalTTC() -> Double {
+        let brut = calculateDirectSousTotal() + calculateDirectMontantTVA()
+        let remise = brut * (pageContent.facture.remisePourcentage / 100)
+        return brut - remise
+    }
+    
     private func calculateRemiseAmount() -> Double {
-        return pageContent.facture.calculateSousTotal(with: pageContent.lines) * (pageContent.facture.remisePourcentage / 100)
+        return calculateDirectSousTotal() * (pageContent.facture.remisePourcentage / 100)
     }
     
     // MARK: - Static Generation Method
     static func generatePages(facture: FactureDTO, lignes: [LigneFactureDTO], client: ClientDTO, entreprise: EntrepriseDTO?) -> [FacturePDFView] {
+        print("📋 FacturePDFView.generatePages appelé pour:")
+        print("   - Facture: \(facture.numero) (ID: \(facture.id))")
+        print("   - Client: \(client.nom) (\(client.entreprise))")
+        print("   - Lignes: \(lignes.count)")
+        // Calcul direct pour le débogage (sans dépendance ID)
+        let directTotal = lignes.reduce(0) { $0 + ($1.quantite * $1.prixUnitaire) }
+        let directTVA = directTotal * (facture.tva / 100)
+        let brut = directTotal + directTVA
+        let remise = brut * (facture.remisePourcentage / 100)
+        let totalTTC = brut - remise
+        print("   - Total TTC direct: \(totalTTC)")
+        
         let calculator = PageLayoutCalculator(facture: facture, entreprise: entreprise, client: client, lines: lignes)
         let pageContents = calculator.generatePages()
+        
+        print("   - Pages générées: \(pageContents.count)")
         
         return pageContents.enumerated().map { index, content in
             FacturePDFView(pageContent: content, pageNumber: index + 1, totalPages: pageContents.count)

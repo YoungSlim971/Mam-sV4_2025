@@ -95,4 +95,17 @@ struct Validator {
 
         return remainder == 1
     }
+
+    /// Valide un taux de TVA selon la réglementation française.
+    /// - Parameter tva: Le taux de TVA à valider (en pourcentage).
+    /// - Returns: `true` si le taux de TVA est valide, `false` sinon.
+    static func isValidTVARate(_ tva: Double) -> Bool {
+        // Taux de TVA français autorisés
+        let validRates: Set<Double> = [0.0, 2.1, 5.5, 10.0, 20.0]
+        
+        // Arrondir à 1 décimale pour éviter les problèmes de précision des nombres flottants
+        let roundedTVA = round(tva * 10) / 10
+        
+        return validRates.contains(roundedTVA)
+    }
 }

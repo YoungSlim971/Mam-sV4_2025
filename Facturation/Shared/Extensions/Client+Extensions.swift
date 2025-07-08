@@ -40,6 +40,23 @@ extension ClientModel {
         }
         return "?"
     }
+    
+    /// Retourne les initiales du client pour la numérotation des factures
+    /// Utilise prioritairement l'entreprise, sinon le nom du contact
+    var initialesFacturation: String {
+        let nomPourInitiales = entreprise.isEmpty ? nom : entreprise
+        
+        let components = nomPourInitiales.components(separatedBy: " ")
+        if components.count >= 2 {
+            let first = String(components.first?.first ?? "X")
+            let last = String(components.last?.first ?? "X")
+            return "\(first)\(last)".uppercased()
+        } else if let firstChar = nomPourInitiales.first {
+            // Si un seul mot, prendre la première lettre + "X"
+            return "\(String(firstChar))X".uppercased()
+        }
+        return "XX"
+    }
 
     /// Retourne le nom d'affichage principal (entreprise ou nom)
     var nomPrincipal: String {

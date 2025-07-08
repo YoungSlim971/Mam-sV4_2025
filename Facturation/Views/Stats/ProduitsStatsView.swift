@@ -36,12 +36,32 @@ struct ProduitsStatsView: View {
             
             // Graphiques
             HSplitView {
-                TopProduitChart(stats: Array(statistiquesService.topProduits.prefix(5)))
+                TopProduitChart(stats: Array(statistiquesService.topProduitsParCA.prefix(5)))
                     .frame(minWidth: 300, idealWidth: 500, maxWidth: .infinity)
 
-                ProduitsPieChart(stats: Array(statistiquesService.topProduits.prefix(5)))
+                ProduitsPieChart(stats: Array(statistiquesService.topProduitsParCA.prefix(5)))
                     .frame(minWidth: 300, idealWidth: 500, maxWidth: .infinity)
             }
+
+            // Top 5 produits par quantité vendue
+            VStack(alignment: .leading) {
+                Text("Top 5 Produits par Quantité Vendue")
+                    .font(.headline)
+                    .padding(.bottom, 5)
+
+                ForEach(statistiquesService.topProduitsParVentes.prefix(5)) { produit in
+                    HStack {
+                        Text(produit.nom)
+                        Spacer()
+                        Text("\(String(format: "%.0f", produit.quantite)) unités")
+                    }
+                    .padding(.vertical, 2)
+                }
+            }
+            .padding()
+            .background(Color.clear)
+            .cornerRadius(10)
+            .shadow(radius: 2)
         }
     }
 }

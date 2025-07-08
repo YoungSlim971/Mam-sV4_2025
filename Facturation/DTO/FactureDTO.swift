@@ -7,6 +7,7 @@ struct FactureDTO: Codable, Identifiable, Equatable {
     var dateFacture: Date
     var dateEcheance: Date?
     var datePaiement: Date?
+    /// TVA en pourcentage, valeur humaine saisie par l’utilisateur (ex: 20 = 20%)
     var tva: Double
     var conditionsPaiement: String
     var remisePourcentage: Double
@@ -27,7 +28,7 @@ struct FactureDTO: Codable, Identifiable, Equatable {
     }
     
     func calculateTotalTTC(with lignes: [LigneFactureDTO]) -> Double {
-        let brut = calculateSousTotal(with: lignes) + calculateMontantTVA(with: lignes)
+        let brut = calculateSousTotal(with: lignes) + calculateSousTotal(with: lignes) * (tva / 100)
         let remise = brut * (remisePourcentage / 100)
         return brut - remise
     }

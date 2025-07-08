@@ -28,6 +28,10 @@ struct ClientDTO: Codable, Sendable, Identifiable, Hashable {
         }
     }
     
+    var raisonSociale: String {
+        entreprise.isEmpty ? nom : entreprise
+    }
+    
     var adresseComplete: String {
         var components: [String] = []
         

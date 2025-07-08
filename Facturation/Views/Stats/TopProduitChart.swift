@@ -15,7 +15,7 @@ struct TopProduitChart: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Top Produits par Quantité Vendue")
+            Text("Top Produits par Chiffre d'Affaires")
                 .font(.headline)
                 .padding(.bottom, 8)
             
@@ -28,22 +28,21 @@ struct TopProduitChart: View {
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 let top10Produits = Array(stats.prefix(10))
                 Chart(top10Produits) { stat in
                     BarMark(
-                        x: .value("Quantité", stat.quantite),
+                        x: .value("Chiffre d'Affaires", stat.chiffreAffaires),
                         y: .value("Produit", stat.nom)
                     )
                     .foregroundStyle(Color.orange)
                     .cornerRadius(4)
                     .annotation(position: .trailing) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("\(stat.quantite, specifier: "%.0f")")
+                            Text("\(stat.chiffreAffaires, specifier: "%.0f") €")
                                 .font(.caption.bold())
                                 .foregroundColor(.primary)
-                            Text("\(stat.chiffreAffaires, specifier: "%.0f") €")
+                            Text("\(stat.quantite, specifier: "%.0f") unités")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         }

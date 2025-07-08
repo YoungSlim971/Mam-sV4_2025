@@ -26,30 +26,36 @@ struct PageLayoutCalculator {
         var height = PDFConstants.lineItemBaseHeight
         
         if let ref = ligne.referenceCommande, !ref.isEmpty {
-            height += 15
+            height += 18 // Augmenté pour plus d'espace
         }
         
         if ligne.dateCommande != nil {
-            height += 15
+            height += 18 // Augmenté pour plus d'espace
         }
         
+        // Calcul plus précis pour les désignations longues
         let designationLength = ligne.designation.count
-        if designationLength > 50 {
-            height += CGFloat((designationLength / 50) * 15)
+        let charactersPerLine = 45 // Estimation conservative
+        if designationLength > charactersPerLine {
+            let extraLines = Int(ceil(Double(designationLength - charactersPerLine) / Double(charactersPerLine)))
+            height += CGFloat(extraLines * 18)
         }
+        
+        // Ajoute une marge minimale optimisée pour éviter que les lignes se chevauchent
+        height += 3 // Réduit de 5px à 3px pour plus d'efficacité
         
         return height
     }
     
     func calculateHeaderHeight() -> CGFloat {
-        var height: CGFloat = 180
+        var height: CGFloat = 140  // Réduit de 40px (suppression barre bleue + espacement réduit)
         
         if let entreprise = entreprise {
             if !entreprise.certificationTexte.isEmpty {
-                height += 20
+                height += 15  // Réduit de 5px
             }
             if entreprise.nomDirigeant != nil {
-                height += 15
+                height += 10  // Réduit de 5px
             }
         }
         
@@ -68,23 +74,26 @@ struct PageLayoutCalculator {
             .count
         
         let totalLines = noteLines + commentLines
-        return 60.0 + CGFloat(totalLines * 12)
+        // Hauteur optimisée avec marge de sécurité réduite
+        return 70.0 + CGFloat(totalLines * 14) + 15.0 // Optimisé pour plus de lignes
     }
     
     func generatePages() -> [InvoicePageContent] {
         var pages: [InvoicePageContent] = []
         
         let headerHeight = calculateHeaderHeight()
-        let clientHeight: CGFloat = 120
-        let tableHeaderHeight: CGFloat = 30
-        let totalsHeight: CGFloat = 120
+        let clientHeight: CGFloat = 100 // Réduit avec les optimisations d'espace
+        let tableHeaderHeight: CGFloat = 35 // Réduit pour plus d'espace lignes
+        let totalsHeight: CGFloat = 130 // Réduit pour plus d'espace lignes
         let footerHeight = calculateFooterHeight()
+        let firstPagePadding: CGFloat = 25 // Marge de sécurité première page
+        let subsequentPagePadding: CGFloat = 15 // Marge réduite pages suivantes
         
-        let firstPageFixedHeight = headerHeight + clientHeight + tableHeaderHeight + totalsHeight + footerHeight
-        let firstPageAvailableHeight = PDFConstants.pageHeight - PDFConstants.topMargin - PDFConstants.bottomMargin - firstPageFixedHeight
+        let firstPageFixedHeight = headerHeight + clientHeight + tableHeaderHeight + totalsHeight + footerHeight + firstPagePadding
+        let firstPageAvailableHeight = max(50, PDFConstants.pageHeight - PDFConstants.topMargin - PDFConstants.bottomMargin - firstPageFixedHeight)
         
-        let subsequentPageFixedHeight = tableHeaderHeight + totalsHeight + footerHeight
-        let subsequentPageAvailableHeight = PDFConstants.pageHeight - PDFConstants.topMargin - PDFConstants.bottomMargin - subsequentPageFixedHeight
+        let subsequentPageFixedHeight = tableHeaderHeight + totalsHeight + footerHeight + subsequentPagePadding
+        let subsequentPageAvailableHeight = max(50, PDFConstants.pageHeight - PDFConstants.topMargin - PDFConstants.bottomMargin - subsequentPageFixedHeight)
         
         var currentLineIndex = 0
         var currentPageHeight: CGFloat = 0
@@ -97,60 +106,83 @@ struct PageLayoutCalculator {
             return dateLhs < dateRhs
         }
         
-        while currentLineIndex < sortedLines.count {
-            let isFirstPage = pages.isEmpty
-            let availableHeight = isFirstPage ? firstPageAvailableHeight : subsequentPageAvailableHeight
-            
-            let ligne = sortedLines[currentLineIndex]
-            let lineHeight = calculateLineHeight(for: ligne)
-            
-            if currentPageHeight + lineHeight <= availableHeight {
-                linesForCurrentPage.append(ligne)
-                currentPageHeight += lineHeight
+        // Système de pagination basé sur un nombre fixe de lignes par page
+        let maxLinesPerPage = 9 // 9 lignes par page pour les pages multiples
+        
+        // Déterminer si on aura plusieurs pages
+        let willHaveMultiplePages = sortedLines.count > maxLinesPerPage
+        
+        // Si une seule page, utiliser l'ancien système basé sur la hauteur pour optimiser l'espace
+        if !willHaveMultiplePages {
+            while currentLineIndex < sortedLines.count {
+                let isFirstPage = pages.isEmpty
+                let availableHeight = isFirstPage ? firstPageAvailableHeight : subsequentPageAvailableHeight
+                
+                let ligne = sortedLines[currentLineIndex]
+                let lineHeight = calculateLineHeight(for: ligne)
+                
+                let safetyMargin = 0.9 // Marge de sécurité pour page unique
+                let safeAvailableHeight = availableHeight * safetyMargin
+                
+                if currentPageHeight + lineHeight <= safeAvailableHeight {
+                    linesForCurrentPage.append(ligne)
+                    currentPageHeight += lineHeight
+                    currentLineIndex += 1
+                } else {
+                    break // Arrêter si ça ne rentre plus
+                }
+            }
+        } else {
+            // Pour plusieurs pages, utiliser le système de 9 lignes par page
+            while currentLineIndex < sortedLines.count {
+                let isFirstPage = pages.isEmpty
+                
+                // Ajouter la ligne courante
+                linesForCurrentPage.append(sortedLines[currentLineIndex])
                 currentLineIndex += 1
-            } else {
-                if !linesForCurrentPage.isEmpty {
+                
+                // Vérifier si on a atteint 9 lignes ou si c'est la fin
+                if linesForCurrentPage.count >= maxLinesPerPage || currentLineIndex >= sortedLines.count {
                     let pageContent = InvoicePageContent(
                         facture: facture,
                         entreprise: entreprise,
                         client: client,
                         lines: linesForCurrentPage,
                         isFirstPage: isFirstPage,
-                        isLastPage: false
+                        isLastPage: currentLineIndex >= sortedLines.count
                     )
                     pages.append(pageContent)
+                    
+                    // Préparer pour la page suivante
+                    linesForCurrentPage = []
                 }
-                
-                linesForCurrentPage = [ligne]
-                currentPageHeight = lineHeight
-                currentLineIndex += 1
             }
         }
         
-        if !linesForCurrentPage.isEmpty || pages.isEmpty {
-            let isLastPage = true
-            let isFirstPage = pages.isEmpty
-            
+        // Pour les pages uniques, ajouter la page restante si nécessaire
+        if !willHaveMultiplePages && !linesForCurrentPage.isEmpty {
             let pageContent = InvoicePageContent(
                 facture: facture,
                 entreprise: entreprise,
                 client: client,
                 lines: linesForCurrentPage,
-                isFirstPage: isFirstPage,
-                isLastPage: isLastPage
+                isFirstPage: true,
+                isLastPage: true
             )
             pages.append(pageContent)
         }
         
-        if let lastPage = pages.last {
-            pages[pages.count - 1] = InvoicePageContent(
-                facture: lastPage.facture,
-                entreprise: lastPage.entreprise,
-                client: lastPage.client,
-                lines: lastPage.lines,
-                isFirstPage: lastPage.isFirstPage,
+        // S'assurer qu'on a au moins une page (cas des factures sans lignes)
+        if pages.isEmpty {
+            let pageContent = InvoicePageContent(
+                facture: facture,
+                entreprise: entreprise,
+                client: client,
+                lines: [],
+                isFirstPage: true,
                 isLastPage: true
             )
+            pages.append(pageContent)
         }
         
         return pages

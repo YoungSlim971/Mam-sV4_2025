@@ -276,18 +276,29 @@ class StatistiquesService: ObservableObject {
         }
         
         var stats: [UUID: (ca: Double, quantite: Double, ventes: Int)] = [:]
+        var lignesSansProduitId = 0
+        var totalLignesAnalysees = 0
+        
+        print("🔍 [StatistiquesService] Début de l'analyse des produits...")
         
         for facture in factures {
             let factureLignes = dataService.lignes.filter { facture.ligneIds.contains($0.id) }
             for ligne in factureLignes {
+                totalLignesAnalysees += 1
                 if let produitId = ligne.produitId {
                     let montant = ligne.quantite * ligne.prixUnitaire
                     stats[produitId, default: (0, 0, 0)].ca += montant
                     stats[produitId, default: (0, 0, 0)].quantite += ligne.quantite
                     stats[produitId, default: (0, 0, 0)].ventes += 1
+                } else {
+                    lignesSansProduitId += 1
+                    print("⚠️ Ligne sans produitId trouvée: \(ligne.designation)")
                 }
             }
         }
+        
+        print("📊 [StatistiquesService] \(factures.count) factures analysées – \(lignesSansProduitId) erreur\(lignesSansProduitId > 1 ? "s" : "")")
+        print("📈 [StatistiquesService] Total lignes: \(totalLignesAnalysees), Lignes avec produitId: \(totalLignesAnalysees - lignesSansProduitId)")
         
         return stats.compactMap { (produitId, totals) in
             guard let produit = dataService.produits.first(where: { $0.id == produitId }) else { return nil }

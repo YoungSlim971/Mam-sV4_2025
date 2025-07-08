@@ -11,7 +11,7 @@ struct ProduitsPieChart: View {
                 .padding(.bottom, 8)
             Chart(stats) { produitStat in
                 SectorMark(
-                    angle: .value("Quantité", produitStat.quantite),
+                    angle: .value("Chiffre d'Affaires", produitStat.chiffreAffaires),
                     innerRadius: .ratio(0.6),
                     angularInset: 1
                 )

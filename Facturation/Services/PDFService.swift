@@ -101,39 +101,45 @@ final class PDFService {
         lineText.draw(in: rect, withAttributes: attributes)
     }
     
-    /// Generates an A4 PDF for the given facture.
+    /// Generates an A4 PDF for the given facture with automatic pagination.
     /// - Returns: `Data` representing the PDF or `nil` on failure.
     @MainActor
     func generatePDF(for facture: FactureDTO, lignes: [LigneFactureDTO], client: ClientDTO, entreprise: EntrepriseDTO) async -> Data? {
-        if let cached = cache[facture.id] { return cached }
+        print("🔧 PDFService: Génération PDF pour facture \(facture.numero) (ID: \(facture.id))")
+        print("📊 Facture avec \(lignes.count) lignes pour client \(client.nom)")
+        
+        // Temporairement désactiver le cache pour déboguer
+        // if let cached = cache[facture.id] { 
+        //     print("💾 Cache: PDF trouvé en cache pour facture \(facture.numero)")
+        //     return cached 
+        // }
         if cache.count >= maxCache { cache.remove(at: cache.startIndex) }
 
-        let pageSize = CGSize(width: 595, height: 842) // A4
-
-        let pageContent = InvoicePageContent(facture: facture, entreprise: entreprise, client: client, lines: lignes, isFirstPage: true, isLastPage: true)
-
-        let renderer = ImageRenderer(content:
-            FacturePDFView(pageContent: pageContent)
-                .frame(maxWidth: .infinity)
-                .padding()
-        )
-
-        renderer.scale = 1.0
+        // Use the advanced pagination system
+        let pages = FacturePDFView.generatePages(facture: facture, lignes: lignes, client: client, entreprise: entreprise)
+        print("🎨 PDFService: \(pages.count) pages générées pour rendu")
+        
         let pdfDocument = PDFDocument()
-        guard let image = renderer.nsImage else { return nil }
-        let totalHeight = image.size.height
-        let pageCount = Int(ceil(totalHeight / pageSize.height))
-
-        for pageIndex in 0..<pageCount {
-            let imageRect = CGRect(x: 0, y: CGFloat(pageIndex) * pageSize.height, width: pageSize.width, height: pageSize.height)
-
-            let pdfPage = PDFPage(image: NSImage(size: pageSize, flipped: false) { rect in
-                image.draw(at: .zero, from: imageRect, operation: .copy, fraction: 1.0)
-                return true
-            })
-
+        
+        for (pageIndex, page) in pages.enumerated() {
+            print("🖼️ Rendu page \(pageIndex + 1)/\(pages.count)")
+            
+            // Forcer un identifiant unique pour éviter les problèmes de cache SwiftUI
+            let pageWithId = page
+                .id("\(facture.id)-\(pageIndex)-\(Date().timeIntervalSince1970)")
+            
+            let renderer = ImageRenderer(content: pageWithId)
+            renderer.scale = 1.0
+            
+            guard let image = renderer.nsImage else { 
+                print("❌ Échec rendu image pour page \(pageIndex + 1)")
+                continue 
+            }
+            
+            let pdfPage = PDFPage(image: image)
             if let page = pdfPage {
                 pdfDocument.insert(page, at: pageIndex)
+                print("✅ Page \(pageIndex + 1) ajoutée au PDF")
             }
         }
 

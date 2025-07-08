@@ -147,9 +147,17 @@ struct EditFactureView: View {
     
     @ViewBuilder private var totauxSection: some View {
         Section("Totaux") {
-            HStack { Text("Sous-total"); Spacer(); Text(editedFacture.sousTotal.euroFormatted) }
-            HStack { Text("TVA (\(editedFacture.tva.formatted(.percent)))"); Spacer(); Text(editedFacture.montantTVA.euroFormatted) }
-            HStack { Text("Total TTC").bold(); Spacer(); Text(editedFacture.totalTTC.euroFormatted).bold() }
+            HStack {
+                Text("Sous-total")
+                Spacer()
+                Text(editedFacture.sousTotal.euroFormatted)
+            }
+            HStack {
+                // Affichage du taux de TVA en pourcentage (ex: 20%) à partir d'une valeur décimale (ex: 0.2)
+                Text("TVA (\((editedFacture.tva).formatted(.number.precision(.fractionLength(1)))) %)")
+                Spacer()
+                Text(editedFacture.montantTVA.euroFormatted)
+            }
         }
     }
     

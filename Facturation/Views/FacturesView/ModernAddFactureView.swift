@@ -171,7 +171,12 @@ struct ModernAddFactureView: View {
         Task {
             let numero: String
             if editableFacture.numerotationAutomatique {
-                numero = await dataService.genererNumeroFacture()
+                // Get client model for numbering
+                guard let clientModel = await dataService.fetchClientModel(id: client.id) else {
+                    print("Erreur: Client non trouvé pour la génération du numéro")
+                    return
+                }
+                numero = await dataService.genererNumeroFacture(client: clientModel)
             } else {
                 numero = editableFacture.numeroPersonnalise ?? ""
             }

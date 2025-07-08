@@ -21,6 +21,11 @@
 		4AE5DD562E0EE504003470C5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE5DD552E0EE504003470C5 /* Extensions.swift */; };
 		4AE5DD582E0EE88D003470C5 /* MacOSColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE5DD572E0EE88D003470C5 /* MacOSColors.swift */; };
 		4AE5DD5A2E0EF300003470C5 /* Client+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE5DD592E0EF300003470C5 /* Client+Extensions.swift */; };
+		FB020E392E1CB5C2004BFBF9 /* StatsFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB020E382E1CB5C2004BFBF9 /* StatsFormatters.swift */; };
+		FB020E3B2E1CB5CD004BFBF9 /* StatsColorProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB020E3A2E1CB5CD004BFBF9 /* StatsColorProvider.swift */; };
+		FB020E3F2E1CB774004BFBF9 /* TopClientsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB020E3D2E1CB774004BFBF9 /* TopClientsSection.swift */; };
+		FB020E402E1CB774004BFBF9 /* EvolutionCASection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB020E3C2E1CB774004BFBF9 /* EvolutionCASection.swift */; };
+		FB020E412E1CB774004BFBF9 /* TopProduitsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB020E3E2E1CB774004BFBF9 /* TopProduitsSection.swift */; };
 		FB105BA82E19EFCC00434EEE /* FactureRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB105BA22E19EFCC00434EEE /* FactureRepository.swift */; };
 		FB105BA92E19EFCC00434EEE /* FactureDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB105BA52E19EFCC00434EEE /* FactureDTO.swift */; };
 		FB105BAA2E19EFCC00434EEE /* FactureRepositorySwiftData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB105B9F2E19EFCC00434EEE /* FactureRepositorySwiftData.swift */; };
@@ -128,6 +133,11 @@
 		4AE5DD552E0EE504003470C5 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		4AE5DD572E0EE88D003470C5 /* MacOSColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOSColors.swift; sourceTree = "<group>"; };
 		4AE5DD592E0EF300003470C5 /* Client+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Client+Extensions.swift"; sourceTree = "<group>"; };
+		FB020E382E1CB5C2004BFBF9 /* StatsFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsFormatters.swift; sourceTree = "<group>"; };
+		FB020E3A2E1CB5CD004BFBF9 /* StatsColorProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsColorProvider.swift; sourceTree = "<group>"; };
+		FB020E3C2E1CB774004BFBF9 /* EvolutionCASection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvolutionCASection.swift; sourceTree = "<group>"; };
+		FB020E3D2E1CB774004BFBF9 /* TopClientsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopClientsSection.swift; sourceTree = "<group>"; };
+		FB020E3E2E1CB774004BFBF9 /* TopProduitsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopProduitsSection.swift; sourceTree = "<group>"; };
 		FB105B9F2E19EFCC00434EEE /* FactureRepositorySwiftData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactureRepositorySwiftData.swift; sourceTree = "<group>"; };
 		FB105BA22E19EFCC00434EEE /* FactureRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactureRepository.swift; sourceTree = "<group>"; };
 		FB105BA52E19EFCC00434EEE /* FactureDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactureDTO.swift; sourceTree = "<group>"; };
@@ -153,7 +163,6 @@
 		FB694CE02E177979004CD19F /* PDFImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFImporter.swift; sourceTree = "<group>"; };
 		FB722FFC2E145D93003D1BF6 /* AddProduitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProduitView.swift; sourceTree = "<group>"; };
 		FB722FFD2E145D93003D1BF6 /* ProduitsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduitsView.swift; sourceTree = "<group>"; };
-		FB820C662E1B1EFA0014A143 /* Persistence+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Persistence+Validation.swift"; sourceTree = "<group>"; };
 		FB820C692E1B2C060014A143 /* ClientFactureDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientFactureDetailView.swift; sourceTree = "<group>"; };
 		FB92C4F12E1A4A7C00CD42BE /* ChartsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsSection.swift; sourceTree = "<group>"; };
 		FB92C4F22E1A4A7C00CD42BE /* DashboardHeaderSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardHeaderSection.swift; sourceTree = "<group>"; };
@@ -395,6 +404,8 @@
 		4AE5DD542E0EE4ED003470C5 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				FB020E382E1CB5C2004BFBF9 /* StatsFormatters.swift */,
+				FB020E3A2E1CB5CD004BFBF9 /* StatsColorProvider.swift */,
 				4AE5DD552E0EE504003470C5 /* Extensions.swift */,
 				4AE5DD572E0EE88D003470C5 /* MacOSColors.swift */,
 				4AE5DD592E0EF300003470C5 /* Client+Extensions.swift */,
@@ -477,7 +488,6 @@
 				FB3CEB152E1B60E400C9C33B /* SecureLoginView.swift */,
 				FBC74B0E2E19D51A00CD1B25 /* AppButton.swift */,
 				FBC74B0F2E19D51A00CD1B25 /* AppCard.swift */,
-				FB820C662E1B1EFA0014A143 /* Persistence+Validation.swift */,
 				FBC74B102E19D51A00CD1B25 /* AppTextField.swift */,
 				FBC74B182E19D51A00CD1B25 /* WindowManager.swift */,
 			);
@@ -496,6 +506,9 @@
 		FBE30C942E18EFE3009D5F1F /* Stats */ = {
 			isa = PBXGroup;
 			children = (
+				FB020E3C2E1CB774004BFBF9 /* EvolutionCASection.swift */,
+				FB020E3D2E1CB774004BFBF9 /* TopClientsSection.swift */,
+				FB020E3E2E1CB774004BFBF9 /* TopProduitsSection.swift */,
 				FBDE28C42E1B3D0700B08468 /* ClientsPieChart.swift */,
 				FBDE28C52E1B3D0700B08468 /* ModernStatsView.swift */,
 				FBDE28C62E1B3D0700B08468 /* ProduitsPieChart.swift */,
@@ -624,6 +637,7 @@
 				FB662C712E11A3F8005A01EA /* PDFService.swift in Sources */,
 				FB52C79C2E19F3E100E7170A /* ClientDTO.swift in Sources */,
 				FBE8F11F2E161CC6007DD3AD /* ProductDetailsView.swift in Sources */,
+				FB020E3B2E1CB5CD004BFBF9 /* StatsColorProvider.swift in Sources */,
 				FBAD8CED2E16713B00262D46 /* Statistiques.swift in Sources */,
 				FBAD8CEB2E16712F00262D46 /* StatsView.swift in Sources */,
 				FBC74B1A2E19D51A00CD1B25 /* InfoRow.swift in Sources */,
@@ -641,6 +655,7 @@
 				FBC74B1F2E19D51A00CD1B25 /* InvoiceLineRowImproved.swift in Sources */,
 				FBC74B202E19D51A00CD1B25 /* WindowManager.swift in Sources */,
 				FBC74B212E19D51A00CD1B25 /* TotalRow.swift in Sources */,
+				FB020E392E1CB5C2004BFBF9 /* StatsFormatters.swift in Sources */,
 				FBC74B222E19D51A00CD1B25 /* AppTextField.swift in Sources */,
 				FBCC8EBD2E109FE90000F44C /* SunsetImageWidgetView.swift in Sources */,
 				FB1CA9902E163EE2005E9CED /* ProduitList.swift in Sources */,
@@ -671,6 +686,9 @@
 				FB52C7A02E19F43300E7170A /* ProduitDTO.swift in Sources */,
 				FBB675582E19B662001C70B7 /* ImagePicker.swift in Sources */,
 				FBDE28C72E1B3D0700B08468 /* ModernStatsView.swift in Sources */,
+				FB020E3F2E1CB774004BFBF9 /* TopClientsSection.swift in Sources */,
+				FB020E402E1CB774004BFBF9 /* EvolutionCASection.swift in Sources */,
+				FB020E412E1CB774004BFBF9 /* TopProduitsSection.swift in Sources */,
 				FBDE28C82E1B3D0700B08468 /* ProduitsPieChart.swift in Sources */,
 				FBDE28C92E1B3D0700B08468 /* ClientsPieChart.swift in Sources */,
 				4AE5DD532E0EE4C6003470C5 /* ClientsView.swift in Sources */,

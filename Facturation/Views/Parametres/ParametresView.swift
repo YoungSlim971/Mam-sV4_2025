@@ -123,6 +123,7 @@ struct EntrepriseDetailView: View {
         VStack(spacing: 40) {
             InfoBlock(title: "Informations de l'entreprise", fields: [
                 ("Nom", entreprise.nom),
+                ("Domaine d'activité", entreprise.domaine ?? "—"),
                 ("Dirigeant", entreprise.nomDirigeant ?? "—"),
                 ("Contact Facturation", entreprise.nomContact ?? "—"),
                 ("Email", entreprise.email),
@@ -221,6 +222,9 @@ struct EditableEntreprise {
 
     // Certification
     var certificationTexte: String = "" // Nouveau champ
+    
+    // Domaine d'activité
+    var domaine: String = ""
 
     // Logo de l'entreprise
     var logo: Data?
@@ -250,6 +254,7 @@ struct EditableEntreprise {
         self.adresseVille = entreprise.adresseVille
         self.adressePays = entreprise.adressePays
         self.certificationTexte = entreprise.certificationTexte
+        self.domaine = entreprise.domaine ?? ""
         self.logo = entreprise.logo
         self.prefixeFacture = entreprise.prefixeFacture
         self.prochainNumero = entreprise.prochainNumero
@@ -272,6 +277,7 @@ struct EditableEntreprise {
         if adresseVille.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { adresseVille = "N/A" }
         if adressePays.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { adressePays = "N/A" }
         if certificationTexte.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { certificationTexte = "N/A" } // Préparation du nouveau champ
+        if domaine.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { domaine = "N/A" } // Préparation du nouveau champ
         if prefixeFacture.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { prefixeFacture = "F" }
         // Pas de préparation spéciale pour le logo, on laisse tel quel
     }
@@ -292,6 +298,7 @@ struct EditableEntreprise {
         entreprise.adresseVille = adresseVille
         entreprise.adressePays = adressePays
         entreprise.certificationTexte = certificationTexte
+        entreprise.domaine = domaine.isEmpty || domaine == "N/A" ? nil : domaine
         entreprise.logo = logo
         entreprise.prefixeFacture = prefixeFacture
         entreprise.prochainNumero = prochainNumero
@@ -369,6 +376,15 @@ struct EntrepriseInfoSection: View {
                     TextField("Nom de votre entreprise", text: $editableEntreprise.nom)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .onChange(of: editableEntreprise.nom) { _, _ in hasChanges = true }
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Domaine d'activité")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    TextField("Exploitation agricole, Informatique, Services...", text: $editableEntreprise.domaine)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .onChange(of: editableEntreprise.domaine) { _, _ in hasChanges = true }
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -596,7 +612,20 @@ struct FacturationParametersSection: View {
                             .fontWeight(.medium)
                         TextField("20", value: $editableEntreprise.tvaTauxDefaut, format: .number)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .onChange(of: editableEntreprise.tvaTauxDefaut) { _, _ in hasChanges = true }
+                            .onChange(of: editableEntreprise.tvaTauxDefaut) { _, newValue in
+                                hasChanges = true
+                                // Valider que le taux de TVA respecte la réglementation française
+                                if !Validator.isValidTVARate(newValue) {
+                                    // Ajuster au taux valide le plus proche
+                                    let validRates: [Double] = [0.0, 2.1, 5.5, 10.0, 20.0]
+                                    if let closestRate = validRates.min(by: { abs($0 - newValue) < abs($1 - newValue) }) {
+                                        editableEntreprise.tvaTauxDefaut = closestRate
+                                    }
+                                }
+                            }
+                        Text("Taux valides : 0%, 2.1%, 5.5%, 10%, 20%")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
                     }
 
                     VStack(alignment: .leading, spacing: 4) {

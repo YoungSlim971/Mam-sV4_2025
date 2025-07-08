@@ -11,7 +11,7 @@ struct CreerFactureUseCase {
     func execute(client: ClientModel, tva: Double = 20.0) throws -> FactureModel {
         // guard client.isValid else { throw FactureError.invalidClient } // TODO: Add validation
         guard tva >= 0 else { throw FactureError.invalidTVA }
-        let numero = try repository.genererNumeroFacture()
+        let numero = try repository.genererNumeroFacture(client: client)
         let facture = try repository.createFacture(client: client, numero: numero)
         facture.tva = tva
         return facture
