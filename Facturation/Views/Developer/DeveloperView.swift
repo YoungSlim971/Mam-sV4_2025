@@ -1,4 +1,5 @@
 import SwiftUI
+import DataLayer
 
 struct DeveloperView: View {
     @EnvironmentObject private var dataService: DataService

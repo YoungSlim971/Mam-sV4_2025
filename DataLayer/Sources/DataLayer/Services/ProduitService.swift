@@ -13,18 +13,15 @@ public final class ProduitService: ObservableObject {
         self.persistenceService = persistenceService
     }
     
-    public func fetchProduits<T: PersistentModel>(_ modelType: T.Type) async -> [ProduitDTO] {
+    /// Fetch all products sorted by designation
+    public func fetchProduits() async -> [ProduitDTO] {
         logger.info("Fetching produits")
         do {
-            let descriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.persistentModelID)])
-            let models = try persistenceService.fetch(descriptor)
-            
-            // Convert models to DTOs - this would need to be implemented based on actual model structure
-            let dtos: [ProduitDTO] = [] // TODO: Implement conversion
-            
-            await MainActor.run {
-                self.produits = dtos
-            }
+            let descriptor = FetchDescriptor<ProduitModel>(sortBy: [SortDescriptor(\ProduitModel.designation)])
+            let models: [ProduitModel] = try persistenceService.fetch(descriptor)
+            let dtos = models.map { $0.toDTO() }
+
+            await MainActor.run { self.produits = dtos }
             logger.info("Fetched produits successfully", metadata: ["count": "\(dtos.count)"])
             return dtos
         } catch {
@@ -35,31 +32,50 @@ public final class ProduitService: ObservableObject {
     
     public func addProduit(_ produit: ProduitDTO) async throws {
         logger.info("Adding produit", metadata: ["produitId": "\(produit.id)", "designation": "\(produit.designation)"])
-        
-        // TODO: Convert DTO to model and insert
-        
+
+        guard !produit.designation.trimmingCharacters(in: .whitespaces).isEmpty, produit.prixUnitaire > 0 else {
+            logger.warning("Invalid product data")
+            return
+        }
+
+        let model = ProduitModel.fromDTO(produit)
+        persistenceService.insert(model)
         try persistenceService.save()
-        // TODO: Refresh the list when model integration is complete
+        await fetchProduits()
         logger.info("Produit added successfully", metadata: ["produitId": "\(produit.id)"])
     }
     
     public func updateProduit(_ produit: ProduitDTO) async throws {
         logger.info("Updating produit", metadata: ["produitId": "\(produit.id)", "designation": "\(produit.designation)"])
-        
-        // TODO: Find existing model and update from DTO
-        
-        try persistenceService.save()
-        // TODO: Refresh the list when model integration is complete
-        logger.info("Produit updated successfully", metadata: ["produitId": "\(produit.id)"])
+
+        let descriptor = FetchDescriptor<ProduitModel>(predicate: #Predicate { $0.id == produit.id })
+        if let existing = try? persistenceService.fetch(descriptor).first {
+            existing.updateFromDTO(produit)
+            try persistenceService.save()
+            await fetchProduits()
+            logger.info("Produit updated successfully", metadata: ["produitId": "\(produit.id)"])
+        } else {
+            logger.warning("Produit not found", metadata: ["produitId": "\(produit.id)"])
+        }
     }
     
     public func deleteProduit(withId id: UUID) async throws {
         logger.info("Deleting produit", metadata: ["produitId": "\(id)"])
-        
-        // TODO: Find and delete model
-        
+
+        let descriptor = FetchDescriptor<ProduitModel>(predicate: #Predicate { $0.id == id })
+        guard let produit = try? persistenceService.fetch(descriptor).first, produit.isValidModel else {
+            logger.warning("Produit not found", metadata: ["produitId": "\(id)"])
+            return
+        }
+
+        // Detach from invoice lines
+        let ligneDescriptor = FetchDescriptor<LigneFacture>(predicate: #Predicate { $0.produit?.id == id })
+        let lignes = (try? persistenceService.fetch(ligneDescriptor)) ?? []
+        for ligne in lignes where ligne.isValidModel { ligne.produit = nil }
+
+        persistenceService.delete(produit)
         try persistenceService.save()
-        // TODO: Refresh the list when model integration is complete
+        await fetchProduits()
         logger.info("Produit deleted successfully", metadata: ["produitId": "\(id)"])
     }
     

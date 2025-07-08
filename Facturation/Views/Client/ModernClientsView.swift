@@ -1,4 +1,5 @@
 import SwiftUI
+import DataLayer
 struct ModernClientsView: View {
     @EnvironmentObject private var dataService: DataService
     @Binding var searchText: String

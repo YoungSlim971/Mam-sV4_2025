@@ -13,18 +13,15 @@ public final class ClientService: ObservableObject {
         self.persistenceService = persistenceService
     }
     
-    public func fetchClients<T: PersistentModel>(_ modelType: T.Type) async -> [ClientDTO] {
+    /// Fetch all clients sorted by name
+    public func fetchClients() async -> [ClientDTO] {
         logger.info("Fetching clients")
         do {
-            let descriptor = FetchDescriptor<T>(sortBy: [SortDescriptor(\T.persistentModelID)])
-            let models = try persistenceService.fetch(descriptor)
-            
-            // Convert models to DTOs - this would need to be implemented based on actual model structure
-            let dtos: [ClientDTO] = [] // TODO: Implement conversion
-            
-            await MainActor.run {
-                self.clients = dtos
-            }
+            let descriptor = FetchDescriptor<ClientModel>(sortBy: [SortDescriptor(\ClientModel.nom)])
+            let models: [ClientModel] = try persistenceService.fetch(descriptor)
+            let dtos = models.map { $0.toDTO() }
+
+            await MainActor.run { self.clients = dtos }
             logger.info("Fetched clients successfully", metadata: ["count": "\(dtos.count)"])
             return dtos
         } catch {
@@ -32,35 +29,61 @@ public final class ClientService: ObservableObject {
             return []
         }
     }
-    
+
     public func addClient(_ client: ClientDTO) async throws {
         logger.info("Adding client", metadata: ["clientId": "\(client.id)"])
-        
-        // TODO: Convert DTO to model and insert
-        // This would need to be implemented based on actual model structure
-        
+
+        guard Validator.isValidSIRET(client.siret), Validator.isValidTVA(client.numeroTVA) else {
+            logger.warning("Invalid client identifiers", metadata: ["clientId": "\(client.id)"])
+            return
+        }
+
+        let model = ClientModel.fromDTO(client)
+        persistenceService.insert(model)
         try persistenceService.save()
-        // TODO: Refresh the list when model integration is complete
+        await fetchClients()
         logger.info("Client added successfully", metadata: ["clientId": "\(client.id)"])
     }
-    
+
     public func updateClient(_ client: ClientDTO) async throws {
         logger.info("Updating client", metadata: ["clientId": "\(client.id)"])
-        
-        // TODO: Find existing model and update from DTO
-        
-        try persistenceService.save()
-        // TODO: Refresh the list when model integration is complete
-        logger.info("Client updated successfully", metadata: ["clientId": "\(client.id)"])
+
+        guard Validator.isValidSIRET(client.siret), Validator.isValidTVA(client.numeroTVA) else {
+            logger.warning("Invalid client identifiers", metadata: ["clientId": "\(client.id)"])
+            return
+        }
+
+        let descriptor = FetchDescriptor<ClientModel>(predicate: #Predicate { $0.id == client.id })
+        if let existing = try? persistenceService.fetch(descriptor).first {
+            existing.updateFromDTO(client)
+            try persistenceService.save()
+            await fetchClients()
+            logger.info("Client updated successfully", metadata: ["clientId": "\(client.id)"])
+        } else {
+            logger.warning("Client not found", metadata: ["clientId": "\(client.id)"])
+        }
     }
-    
+
     public func deleteClient(withId id: UUID) async throws {
         logger.info("Deleting client", metadata: ["clientId": "\(id)"])
-        
-        // TODO: Find and delete model
-        
+
+        let clientDescriptor = FetchDescriptor<ClientModel>(predicate: #Predicate { $0.id == id })
+        guard let client = try? persistenceService.fetch(clientDescriptor).first, client.isValidModel else {
+            logger.warning("Client not found", metadata: ["clientId": "\(id)"])
+            return
+        }
+
+        // Delete invoices associated with this client
+        let factureDescriptor = FetchDescriptor<FactureModel>(predicate: #Predicate { $0.client?.id == id })
+        let factures = (try? persistenceService.fetch(factureDescriptor)) ?? []
+        for facture in factures where facture.isValidModel {
+            for ligne in facture.lignes { persistenceService.delete(ligne) }
+            persistenceService.delete(facture)
+        }
+
+        persistenceService.delete(client)
         try persistenceService.save()
-        // TODO: Refresh the list when model integration is complete
+        await fetchClients()
         logger.info("Client deleted successfully", metadata: ["clientId": "\(id)"])
     }
 }
