@@ -96,3 +96,21 @@ public struct ClientDTO: Codable, Sendable, Identifiable, Hashable {
         }
     }
 }
+// MARK: - Conversion ClientModel → ClientDTO
+
+extension ClientDTO {
+    init(from model: ClientModel) {
+        self.id = model.id
+        self.nom = model.nom
+        self.entreprise = model.entreprise
+        self.email = model.email
+        self.telephone = model.telephone
+        self.siret = model.siret
+        self.numeroTVA = model.numeroTVA
+        self.adresse = model.adresse
+        self.adresseRue = model.adresseRue
+        self.adresseCodePostal = model.adresseCodePostal
+        self.adresseVille = model.adresseVille
+        self.adressePays = model.adressePays
+    }
+}

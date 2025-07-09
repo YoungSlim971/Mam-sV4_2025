@@ -9,14 +9,17 @@ class ClientFactureViewModel: ObservableObject {
 
     private let dataService: DataService
 
-    init(factureID: UUID, dataService: DataService = .shared) {
-        self.dataService = dataService
+    init(
+        factureID: UUID,
+        dataService: @MainActor @escaping () -> DataService = { { .shared }() }
+    ) {
+        self.dataService = dataService()
         self.facture = nil
         self.localDateEcheance = Date()
         self.localStatut = .brouillon
 
         Task {
-            if let dto = await dataService.fetchFactureDTO(id: factureID) {
+            if let dto = await self.dataService.fetchFactureDTO(id: factureID) {
                 await MainActor.run {
                     self.facture = dto
                     self.localDateEcheance = dto.dateEcheance ?? Date()

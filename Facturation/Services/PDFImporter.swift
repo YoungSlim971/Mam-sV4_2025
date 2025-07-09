@@ -160,7 +160,7 @@ struct PDFImporter {
 
             // Render PDF page to image for OCR
             let pageRect = page.bounds(for: .mediaBox)
-            let renderer = UIGraphicsImageRenderer(bounds: pageRect) // Use UIGraphicsImageRenderer for macOS
+            let renderer = UIGraphicsImageRenderer(bounds: pageRect)
             let image = renderer.image { ctx in
                 ctx.saveGState()
                 ctx.translateBy(x: 0, y: pageRect.height)
@@ -297,10 +297,10 @@ struct PDFImporter {
         }
 
         // Get the client model for numbering
-        guard let client = await dataService.fetchClientModel(id: clientId) else {
+        guard let foundClientDTO = await dataService.fetchClientDTO(id: clientId) else {
             throw ImportError.clientNotFound
         }
-        let numero = await dataService.genererNumeroFacture(client: client)
+        let numero = await dataService.genererNumeroFacture(clientDTO: foundClientDTO)
         let factureDTO = FactureDTO(
             id: UUID(),
             numero: numero,

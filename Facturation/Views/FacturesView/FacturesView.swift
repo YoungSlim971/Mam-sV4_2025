@@ -103,8 +103,8 @@ struct FacturesView: View {
                     // PDF import handles saving to dataService directly
                     try await pdfImporter.importFacture(from: url, dataService: dataService)
                 } else {
-                    // Excel import returns DTOs that need to be saved  
-                    let facturesDTO = try await excelImporter.importFactures(from: url)
+                    // Excel import returns DTOs that need to be saved
+                    _ = try await excelImporter.importFactures(from: url)
                     // TODO: Convert DTOs to models and save using dataService
                 }
             } catch {
@@ -126,9 +126,9 @@ struct FacturesView: View {
             await dataService.fetchData()
             
             guard let entreprise = dataService.entreprise,
-                  let client = dataService.clients.first(where: { $0.id == facture.clientId }) else { 
+                  let client = dataService.clients.first(where: { $0.id == facture.clientId }) else {
                 print("❌ Données manquantes: entreprise=\(dataService.entreprise != nil), client trouvé=\(dataService.clients.contains { $0.id == facture.clientId })")
-                return 
+                return
             }
             
             let lignes = dataService.lignes.filter { $0.factureId == facture.id }
