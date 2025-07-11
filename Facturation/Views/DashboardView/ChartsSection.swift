@@ -2,7 +2,7 @@ import SwiftUI
 import DataLayer
 
 struct ChartsSection: View {
-    @ObservedObject var statsService: StatistiquesService
+    @ObservedObject var statsService: StatistiquesService_DTO
     @Environment(\.horizontalSizeClass) var sizeClass
     @State private var selectedSector: StatutFacture?
 
@@ -10,7 +10,7 @@ struct ChartsSection: View {
         VStack(alignment: .leading, spacing: 15) {
             sectionHeader
             chartsLayout
-            AveragePaymentDelayView(statsService: statsService)
+            AveragePaymentDelayView()
         }
     }
     
@@ -54,5 +54,5 @@ struct ChartsSection: View {
 }
 
 #Preview {
-    ChartsSection(statsService: StatistiquesService())
+    ChartsSection(statsService: StatistiquesService_DTO())
 }

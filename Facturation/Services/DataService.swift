@@ -36,7 +36,8 @@ class DataService: ObservableObject {
             let container = try ModelContainer(for: schema, configurations: configuration)
             
             // Initialize DataLayer with the container
-            self.dataLayer = DataLayer(modelContainer: container)
+            let persistenceService = PersistenceService(modelContainer: container)
+            self.dataLayer = DataLayer(persistenceService: persistenceService)
             
             logger.info("SwiftData persistence initialized successfully on disk")
             
@@ -47,7 +48,8 @@ class DataService: ObservableObject {
             do {
                 let schema = Schema([ClientModel.self, EntrepriseModel.self, FactureModel.self, ProduitModel.self, LigneFacture.self])
                 let container = try ModelContainer(for: schema)
-                self.dataLayer = DataLayer(modelContainer: container)
+                let persistenceService = PersistenceService(modelContainer: container)
+                self.dataLayer = DataLayer(persistenceService: persistenceService)
                 logger.warning("Using default SwiftData configuration")
                 
             } catch {
@@ -55,7 +57,8 @@ class DataService: ObservableObject {
                 do {
                     let schema = Schema([ClientModel.self, EntrepriseModel.self, FactureModel.self, ProduitModel.self, LigneFacture.self])
                     let container = try ModelContainer(for: schema, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
-                    self.dataLayer = DataLayer(modelContainer: container)
+                    let persistenceService = PersistenceService(modelContainer: container)
+                    self.dataLayer = DataLayer(persistenceService: persistenceService)
                     logger.critical("WARNING: Using in-memory storage only. Data will NOT be persisted!")
                 } catch {
                     fatalError("Impossible d'initialiser SwiftData: \(error)")
@@ -270,25 +273,24 @@ class DataService: ObservableObject {
         }
     }
     
-    // MARK: - Statistics (Delegated to existing StatistiquesService)
-    func getStatistiques() -> Statistiques {
+    // MARK: - Statistics (Delegated to existing StatistiquesService_DTO)
+    func getStatistiques() -> (totalCA: Double, facturesEnAttente: Int, facturesEnRetard: Int, totalFactures: Int) {
         let totalClients = clients.count
         let totalFactures = factures.count
         let totalProduits = produits.count
         
-        let chiffreAffaires = factures.reduce(0.0) { $0 + $1.totalTTC }
-        let facturesEnAttente = factures.filter { $0.statut == .envoyee }.count
-        let facturesPayees = factures.filter { $0.statut == .payee }.count
-        let facturesEnRetard = factures.filter { $0.statut == .EnRetard }.count
+        let chiffreAffaires = factures.reduce(into: 0.0) { total, facture in
+            total += facture.calculateTotalTTC(with: lignes)
+        }
+        let facturesEnAttente = factures.filter { $0.statut == StatutFacture.envoyee.rawValue }.count
+        let facturesPayees = factures.filter { $0.statut == StatutFacture.payee.rawValue }.count
+        let facturesEnRetard = factures.filter { $0.statut == StatutFacture.enRetard.rawValue }.count
         
-        return Statistiques(
-            totalClients: totalClients,
-            totalFactures: totalFactures,
-            totalProduits: totalProduits,
-            chiffreAffaires: chiffreAffaires,
+        return (
+            totalCA: chiffreAffaires,
             facturesEnAttente: facturesEnAttente,
-            facturesPayees: facturesPayees,
-            facturesEnRetard: facturesEnRetard
+            facturesEnRetard: facturesEnRetard,
+            totalFactures: totalFactures
         )
     }
     

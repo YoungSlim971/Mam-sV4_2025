@@ -2,34 +2,40 @@ import SwiftUI
 import DataLayer
 
 struct FactureDetailView: View {
-    @EnvironmentObject private var dataService: DataService
+    @EnvironmentObject private var dependencyContainer: DependencyContainer
     @Environment(\.dismiss) private var dismiss
 
     let facture: FactureDTO
-
-    private var client: ClientDTO? {
-        dataService.clients.first { $0.id == facture.clientId }
-    }
-
-    private var lignes: [LigneFactureDTO] {
-        dataService.lignes.filter { $0.factureId == facture.id }
-    }
+    
+    @State private var client: ClientDTO?
+    @State private var lignes: [LigneFactureDTO] = []
+    @State private var isLoading = true
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                headerSection
-                basicInfoSection
-                linesSection
-                totalsSection
-                notesSection
+            if isLoading {
+                ProgressView("Chargement...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                VStack(alignment: .leading, spacing: 20) {
+                    headerSection
+                    basicInfoSection
+                    linesSection
+                    totalsSection
+                    notesSection
+                }
+                .padding()
             }
-            .padding()
         }
         .navigationTitle("Facture \(facture.numero)")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Fermer") { dismiss() }
+            }
+        }
+        .onAppear {
+            Task {
+                await loadFactureDetails()
             }
         }
     }
@@ -124,9 +130,27 @@ struct FactureDetailView: View {
             }
         }
     }
+    
+    private func loadFactureDetails() async {
+        isLoading = true
+        
+        // Charger le client
+        let clientResult = await dependencyContainer.getClientUseCase.execute(clientId: facture.clientId)
+        if case .success(let clientData) = clientResult {
+            client = clientData
+        }
+        
+        // Charger les lignes
+        let lignesResult = await dependencyContainer.fetchLignesUseCase.execute()
+        if case .success(let lignesData) = lignesResult {
+            lignes = lignesData
+        }
+        
+        isLoading = false
+    }
 }
 
 #Preview {
     FactureDetailView(facture: FactureDTO(id: UUID(), numero: "TEST", dateFacture: Date(), dateEcheance: nil, datePaiement: nil, tva: 20, conditionsPaiement: "virement", remisePourcentage: 0, statut: "Brouillon", notes: "", notesCommentaireFacture: nil, clientId: UUID(), ligneIds: []))
-        .environmentObject(DataService.shared)
+        .environmentObject(DependencyContainer.shared)
 }

@@ -2,13 +2,17 @@
 import SwiftUI
 import DataLayer
 struct ClientsView: View {
-    @EnvironmentObject private var dataService: DataService
+    @EnvironmentObject private var dependencyContainer: DependencyContainer
     @Binding var searchText: String
 
     @State private var showingAddClient = false
     @State private var clientToEdit: ClientDTO?
     @State private var clientToDetail: ClientDTO?
     @State private var sortOrder = SortOrder.nom
+    @State private var clients: [ClientDTO] = []
+    @State private var factures: [FactureDTO] = []
+    @State private var lignes: [LigneFactureDTO] = []
+    @State private var isLoading = true
 
     enum SortOrder: String, CaseIterable {
         case nom = "Nom (A-Z)"
@@ -34,11 +38,10 @@ struct ClientsView: View {
     }
 
     var filteredClients: [ClientDTO] {
-        let allClients: [ClientDTO] = dataService.clients
         guard !searchText.isEmpty else {
-            return allClients
+            return clients
         }
-        return allClients.filter { client in
+        return clients.filter { client in
             client.nom.localizedCaseInsensitiveContains(searchText) ||
             client.entreprise.localizedCaseInsensitiveContains(searchText) ||
             client.email.localizedCaseInsensitiveContains(searchText)
@@ -46,41 +49,103 @@ struct ClientsView: View {
     }
 
     var sortedClients: [ClientDTO] {
-        sortOrder.sort(filteredClients, factures: dataService.factures, lignes: dataService.lignes)
+        sortOrder.sort(filteredClients, factures: factures, lignes: lignes)
     }
 
     var body: some View {
         VStack(spacing: 0) {
             ClientsHeaderView(showingAddClient: $showingAddClient)
             ClientFilterBar(sortOrder: $sortOrder, clientsCount: sortedClients.count)
-            ClientsList(
-                clients: sortedClients,
-                factures: dataService.factures,
-                lignes: dataService.lignes,
-                onSelectClient: { client in clientToDetail = client },
-                onEditClient: { client in clientToEdit = client },
-                onAddClient: { showingAddClient = true }
-            )
+            if isLoading {
+                ProgressView("Chargement des clients...")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ClientsList(
+                    clients: sortedClients,
+                    factures: factures,
+                    lignes: lignes,
+                    onSelectClient: { client in clientToDetail = client },
+                    onEditClient: { client in clientToEdit = client },
+                    onAddClient: { showingAddClient = true },
+                    onDeleteClient: { client in
+                        Task {
+                            let result = await dependencyContainer.deleteClientUseCase.execute(clientId: client.id)
+                            if case .success = result {
+                                await loadData()
+                            }
+                        }
+                    }
+                )
+            }
         }
         .sheet(isPresented: $showingAddClient) { 
-            AddClientView { client in
-                await dataService.addClientDTO(client)
-            }
+            AddClientView(onCreate: { client in
+                let result = await dependencyContainer.addClientUseCase.execute(
+                    nom: client.nom,
+                    prenom: client.entreprise,
+                    email: client.email,
+                    telephone: client.telephone,
+                    adresse: client.adresse,
+                    ville: client.adresseVille,
+                    codePostal: client.adresseCodePostal,
+                    pays: client.adressePays,
+                    siret: client.siret,
+                    tva: client.numeroTVA
+                )
+                if case .success = result {
+                    await loadData()
+                }
+            })
         }
         .sheet(item: $clientToEdit) { client in 
             EditClientView(
                 client: client,
-                factures: dataService.factures,
-                lignes: dataService.lignes,
+                factures: factures,
+                lignes: lignes,
                 onUpdate: { updatedClient in
-                    await dataService.updateClientDTO(updatedClient)
+                    let result = await dependencyContainer.updateClientUseCase.execute(client: updatedClient)
+                    if case .success = result {
+                        await loadData()
+                    }
                 },
                 onDelete: { clientId in
-                    await dataService.deleteClientDTO(id: clientId)
+                    let result = await dependencyContainer.deleteClientUseCase.execute(clientId: clientId)
+                    if case .success = result {
+                        await loadData()
+                    }
                 }
             )
         }
-        .sheet(item: $clientToDetail) { client in ClientDetailView(client: client) }
+        .sheet(item: $clientToDetail) { client in SecureClientDetailView(client: client) }
+        .onAppear {
+            Task {
+                await loadData()
+            }
+        }
+    }
+    
+    private func loadData() async {
+        isLoading = true
+        
+        async let clientsResult = dependencyContainer.fetchClientsUseCase.execute()
+        async let facturesResult = dependencyContainer.fetchFacturesUseCase.execute()
+        async let lignesResult = dependencyContainer.fetchLignesUseCase.execute()
+        
+        let (clientsRes, facturesRes, lignesRes) = await (clientsResult, facturesResult, lignesResult)
+        
+        if case .success(let clientsData) = clientsRes {
+            clients = clientsData
+        }
+        
+        if case .success(let facturesData) = facturesRes {
+            factures = facturesData
+        }
+        
+        if case .success(let lignesData) = lignesRes {
+            lignes = lignesData
+        }
+        
+        isLoading = false
     }
 }
 
@@ -88,5 +153,5 @@ struct ClientsView: View {
 
 #Preview {
     ClientsView(searchText: .constant(""))
-        .environmentObject(DataService.shared)
+        .environmentObject(DependencyContainer.shared)
 }

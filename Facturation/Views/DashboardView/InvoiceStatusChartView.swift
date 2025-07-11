@@ -4,7 +4,7 @@ import AppKit
 import DataLayer
 
 struct InvoiceStatusChartView: View {
-    @ObservedObject var statsService: StatistiquesService
+    @ObservedObject var statsService: StatistiquesService_DTO
     @Binding var selectedInvoiceStatusFilter: StatutFacture?
     @State private var selectedSector: StatutFacture?
 
@@ -103,7 +103,8 @@ struct InvoiceStatusChartView: View {
     
     private func totalAmount(for factures: [FactureDTO]) -> String {
         let total = factures.reduce(0) { partial, facture in
-            partial + facture.calculateTotalTTC(with: statsService.lignes)
+            // TODO: Get lignes from appropriate service
+            partial + facture.calculateTotalTTC(with: [])
         }
         return total.euroFormatted
     }
@@ -119,7 +120,7 @@ struct InvoiceStatusChartView: View {
 
 #Preview {
     InvoiceStatusChartView(
-        statsService: StatistiquesService(),
+        statsService: StatistiquesService_DTO(),
         selectedInvoiceStatusFilter: .constant(nil)
     )
 }

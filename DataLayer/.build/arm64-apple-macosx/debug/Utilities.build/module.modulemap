@@ -1,4 +1,0 @@
-module Utilities {
-    header "/Users/youngslim971/Documents/GitHub/Mam-sV4_2025/DataLayer/.build/arm64-apple-macosx/debug/Utilities.build/Utilities-Swift.h"
-    requires objc
-}

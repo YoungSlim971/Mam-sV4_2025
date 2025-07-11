@@ -52,6 +52,8 @@ public enum AppTheme {
         // MARK: Couleurs de base
         /// La couleur principale utilisée pour les éléments interactifs et l'image de marque.
         public static let primary = Color.blue
+        /// La couleur secondaire utilisée pour les éléments de support.
+        public static let secondary = Color.gray
         /// Une version plus claire de la couleur principale, utile pour les états survolés ou les arrière-plans subtils.
         public static let primaryLight = Color.blue.opacity(0.1)
         /// Une version plus sombre de la couleur principale, pour les états pressés ou les accents.

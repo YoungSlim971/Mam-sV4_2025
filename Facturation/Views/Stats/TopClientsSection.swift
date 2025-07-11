@@ -3,13 +3,13 @@ import Charts
 import DataLayer
 
 struct TopClientsSection: View {
-    let clients: [StatistiquesService.ClientStatistique]
+    let clients: [StatistiquesService_DTO.ClientStatistique]
     @Binding var selectedClient: ClientDTO?
     @State private var hoveredClientID: UUID?
     
     private let maxDisplayCount = 8
     
-    private var topClients: [StatistiquesService.ClientStatistique] {
+    private var topClients: [StatistiquesService_DTO.ClientStatistique] {
         Array(clients.prefix(maxDisplayCount))
     }
     
@@ -43,8 +43,8 @@ struct TopClientsSection: View {
     private var chartView: some View {
         Chart(topClients, id: \.id) { client in
             BarMark(
-                x: .value("Chiffre d'affaires", client.total),
-                y: .value("Client", client.nom),
+                x: .value("Chiffre d'affaires", client.chiffreAffaires),
+                y: .value("Client", client.client.nom),
                 height: 24
             )
             .foregroundStyle(clientColor(for: client))
@@ -96,16 +96,16 @@ struct TopClientsSection: View {
     }
     
     @ViewBuilder
-    private func clientInfo(for client: StatistiquesService.ClientStatistique) -> some View {
+    private func clientInfo(for client: StatistiquesService_DTO.ClientStatistique) -> some View {
         HStack {
-            Text(client.nom)
+            Text(client.client.nom)
                 .font(.subheadline)
                 .fontWeight(.medium)
                 .lineLimit(1)
             
             Spacer()
             
-            Text(String.euroFormatted(client.total))
+            Text(String.euroFormatted(client.chiffreAffaires))
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundColor(StatsColorProvider.chartPrimary)
@@ -113,14 +113,14 @@ struct TopClientsSection: View {
     }
     
     @ViewBuilder
-    private func rowBackground(for client: StatistiquesService.ClientStatistique) -> some View {
+    private func rowBackground(for client: StatistiquesService_DTO.ClientStatistique) -> some View {
         Rectangle()
             .fill(isClientHovered(client) ? Color.accentColor.opacity(0.1) : Color.clear)
             .animation(.easeInOut(duration: 0.2), value: hoveredClientID)
     }
     
     @ViewBuilder
-    private func rowBorder(for client: StatistiquesService.ClientStatistique) -> some View {
+    private func rowBorder(for client: StatistiquesService_DTO.ClientStatistique) -> some View {
         Rectangle()
             .stroke(
                 isClientSelected(client) ? Color.accentColor : Color.clear,
@@ -158,11 +158,11 @@ struct TopClientsSection: View {
                     Spacer()
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(hoveredClient.nom)
+                        Text(hoveredClient.client.nom)
                             .font(.caption)
                             .fontWeight(.semibold)
                         
-                        Text("CA: \(String.euroFormatted(hoveredClient.total))")
+                        Text("CA: \(String.euroFormatted(hoveredClient.chiffreAffaires))")
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
@@ -178,9 +178,9 @@ struct TopClientsSection: View {
     
     // MARK: - Helper Methods
     
-    private func clientColor(for client: StatistiquesService.ClientStatistique) -> Color {
+    private func clientColor(for client: StatistiquesService_DTO.ClientStatistique) -> Color {
         // Utilise un UUID basé sur le hash du nom pour la cohérence des couleurs
-        let clientUUID = UUID(uuidString: client.nom.simpleHash) ?? UUID()
+        let clientUUID = UUID(uuidString: client.client.nom.simpleHash) ?? UUID()
         let baseColor = StatsColorProvider.accessibleColorForClient(id: clientUUID)
         
         if isClientSelected(client) {
@@ -201,13 +201,13 @@ struct TopClientsSection: View {
         }
     }
     
-    private func isClientSelected(_ client: StatistiquesService.ClientStatistique) -> Bool {
+    private func isClientSelected(_ client: StatistiquesService_DTO.ClientStatistique) -> Bool {
         // Compare par nom car ClientStatistique n'a pas d'UUID direct
-        return selectedClient?.raisonSociale == client.nom
+        return selectedClient?.nom == client.client.nom
     }
     
-    private func isClientHovered(_ client: StatistiquesService.ClientStatistique) -> Bool {
-        let clientUUID = UUID(uuidString: client.nom.simpleHash) ?? UUID()
+    private func isClientHovered(_ client: StatistiquesService_DTO.ClientStatistique) -> Bool {
+        let clientUUID = UUID(uuidString: client.client.nom.simpleHash) ?? UUID()
         return hoveredClientID == clientUUID
     }
     
@@ -220,9 +220,9 @@ struct TopClientsSection: View {
         }
     }
     
-    private func clientAccessibilityLabel(_ client: StatistiquesService.ClientStatistique) -> String {
+    private func clientAccessibilityLabel(_ client: StatistiquesService_DTO.ClientStatistique) -> String {
         let position = (topClients.firstIndex(where: { $0.id == client.id }) ?? 0) + 1
-        return "Client \(position): \(client.nom), chiffre d'affaires: \(String.accessibilityEuroDescription(client.total))"
+        return "Client \(position): \(client.client.nom), chiffre d'affaires: \(String.accessibilityEuroDescription(client.chiffreAffaires))"
     }
 }
 
@@ -250,11 +250,31 @@ struct TopClientsSection_Previews: PreviewProvider {
     static var previews: some View {
         TopClientsSection(
             clients: [
-                StatistiquesService.ClientStatistique(nom: "Carrefour Marseille", total: 25000.0),
-                StatistiquesService.ClientStatistique(nom: "Leclerc Lyon", total: 18500.0),
-                StatistiquesService.ClientStatistique(nom: "Super U Nantes", total: 15750.0),
-                StatistiquesService.ClientStatistique(nom: "Intermarché Bordeaux", total: 12300.0),
-                StatistiquesService.ClientStatistique(nom: "Casino Toulouse", total: 9800.0)
+                StatistiquesService_DTO.ClientStatistique(
+                    client: ClientDTO(id: UUID(), nom: "Carrefour Marseille", entreprise: "Carrefour", email: "test@example.com", telephone: "", siret: "", numeroTVA: "", adresse: "", adresseRue: "", adresseCodePostal: "", adresseVille: "", adressePays: ""),
+                    chiffreAffaires: 25000.0,
+                    nombreFactures: 5
+                ),
+                StatistiquesService_DTO.ClientStatistique(
+                    client: ClientDTO(id: UUID(), nom: "Leclerc Lyon", entreprise: "Leclerc", email: "test@example.com", telephone: "", siret: "", numeroTVA: "", adresse: "", adresseRue: "", adresseCodePostal: "", adresseVille: "", adressePays: ""),
+                    chiffreAffaires: 18500.0,
+                    nombreFactures: 3
+                ),
+                StatistiquesService_DTO.ClientStatistique(
+                    client: ClientDTO(id: UUID(), nom: "Super U Nantes", entreprise: "Super U", email: "test@example.com", telephone: "", siret: "", numeroTVA: "", adresse: "", adresseRue: "", adresseCodePostal: "", adresseVille: "", adressePays: ""),
+                    chiffreAffaires: 15750.0,
+                    nombreFactures: 4
+                ),
+                StatistiquesService_DTO.ClientStatistique(
+                    client: ClientDTO(id: UUID(), nom: "Intermarché Bordeaux", entreprise: "Intermarché", email: "test@example.com", telephone: "", siret: "", numeroTVA: "", adresse: "", adresseRue: "", adresseCodePostal: "", adresseVille: "", adressePays: ""),
+                    chiffreAffaires: 12300.0,
+                    nombreFactures: 2
+                ),
+                StatistiquesService_DTO.ClientStatistique(
+                    client: ClientDTO(id: UUID(), nom: "Casino Toulouse", entreprise: "Casino", email: "test@example.com", telephone: "", siret: "", numeroTVA: "", adresse: "", adresseRue: "", adresseCodePostal: "", adresseVille: "", adressePays: ""),
+                    chiffreAffaires: 9800.0,
+                    nombreFactures: 1
+                )
             ],
             selectedClient: $selectedClient
         )

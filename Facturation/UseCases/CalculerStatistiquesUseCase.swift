@@ -10,6 +10,7 @@
 import Foundation
 import DataLayer
 
+@MainActor
 final class CalculerStatistiquesUseCase {
 
     private let dataService: DataService
@@ -19,8 +20,9 @@ final class CalculerStatistiquesUseCase {
     }
 
     func executer() async -> StatistiquesDTO {
-        let factures = await dataService.fetchFactureDTOs()
-        let lignes = await dataService.fetchLignesFactures()
+        await dataService.fetchData()
+        let factures = dataService.factures
+        let lignes = dataService.lignes
 
         let chiffreAffairesMensuel = calculerChiffreAffairesMensuel(factures: factures, lignes: lignes)
         let delaiPaiementMoyen = calculerDelaiPaiementMoyen(factures: factures)

@@ -3,14 +3,14 @@ import Charts
 import DataLayer
 
 struct TopProduitsSection: View {
-    let produits: [StatistiquesService.ProduitStatistique]
+    let produits: [StatistiquesService_DTO.ProduitStatistique]
     @Binding var selectedProduit: ProduitDTO?
     @State private var hoveredProduitID: UUID?
     @Environment(\.self) private var environment
     
     private let maxDisplayCount = 8
     
-    private var topProduits: [StatistiquesService.ProduitStatistique] {
+    private var topProduits: [StatistiquesService_DTO.ProduitStatistique] {
         Array(produits.prefix(maxDisplayCount))
     }
     
@@ -45,7 +45,7 @@ struct TopProduitsSection: View {
         Chart(topProduits, id: \.id) { produit in
             BarMark(
                 x: .value("Chiffre d'affaires", produit.chiffreAffaires),
-                y: .value("Produit", produit.nom),
+                y: .value("Produit", produit.produit.designation),
                 height: 24
             )
             .foregroundStyle(produitColor(for: produit))
@@ -97,10 +97,10 @@ struct TopProduitsSection: View {
     }
     
     @ViewBuilder
-    private func produitInfo(for produit: StatistiquesService.ProduitStatistique) -> some View {
+    private func produitInfo(for produit: StatistiquesService_DTO.ProduitStatistique) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack {
-                Text(produit.nom)
+                Text(produit.produit.designation)
                     .font(.subheadline)
                     .fontWeight(.medium)
                     .lineLimit(1)
@@ -114,13 +114,13 @@ struct TopProduitsSection: View {
             }
             
             HStack {
-                Text("Quantité: \(String.quantityFormatted(produit.quantite))")
+                Text("Quantité: \(String.quantityFormatted(produit.quantiteVendue))")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 
                 Spacer()
                 
-                Text("\(produit.nombreVentes) vente\(produit.nombreVentes > 1 ? "s" : "")")
+                Text("\(Int(produit.quantiteVendue)) vente\(produit.quantiteVendue > 1 ? "s" : "")")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -128,14 +128,14 @@ struct TopProduitsSection: View {
     }
     
     @ViewBuilder
-    private func rowBackground(for produit: StatistiquesService.ProduitStatistique) -> some View {
+    private func rowBackground(for produit: StatistiquesService_DTO.ProduitStatistique) -> some View {
         Rectangle()
             .fill(isProduitHovered(produit) ? Color.accentColor.opacity(0.1) : Color.clear)
             .animation(.easeInOut(duration: 0.2), value: hoveredProduitID)
     }
     
     @ViewBuilder
-    private func rowBorder(for produit: StatistiquesService.ProduitStatistique) -> some View {
+    private func rowBorder(for produit: StatistiquesService_DTO.ProduitStatistique) -> some View {
         Rectangle()
             .stroke(
                 isProduitSelected(produit) ? Color.accentColor : Color.clear,
@@ -173,7 +173,7 @@ struct TopProduitsSection: View {
                     Spacer()
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(hoveredProduit.nom)
+                        Text(hoveredProduit.produit.designation)
                             .font(.caption)
                             .fontWeight(.semibold)
                             .lineLimit(2)
@@ -182,11 +182,11 @@ struct TopProduitsSection: View {
                             .font(.caption2)
                             .foregroundColor(.secondary)
                         
-                        Text("Qté: \(String.quantityFormatted(hoveredProduit.quantite))")
+                        Text("Qté: \(String.quantityFormatted(hoveredProduit.quantiteVendue))")
                             .font(.caption2)
                             .foregroundColor(.secondary)
                         
-                        Text("\(hoveredProduit.nombreVentes) vente\(hoveredProduit.nombreVentes > 1 ? "s" : "")")
+                        Text("\(Int(hoveredProduit.quantiteVendue)) unité\(hoveredProduit.quantiteVendue > 1 ? "s" : "")")
                             .font(.caption2)
                             .foregroundColor(.secondary)
                     }
@@ -202,9 +202,9 @@ struct TopProduitsSection: View {
     
     // MARK: - Helper Methods
     
-    private func produitColor(for produit: StatistiquesService.ProduitStatistique) -> Color {
+    private func produitColor(for produit: StatistiquesService_DTO.ProduitStatistique) -> Color {
         // Utilise un UUID basé sur le nom pour la cohérence des couleurs
-        let produitUUID = UUID(uuidString: produit.nom.simpleHash) ?? UUID()
+        let produitUUID = UUID(uuidString: produit.produit.designation.simpleHash) ?? UUID()
         let baseColor = StatsColorProvider.accessibleColorForProduct(id: produitUUID, environment: environment)
         
         if isProduitSelected(produit) {
@@ -225,13 +225,13 @@ struct TopProduitsSection: View {
         }
     }
     
-    private func isProduitSelected(_ produit: StatistiquesService.ProduitStatistique) -> Bool {
+    private func isProduitSelected(_ produit: StatistiquesService_DTO.ProduitStatistique) -> Bool {
         // Compare par nom car ProduitStatistique n'a pas d'UUID direct
-        return selectedProduit?.designation == produit.nom
+        return selectedProduit?.designation == produit.produit.designation
     }
     
-    private func isProduitHovered(_ produit: StatistiquesService.ProduitStatistique) -> Bool {
-        let produitUUID = UUID(uuidString: produit.nom.simpleHash) ?? UUID()
+    private func isProduitHovered(_ produit: StatistiquesService_DTO.ProduitStatistique) -> Bool {
+        let produitUUID = UUID(uuidString: produit.produit.designation.simpleHash) ?? UUID()
         return hoveredProduitID == produitUUID
     }
     
@@ -244,13 +244,13 @@ struct TopProduitsSection: View {
         }
     }
     
-    private func produitAccessibilityLabel(_ produit: StatistiquesService.ProduitStatistique) -> String {
+    private func produitAccessibilityLabel(_ produit: StatistiquesService_DTO.ProduitStatistique) -> String {
         let position = (topProduits.firstIndex(where: { $0.id == produit.id }) ?? 0) + 1
         return """
-        Produit \(position): \(produit.nom), \
+        Produit \(position): \(produit.produit.designation), \
         chiffre d'affaires: \(String.accessibilityEuroDescription(produit.chiffreAffaires)), \
-        quantité: \(String.accessibilityQuantityDescription(produit.quantite)), \
-        \(produit.nombreVentes) vente\(produit.nombreVentes > 1 ? "s" : "")
+        quantité: \(String.accessibilityQuantityDescription(produit.quantiteVendue)), \
+        \(Int(produit.quantiteVendue)) vente\(produit.quantiteVendue > 1 ? "s" : "")
         """
     }
 }
@@ -264,35 +264,30 @@ struct TopProduitsSection_Previews: PreviewProvider {
     static var previews: some View {
         TopProduitsSection(
             produits: [
-                StatistiquesService.ProduitStatistique(
-                    nom: "Tomates grappe",
-                    quantite: 1250.0,
-                    chiffreAffaires: 3125.0,
-                    nombreVentes: 45
+                StatistiquesService_DTO.ProduitStatistique(
+                    produit: ProduitDTO(id: UUID(), designation: "Tomates grappe", details: "Tomates grappe", prixUnitaire: 2.5),
+                    quantiteVendue: 1250.0,
+                    chiffreAffaires: 3125.0
                 ),
-                StatistiquesService.ProduitStatistique(
-                    nom: "Pommes Golden",
-                    quantite: 980.0,
-                    chiffreAffaires: 1911.0,
-                    nombreVentes: 38
+                StatistiquesService_DTO.ProduitStatistique(
+                    produit: ProduitDTO(id: UUID(), designation: "Pommes Golden", details: "Pommes Golden", prixUnitaire: 1.95),
+                    quantiteVendue: 980.0,
+                    chiffreAffaires: 1911.0
                 ),
-                StatistiquesService.ProduitStatistique(
-                    nom: "Bananes",
-                    quantite: 875.0,
-                    chiffreAffaires: 1925.0,
-                    nombreVentes: 42
+                StatistiquesService_DTO.ProduitStatistique(
+                    produit: ProduitDTO(id: UUID(), designation: "Bananes", details: "Bananes", prixUnitaire: 2.2),
+                    quantiteVendue: 875.0,
+                    chiffreAffaires: 1925.0
                 ),
-                StatistiquesService.ProduitStatistique(
-                    nom: "Courgettes",
-                    quantite: 654.0,
-                    chiffreAffaires: 1177.2,
-                    nombreVentes: 31
+                StatistiquesService_DTO.ProduitStatistique(
+                    produit: ProduitDTO(id: UUID(), designation: "Courgettes", details: "Courgettes", prixUnitaire: 1.8),
+                    quantiteVendue: 654.0,
+                    chiffreAffaires: 1177.2
                 ),
-                StatistiquesService.ProduitStatistique(
-                    nom: "Poivrons rouges",
-                    quantite: 432.0,
-                    chiffreAffaires: 1512.0,
-                    nombreVentes: 28
+                StatistiquesService_DTO.ProduitStatistique(
+                    produit: ProduitDTO(id: UUID(), designation: "Poivrons rouges", details: "Poivrons rouges", prixUnitaire: 3.5),
+                    quantiteVendue: 432.0,
+                    chiffreAffaires: 1512.0
                 )
             ],
             selectedProduit: $selectedProduit

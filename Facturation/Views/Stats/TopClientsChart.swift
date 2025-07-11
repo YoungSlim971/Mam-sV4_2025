@@ -3,7 +3,7 @@ import Charts
 import DataLayer
 
 struct TopClientsChart: View {
-    var stats: [StatistiquesService.ClientStatistique]
+    var stats: [StatistiquesService_DTO.ClientStatistique]
     @Binding var selectedClient: ClientDTO?
 
     var body: some View {
@@ -21,12 +21,12 @@ struct TopClientsChart: View {
             } else {
                 Chart(stats) { stat in
                     BarMark(
-                        x: .value("Client", stat.nom),
-                        y: .value("Montant", stat.total)
+                        x: .value("Client", stat.client.nom),
+                        y: .value("Montant", stat.chiffreAffaires)
                     )
                     .foregroundStyle(Color.accentColor.gradient)
                     .annotation(position: .top) {
-                        Text(stat.total, format: .currency(code: "EUR"))
+                        Text(stat.chiffreAffaires, format: .currency(code: "EUR"))
                             .font(.caption2)
                     }
                 }

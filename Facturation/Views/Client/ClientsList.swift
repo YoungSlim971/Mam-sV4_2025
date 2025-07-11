@@ -9,6 +9,7 @@ struct ClientsList: View {
     var onSelectClient: (ClientDTO) -> Void
     var onEditClient: (ClientDTO) -> Void
     var onAddClient: () -> Void
+    var onDeleteClient: (ClientDTO) -> Void
 
     var body: some View {
         ScrollView {
@@ -17,11 +18,12 @@ struct ClientsList: View {
             } else {
                 LazyVStack(spacing: 8) {
                     ForEach(clients) { client in
-                        ClientRowView(
+                        SecureClientRowView(
                             client: client, 
                             factures: factures, 
                             lignes: lignes,
-                            onEdit: { onEditClient(client) }
+                            onEdit: { onEditClient(client) },
+                            onDelete: { onDeleteClient(client) }
                         )
                         .onTapGesture { onSelectClient(client) }
                     }

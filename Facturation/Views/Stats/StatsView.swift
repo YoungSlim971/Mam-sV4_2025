@@ -4,7 +4,7 @@ import DataLayer
 
 struct StatsView: View {
     @ObservedObject private var dataService = DataService.shared
-    @StateObject private var statistiquesService: StatistiquesService
+    @StateObject private var statistiquesService: StatistiquesService_DTO
 
     @State private var statistiqueType: StatistiqueType = .clients
     @State private var periode: PeriodePredefinie
@@ -19,7 +19,7 @@ struct StatsView: View {
         _periode = State(initialValue: .sixMois)
         _dateFin = State(initialValue: now)
         _dateDebut = State(initialValue: Calendar.current.date(byAdding: .month, value: -6, to: now) ?? now)
-        _statistiquesService = StateObject(wrappedValue: StatistiquesService())
+        _statistiquesService = StateObject(wrappedValue: StatistiquesService_DTO())
     }
 
     var body: some View {
@@ -168,7 +168,7 @@ struct StatsView: View {
     // MARK: - Computed Properties
     
     private var evolutionStats: [MonthStat] {
-        // Convertir les données de StatistiquesService en MonthStat
+        // Convertir les données de StatistiquesService_DTO en MonthStat
         return statistiquesService.evolutionVentes.map { point in
             MonthStat(
                 date: point.date,

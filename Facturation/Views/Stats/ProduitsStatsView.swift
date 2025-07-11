@@ -3,7 +3,7 @@ import Charts
 import DataLayer
 
 struct ProduitsStatsView: View {
-    @ObservedObject var statistiquesService: StatistiquesService
+    @ObservedObject var statistiquesService: StatistiquesService_DTO
     @Binding var selectedProduit: ProduitDTO?
 
     var body: some View {
@@ -14,16 +14,14 @@ struct ProduitsStatsView: View {
                     title: "Total Produits Vendus",
                     value: String(format: "%.0f", statistiquesService.totalProduitsVendus),
                     icon: "cart.fill",
-                    color: .blue,
-                    trend: .neutral
+                    color: .blue
                 )
                 
                 StatCard(
                     title: "CA Total Produits",
-                    value: String(format: "%.2f €", statistiquesService.chiffreAffairesTotalProduits),
+                    value: statistiquesService.chiffreAffairesTotalProduits.euroFormatted,
                     icon: "eurosign.circle.fill",
                     color: .green,
-                    trend: .neutral
                 )
                 
                 StatCard(
@@ -31,11 +29,10 @@ struct ProduitsStatsView: View {
                     value: "\(statistiquesService.topProduits.count)",
                     icon: "tag.fill",
                     color: .orange,
-                    trend: .neutral
                 )
             }
             
-            // Graphiques
+            // Graphiques produits
             HSplitView {
                 TopProduitChart(stats: Array(statistiquesService.topProduitsParCA.prefix(5)))
                     .frame(minWidth: 300, idealWidth: 500, maxWidth: .infinity)
@@ -52,15 +49,15 @@ struct ProduitsStatsView: View {
 
                 ForEach(statistiquesService.topProduitsParVentes.prefix(5)) { produit in
                     HStack {
-                        Text(produit.nom)
+                        Text(produit.produit.designation)
                         Spacer()
-                        Text("\(String(format: "%.0f", produit.quantite)) unités")
+                        Text("\(String(format: "%.0f", produit.quantiteVendue)) unités")
                     }
                     .padding(.vertical, 2)
                 }
             }
             .padding()
-            .background(Color.clear)
+            .background(Color(NSColor.controlBackgroundColor))
             .cornerRadius(10)
             .shadow(radius: 2)
         }

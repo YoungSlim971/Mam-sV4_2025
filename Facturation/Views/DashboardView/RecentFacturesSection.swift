@@ -1,5 +1,4 @@
 import SwiftUI
-import AppKit
 import DataLayer
 
 struct RecentFacturesSection: View {
@@ -25,89 +24,95 @@ struct RecentFacturesSection: View {
 
                 NavigationLink("Voir tout") {
                     // Navigation vers la liste complète des factures
+                    Text("Liste complète des factures")
                 }
                 .buttonStyle(.borderless)
                 .foregroundColor(.blue)
             }
 
             if filteredFactures.isEmpty {
-                EmptyStateView(
-                    icon: "doc.text.fill",
-                    title: "Aucune facture",
-                    description: "Créez votre première facture pour commencer"
-                )
+                VStack {
+                    Image(systemName: "doc.text.fill")
+                        .font(.system(size: 40))
+                        .foregroundColor(.gray)
+                    Text("Aucune facture")
+                        .font(.headline)
+                    Text("Créez votre première facture pour commencer")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding()
             } else {
                 LazyVStack(spacing: 8) {
-                    ForEach(filteredFactures) { facture in
-                        FactureRowCompact(facture: facture)
+                    ForEach(Array(filteredFactures.prefix(5).enumerated()), id: \.element.id) { index, facture in
+                        RecentFactureRow(facture: facture)
                     }
                 }
             }
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color(NSColor.windowBackgroundColor))
-        .cornerRadius(8)
-        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .padding()
+        .background(Color(NSColor.controlBackgroundColor))
+        .cornerRadius(12)
     }
 }
 
-struct FactureRowCompact: View {
+struct RecentFactureRow: View {
     let facture: FactureDTO
-    @EnvironmentObject private var dataService: DataService
-
-    private var clientName: String {
-        dataService.clients.first(where: { $0.id == facture.clientId })?.nomCompletClient ?? "Client inconnu"
-    }
-
-    private var totalTTC: Double {
-        facture.calculateTotalTTC(with: dataService.lignes)
-    }
-
-    private var statut: StatutFacture {
-        StatutFacture(rawValue: facture.statut) ?? .brouillon
-    }
-
+    
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(facture.numero)
                     .font(.headline)
-                    .fontWeight(.semibold)
-
-                Text(clientName)
-                    .font(.subheadline)
+                
+                Text("Client: \(facture.clientId.uuidString.prefix(8))")
+                    .font(.caption)
                     .foregroundColor(.secondary)
-                    .lineLimit(1)
+                
+                Text(facture.dateFacture.formatted(date: .abbreviated, time: .omitted))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
-
+            
             Spacer()
-
-            VStack(alignment: .trailing, spacing: 2) {
-                Text(totalTTC.euroFormatted)
+            
+            VStack(alignment: .trailing, spacing: 4) {
+                Text("Montant") // TODO: Calculer le montant réel
                     .font(.headline)
-                    .fontWeight(.semibold)
-
-                HStack(spacing: 4) {
-                    Circle()
-                        .fill(statut.color)
-                        .frame(width: 6, height: 6)
-
-                    Text(statut.rawValue)
-                        .font(.caption)
-                        .foregroundColor(statut.color)
-                }
+                
+                Text(facture.statut.capitalized)
+                    .font(.caption)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 2)
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(4)
             }
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
+        .padding()
         .background(Color(NSColor.windowBackgroundColor))
         .cornerRadius(8)
-        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
 }
 
 #Preview {
-    RecentFacturesSection(factures: [], selectedInvoiceStatusFilter: .constant(nil))
-        .environmentObject(DataService.shared)
+    RecentFacturesSection(
+        factures: [
+            FactureDTO(
+                id: UUID(),
+                numero: "FAC001",
+                dateFacture: Date(),
+                dateEcheance: nil,
+                datePaiement: nil,
+                tva: 20.0,
+                conditionsPaiement: ConditionsPaiement.virement.rawValue,
+                remisePourcentage: 0.0,
+                statut: StatutFacture.brouillon.rawValue,
+                notes: "",
+                notesCommentaireFacture: nil,
+                clientId: UUID(),
+                ligneIds: []
+            )
+        ],
+        selectedInvoiceStatusFilter: .constant(nil)
+    )
 }

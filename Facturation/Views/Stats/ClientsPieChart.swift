@@ -2,7 +2,7 @@ import SwiftUI
 import Charts
 
 struct ClientsPieChart: View {
-    let stats: [StatistiquesService.ClientStatistique]
+    let stats: [StatistiquesService_DTO.ClientStatistique]
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -11,11 +11,11 @@ struct ClientsPieChart: View {
                 .padding(.bottom, 8)
             Chart(stats) { clientStat in
                 SectorMark(
-                    angle: .value("CA", clientStat.total),
+                    angle: .value("CA", clientStat.chiffreAffaires),
                     innerRadius: .ratio(0.6),
                     angularInset: 1
                 )
-                .foregroundStyle(by: .value("Client", clientStat.nom))
+                .foregroundStyle(by: .value("Client", clientStat.client.nom))
             }
             .chartLegend(position: .bottom)
             .frame(height: 300)

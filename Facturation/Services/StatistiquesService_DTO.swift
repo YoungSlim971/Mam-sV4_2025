@@ -1,13 +1,71 @@
 import Foundation
 import Combine
 import SwiftUI
+import DataLayer
 
 @MainActor
-class StatistiquesService: ObservableObject {
+class StatistiquesService_DTO: ObservableObject {
     
-    @Published var topClients: [StatParClient] = []
-    @Published var topProduits: [StatParProduit] = []
-    @Published var evolutionVentes: [MonthStat] = []
+    // Types pour les statistiques
+    struct ClientStatistique: Identifiable {
+        let id = UUID()
+        let client: ClientDTO
+        let chiffreAffaires: Double
+        let nombreFactures: Int
+    }
+    
+    struct ProduitStatistique: Identifiable {
+        let id = UUID()
+        let produit: ProduitDTO
+        let quantiteVendue: Double
+        let chiffreAffaires: Double
+    }
+    
+    struct PointStatistique: Identifiable {
+        let id = UUID()
+        let date: Date
+        let montant: Double
+    }
+    
+    enum StatistiqueType: String, CaseIterable {
+        case clients = "Clients"
+        case produits = "Produits"
+    }
+    
+    enum PeriodePredefinie: String, CaseIterable {
+        case septJours = "7 derniers jours"
+        case trentejours = "30 derniers jours"
+        case troisMois = "3 derniers mois"
+        case sixMois = "6 derniers mois"
+        case unAn = "Cette année"
+        
+        var dateInterval: DateInterval {
+            let calendar = Calendar.current
+            let now = Date()
+            let startDate: Date
+            
+            switch self {
+            case .septJours:
+                startDate = calendar.date(byAdding: .day, value: -7, to: now) ?? now
+            case .trentejours:
+                startDate = calendar.date(byAdding: .day, value: -30, to: now) ?? now
+            case .troisMois:
+                startDate = calendar.date(byAdding: .month, value: -3, to: now) ?? now
+            case .sixMois:
+                startDate = calendar.date(byAdding: .month, value: -6, to: now) ?? now
+            case .unAn:
+                startDate = calendar.date(byAdding: .year, value: -1, to: now) ?? now
+            }
+            
+            return DateInterval(start: startDate, end: now)
+        }
+    }
+    
+    @Published var topClients: [ClientStatistique] = []
+    @Published var topProduits: [ProduitStatistique] = []
+    @Published var topProduitsParCA: [ProduitStatistique] = []
+    @Published var topProduitsParVentes: [ProduitStatistique] = []
+    @Published var evolutionVentes: [PointStatistique] = []
     @Published var delaisPaiementMoyen: Int = 0
     @Published var repartitionStatuts: [StatutFacture: [FactureDTO]] = [:]
 
@@ -15,10 +73,19 @@ class StatistiquesService: ObservableObject {
         Dictionary(uniqueKeysWithValues: evolutionVentes.map { stat in
             let monthIndex = Calendar.current.component(.month, from: stat.date) - 1
             let monthName = Calendar.current.monthSymbols[monthIndex]
-            return (monthName, stat.valeur)
+            return (monthName, stat.montant)
         })
     }
     var evolutionCAMensuel: Double = 0.0
+    
+    // MARK: - Computed Properties for Views
+    var totalProduitsVendus: Double {
+        return topProduitsParVentes.reduce(0) { $0 + $1.quantiteVendue }
+    }
+    
+    var chiffreAffairesTotalProduits: Double {
+        return topProduitsParCA.reduce(0) { $0 + $1.chiffreAffaires }
+    }
     
     private var dataService: DataService
 
@@ -39,6 +106,8 @@ class StatistiquesService: ObservableObject {
             }
         case .produits:
             self.topProduits = calculerTopProduits(interval: interval)
+            self.topProduitsParCA = calculerTopProduitsParCA(interval: interval)
+            self.topProduitsParVentes = calculerTopProduitsParVentes(interval: interval)
             if let produitId = produitId {
                 self.evolutionVentes = calculerEvolutionVentesProduit(produitId: produitId, interval: interval)
             } else {
@@ -52,22 +121,24 @@ class StatistiquesService: ObservableObject {
     
     // MARK: - Méthodes de calcul des statistiques (DTO-based)
     
-    private func calculerTopClients(interval: DateInterval) -> [StatParClient] {
+    private func calculerTopClients(interval: DateInterval) -> [ClientStatistique] {
         let factures = dataService.factures.filter { facture in
             facture.dateFacture >= interval.start && facture.dateFacture <= interval.end
         }
         
         let stats = Dictionary(grouping: factures, by: { $0.clientId })
-            .compactMap { (clientId, factures) -> StatParClient? in
+            .compactMap { (clientId, factures) -> ClientStatistique? in
                 guard let client = dataService.clients.first(where: { $0.id == clientId }) else { return nil }
-                let montantTotal = factures.reduce(0) { $0 + $1.totalTTC }
-                return StatParClient(clientDTO: client, montantTotal: montantTotal, facturesCount: factures.count)
+                let montantTotal = factures.reduce(0) { total, facture in
+                    total + facture.calculateTotalTTC(with: dataService.lignes)
+                }
+                return ClientStatistique(client: client, chiffreAffaires: montantTotal, nombreFactures: factures.count)
             }
         
-        return stats.sorted { $0.montantTotal > $1.montantTotal }
+        return stats.sorted { $0.chiffreAffaires > $1.chiffreAffaires }
     }
     
-    private func calculerTopProduits(interval: DateInterval) -> [StatParProduit] {
+    private func calculerTopProduits(interval: DateInterval) -> [ProduitStatistique] {
         let factures = dataService.factures.filter { facture in
             facture.dateFacture >= interval.start && facture.dateFacture <= interval.end
         }
@@ -78,19 +149,68 @@ class StatistiquesService: ObservableObject {
             let factureLignes = dataService.lignes.filter { facture.ligneIds.contains($0.id) }
             for ligne in factureLignes {
                 if let produitId = ligne.produitId {
+                    let total = ligne.quantite * ligne.prixUnitaire
                     stats[produitId, default: (0, 0)].quantite += ligne.quantite
-                    stats[produitId, default: (0, 0)].montant += ligne.total
+                    stats[produitId, default: (0, 0)].montant += total
                 }
             }
         }
         
         return stats.compactMap { (produitId, totals) in
             guard let produit = dataService.produits.first(where: { $0.id == produitId }) else { return nil }
-            return StatParProduit(produitDTO: produit, quantiteTotale: totals.quantite, montantTotal: totals.montant)
-        }.sorted { $0.montantTotal > $1.montantTotal }
+            return ProduitStatistique(produit: produit, quantiteVendue: totals.quantite, chiffreAffaires: totals.montant)
+        }.sorted { $0.chiffreAffaires > $1.chiffreAffaires }
     }
     
-    private func calculerEvolutionVentesClient(clientId: UUID, interval: DateInterval) -> [MonthStat] {
+    private func calculerTopProduitsParCA(interval: DateInterval) -> [ProduitStatistique] {
+        let factures = dataService.factures.filter { facture in
+            facture.dateFacture >= interval.start && facture.dateFacture <= interval.end
+        }
+        
+        var stats: [UUID: (quantite: Double, chiffreAffaires: Double)] = [:]
+        
+        for facture in factures {
+            let factureLignes = dataService.lignes.filter { facture.ligneIds.contains($0.id) }
+            for ligne in factureLignes {
+                if let produitId = ligne.produitId {
+                    let lineTotal = ligne.quantite * ligne.prixUnitaire
+                    stats[produitId, default: (0, 0)].quantite += ligne.quantite
+                    stats[produitId, default: (0, 0)].chiffreAffaires += lineTotal
+                }
+            }
+        }
+        
+        return stats.compactMap { (produitId, totals) in
+            guard let produit = dataService.produits.first(where: { $0.id == produitId }) else { return nil }
+            return ProduitStatistique(produit: produit, quantiteVendue: totals.quantite, chiffreAffaires: totals.chiffreAffaires)
+        }.sorted { $0.chiffreAffaires > $1.chiffreAffaires }
+    }
+    
+    private func calculerTopProduitsParVentes(interval: DateInterval) -> [ProduitStatistique] {
+        let factures = dataService.factures.filter { facture in
+            facture.dateFacture >= interval.start && facture.dateFacture <= interval.end
+        }
+        
+        var stats: [UUID: (quantite: Double, chiffreAffaires: Double)] = [:]
+        
+        for facture in factures {
+            let factureLignes = dataService.lignes.filter { facture.ligneIds.contains($0.id) }
+            for ligne in factureLignes {
+                if let produitId = ligne.produitId {
+                    let lineTotal = ligne.quantite * ligne.prixUnitaire
+                    stats[produitId, default: (0, 0)].quantite += ligne.quantite
+                    stats[produitId, default: (0, 0)].chiffreAffaires += lineTotal
+                }
+            }
+        }
+        
+        return stats.compactMap { (produitId, totals) in
+            guard let produit = dataService.produits.first(where: { $0.id == produitId }) else { return nil }
+            return ProduitStatistique(produit: produit, quantiteVendue: totals.quantite, chiffreAffaires: totals.chiffreAffaires)
+        }.sorted { $0.quantiteVendue > $1.quantiteVendue }
+    }
+    
+    private func calculerEvolutionVentesClient(clientId: UUID, interval: DateInterval) -> [PointStatistique] {
         let factures = dataService.factures.filter { facture in
             facture.clientId == clientId &&
             facture.dateFacture >= interval.start && 
@@ -99,13 +219,16 @@ class StatistiquesService: ObservableObject {
         
         let monthlyData = Dictionary(grouping: factures, by: { Calendar.current.startOfMonth(for: $0.dateFacture) })
             .map { (date, factures) in
-                MonthStat(date: date, valeur: factures.reduce(0) { $0 + $1.totalTTC })
+                let total = factures.reduce(0) { total, facture in
+                    total + facture.calculateTotalTTC(with: dataService.lignes)
+                }
+                return PointStatistique(date: date, montant: total)
             }
         
         return monthlyData.sorted { $0.date < $1.date }
     }
     
-    private func calculerEvolutionVentesProduit(produitId: UUID, interval: DateInterval) -> [MonthStat] {
+    private func calculerEvolutionVentesProduit(produitId: UUID, interval: DateInterval) -> [PointStatistique] {
         let factures = dataService.factures.filter { facture in
             facture.dateFacture >= interval.start && facture.dateFacture <= interval.end
         }
@@ -122,23 +245,26 @@ class StatistiquesService: ObservableObject {
             }
         }
         
-        return monthlyData.map { MonthStat(date: $0.key, valeur: $0.value) }.sorted { $0.date < $1.date }
+        return monthlyData.map { PointStatistique(date: $0.key, montant: $0.value) }.sorted { $0.date < $1.date }
     }
 
-    private func calculerEvolutionGlobalCA(interval: DateInterval) -> [MonthStat] {
+    private func calculerEvolutionGlobalCA(interval: DateInterval) -> [PointStatistique] {
         let factures = dataService.factures.filter { facture in
             facture.dateFacture >= interval.start && facture.dateFacture <= interval.end
         }
         
         let monthlyData = Dictionary(grouping: factures, by: { Calendar.current.startOfMonth(for: $0.dateFacture) })
             .map { (date, factures) in
-                MonthStat(date: date, valeur: factures.reduce(0) { $0 + $1.totalTTC })
+                let total = factures.reduce(0) { total, facture in
+                    total + facture.calculateTotalTTC(with: dataService.lignes)
+                }
+                return PointStatistique(date: date, montant: total)
             }
         
         return monthlyData.sorted { $0.date < $1.date }
     }
 
-    private func calculerEvolutionGlobalQuantite(interval: DateInterval) -> [MonthStat] {
+    private func calculerEvolutionGlobalQuantite(interval: DateInterval) -> [PointStatistique] {
         let factures = dataService.factures.filter { facture in
             facture.dateFacture >= interval.start && facture.dateFacture <= interval.end
         }
@@ -146,12 +272,13 @@ class StatistiquesService: ObservableObject {
         var monthlyData: [Date: Double] = [:]
         
         for facture in factures {
-            let factureLignes = dataService.lignes.filter { facture.ligneIds.contains($0.id) }
             let startOfMonth = Calendar.current.startOfMonth(for: facture.dateFacture)
-            monthlyData[startOfMonth, default: 0] += factureLignes.reduce(0) { $0 + $1.quantite }
+            let factureLignes = dataService.lignes.filter { facture.ligneIds.contains($0.id) }
+            let totalQuantite = factureLignes.reduce(0) { $0 + $1.quantite }
+            monthlyData[startOfMonth, default: 0] += totalQuantite
         }
         
-        return monthlyData.map { MonthStat(date: $0.key, valeur: $0.value) }.sorted { $0.date < $1.date }
+        return monthlyData.map { PointStatistique(date: $0.key, montant: $0.value) }.sorted { $0.date < $1.date }
     }
 
     private func calculerDelaiPaiementMoyen(interval: DateInterval) -> Int {
@@ -185,82 +312,6 @@ class StatistiquesService: ObservableObject {
     private func calculerEvolutionCAMensuel() -> Double {
         // Simplified implementation
         return 0.0
-    }
-}
-
-// MARK: - Support structures for DTO compatibility
-
-struct StatParClient {
-    let client: ClientDTO
-    let montantTotal: Double
-    let facturesCount: Int
-    
-    init(clientDTO: ClientDTO, montantTotal: Double, facturesCount: Int) {
-        self.client = clientDTO
-        self.montantTotal = montantTotal
-        self.facturesCount = facturesCount
-    }
-}
-
-struct StatParProduit {
-    let produit: ProduitDTO
-    let quantiteTotale: Double
-    let montantTotal: Double
-    
-    init(produitDTO: ProduitDTO, quantiteTotale: Double, montantTotal: Double) {
-        self.produit = produitDTO
-        self.quantiteTotale = quantiteTotale
-        self.montantTotal = montantTotal
-    }
-}
-
-struct MonthStat {
-    let date: Date
-    let valeur: Double
-}
-
-enum StatistiqueType: String, CaseIterable, Identifiable {
-    case clients = "Clients"
-    case produits = "Produits"
-    
-    var id: String { rawValue }
-}
-
-enum PeriodePredefinie: String, CaseIterable, Identifiable {
-    case septJours = "7 derniers jours"
-    case trentejours = "30 derniers jours"
-    case troisMois = "3 derniers mois"
-    case sixMois = "6 derniers mois"
-    case anneeEnCours = "Année en cours"
-    case anneePrecedente = "Année précédente"
-    case personnalise = "Période personnalisée"
-    
-    var id: String { rawValue }
-    
-    var dateInterval: DateInterval? {
-        let calendar = Calendar.current
-        let now = Date()
-        
-        switch self {
-        case .septJours:
-            return DateInterval(start: calendar.date(byAdding: .day, value: -7, to: now) ?? now, end: now)
-        case .trentejours:
-            return DateInterval(start: calendar.date(byAdding: .day, value: -30, to: now) ?? now, end: now)
-        case .troisMois:
-            return DateInterval(start: calendar.date(byAdding: .month, value: -3, to: now) ?? now, end: now)
-        case .sixMois:
-            return DateInterval(start: calendar.date(byAdding: .month, value: -6, to: now) ?? now, end: now)
-        case .anneeEnCours:
-            let startOfYear = calendar.dateInterval(of: .year, for: now)?.start ?? now
-            return DateInterval(start: startOfYear, end: now)
-        case .anneePrecedente:
-            let lastYear = calendar.date(byAdding: .year, value: -1, to: now) ?? now
-            let startOfLastYear = calendar.dateInterval(of: .year, for: lastYear)?.start ?? lastYear
-            let endOfLastYear = calendar.dateInterval(of: .year, for: lastYear)?.end ?? lastYear
-            return DateInterval(start: startOfLastYear, end: endOfLastYear)
-        case .personnalise:
-            return nil
-        }
     }
 }
 

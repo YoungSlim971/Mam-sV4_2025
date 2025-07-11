@@ -71,7 +71,7 @@ struct EditProduitView: View {
                     Spacer()
                     Button("Enregistrer") {
                         Task {
-                            await dataService.updateProduitDTO(produit)
+                            await dataService.updateProduit(produit)
                             dismiss()
                         }
                     }

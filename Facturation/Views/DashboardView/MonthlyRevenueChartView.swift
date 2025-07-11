@@ -3,7 +3,7 @@ import Charts
 import AppKit
 
 struct MonthlyRevenueChartView: View {
-    @ObservedObject var statsService: StatistiquesService
+    @ObservedObject var statsService: StatistiquesService_DTO
     @State private var selectedMonth: String? = nil
 
     var body: some View {
@@ -124,5 +124,5 @@ struct MonthlyRevenueChartView: View {
 }
 
 #Preview {
-    MonthlyRevenueChartView(statsService: StatistiquesService())
+    MonthlyRevenueChartView(statsService: StatistiquesService_DTO())
 }

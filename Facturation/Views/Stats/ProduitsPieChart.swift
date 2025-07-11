@@ -2,7 +2,7 @@ import SwiftUI
 import Charts
 
 struct ProduitsPieChart: View {
-    let stats: [StatistiquesService.ProduitStatistique]
+    let stats: [StatistiquesService_DTO.ProduitStatistique]
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -15,7 +15,7 @@ struct ProduitsPieChart: View {
                     innerRadius: .ratio(0.6),
                     angularInset: 1
                 )
-                .foregroundStyle(by: .value("Produit", produitStat.nom))
+                .foregroundStyle(by: .value("Produit", produitStat.produit.designation))
             }
             .chartLegend(position: .bottom)
             .frame(height: 300)

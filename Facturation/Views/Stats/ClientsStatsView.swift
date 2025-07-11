@@ -3,7 +3,7 @@ import Charts
 import DataLayer
 
 struct ClientsStatsView: View {
-    @ObservedObject var statistiquesService: StatistiquesService
+    @ObservedObject var statistiquesService: StatistiquesService_DTO
     @Binding var selectedClient: ClientDTO?
 
     var body: some View {

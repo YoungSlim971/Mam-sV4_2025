@@ -2,7 +2,7 @@ import SwiftUI
 import Charts
 
 struct EvolutionVentesChart: View {
-    var stats: [StatistiquesService.PointStatistique]
+    var stats: [StatistiquesService_DTO.PointStatistique]
     var title: String
 
     var body: some View {

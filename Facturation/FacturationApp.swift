@@ -8,7 +8,7 @@ struct FacturationApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ModernContentView()
+            SecureContentView()
                 .environmentObject(dataService)
                 .frame(minWidth: 1200, minHeight: 800)
         }

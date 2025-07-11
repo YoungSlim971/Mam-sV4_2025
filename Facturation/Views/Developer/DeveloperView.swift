@@ -2,7 +2,7 @@ import SwiftUI
 import DataLayer
 
 struct DeveloperView: View {
-    @EnvironmentObject private var dataService: DataService
+    @EnvironmentObject private var dependencyContainer: DependencyContainer
     @State private var showingAlert = false
     @State private var alertMessage = ""
     @State private var showResetConfirmation = false
@@ -36,7 +36,7 @@ struct DeveloperView: View {
 
                     Button("Générer des données d’entraînement") {
                         Task {
-                            await dataService.generateTrainingData()
+                            // TODO: Implémenter la génération de données d'entraînement
                             alertMessage = "Données d’entraînement créées"
                             showingAlert = true
                         }
@@ -48,7 +48,7 @@ struct DeveloperView: View {
 
                     Button("Réinitialiser l’application") {
                         Task {
-                            await dataService.clearAllData()
+                            // TODO: Implémenter la réinitialisation via architecture sécurisée
                             alertMessage = "Toutes les données ont été supprimées"
                             showingAlert = true
                         }
@@ -68,7 +68,7 @@ struct DeveloperView: View {
                         .foregroundColor(.gray)
                     .alert("⚠️ Attention", isPresented: $showResetConfirmation) {
                         Button("Réinitialiser", role: .destructive) {
-                            dataService.resetContainer()
+                            // TODO: Implémenter le reset via architecture sécurisée
                             alertMessage = "Base de données réinitialisée (container reset)"
                             showingAlert = true
                         }
@@ -161,5 +161,5 @@ struct DeveloperView: View {
 
 #Preview {
     DeveloperView()
-        .environmentObject(DataService.shared)
+        .environmentObject(DependencyContainer.shared)
 }

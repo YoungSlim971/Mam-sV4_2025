@@ -11,7 +11,7 @@ import SwiftUI
 import Charts
 
 struct TopProduitChart: View {
-    let stats: [StatistiquesService.ProduitStatistique]
+    let stats: [StatistiquesService_DTO.ProduitStatistique]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -19,49 +19,58 @@ struct TopProduitChart: View {
                 .font(.headline)
                 .padding(.bottom, 8)
             
-            if stats.isEmpty {
-                VStack(spacing: 8) {
-                    Image(systemName: "cart")
-                        .font(.largeTitle)
-                        .foregroundColor(.secondary)
-                    Text("Aucune donnée produit")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            } else {
-                let top10Produits = Array(stats.prefix(10))
-                Chart(top10Produits) { stat in
-                    BarMark(
-                        x: .value("Chiffre d'Affaires", stat.chiffreAffaires),
-                        y: .value("Produit", stat.nom)
-                    )
-                    .foregroundStyle(Color.orange)
-                    .cornerRadius(4)
-                    .annotation(position: .trailing) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("\(stat.chiffreAffaires, specifier: "%.0f") €")
-                                .font(.caption.bold())
-                                .foregroundColor(.primary)
-                            Text("\(stat.quantite, specifier: "%.0f") unités")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-                }
-                .chartXAxis {
-                    AxisMarks(position: .bottom) {
-                        AxisValueLabel()
-                    }
-                }
-                .frame(height: 300)
-            }
+            chartContent
         }
         .padding()
         .background(Material.ultraThin)
         .cornerRadius(12)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.orange.opacity(0.2), lineWidth: 1)
-        )
+    }
+    
+    private var chartContent: some View {
+        Group {
+            if stats.isEmpty {
+                emptyStateView
+            } else {
+                produitChart
+            }
+        }
+    }
+    
+    private var emptyStateView: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "cart")
+                .font(.largeTitle)
+                .foregroundColor(.secondary)
+            Text("Aucune donnée produit")
+                .font(.caption)
+                .foregroundColor(.secondary)
+        }
+    }
+    
+    private var produitChart: some View {
+        Chart(Array(stats.prefix(10))) { stat in
+            BarMark(
+                x: .value("Chiffre d'Affaires", stat.chiffreAffaires),
+                y: .value("Produit", stat.produit.designation)
+            )
+            .foregroundStyle(Color.orange)
+            .cornerRadius(4)
+            .annotation(position: .trailing) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("\(stat.chiffreAffaires, specifier: "%.0f") €")
+                        .font(.caption.bold())
+                        .foregroundColor(.primary)
+                    Text("\(stat.quantiteVendue, specifier: "%.0f") unités")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .chartXAxis {
+            AxisMarks(position: .bottom) {
+                AxisValueLabel()
+            }
+        }
+        .frame(height: 300)
     }
 }

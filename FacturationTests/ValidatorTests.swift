@@ -1,4 +1,5 @@
 import XCTest
+import Utilities
 @testable import Facturation
 
 final class ValidatorTests: XCTestCase {

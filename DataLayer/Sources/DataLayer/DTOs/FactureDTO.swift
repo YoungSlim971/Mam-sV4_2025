@@ -55,22 +55,22 @@ public struct FactureDTO: Codable, Identifiable, Equatable {
 public extension FactureDTO {
     var statutDisplay: String {
         switch statut {
-        case "brouillon": return "Brouillon"
-        case "envoyee": return "Envoyée"
-        case "payee": return "Payée"
-        case "en_retard": return "En retard"
-        case "annulee": return "Annulée"
+        case StatutFacture.brouillon.rawValue: return "Brouillon"
+        case StatutFacture.envoyee.rawValue: return "Envoyée"
+        case StatutFacture.payee.rawValue: return "Payée"
+        case StatutFacture.enRetard.rawValue: return "En retard"
+        case StatutFacture.annulee.rawValue: return "Annulée"
         default: return statut.capitalized
         }
     }
     
     var statutColor: Color {
         switch statut {
-        case "brouillon": return .gray
-        case "envoyee": return .blue
-        case "payee": return .green
-        case "en_retard": return .red
-        case "annulee": return .red
+        case StatutFacture.brouillon.rawValue: return .gray
+        case StatutFacture.envoyee.rawValue: return .blue
+        case StatutFacture.payee.rawValue: return .green
+        case StatutFacture.enRetard.rawValue: return .red
+        case StatutFacture.annulee.rawValue: return .red
         default: return .blue
         }
     }

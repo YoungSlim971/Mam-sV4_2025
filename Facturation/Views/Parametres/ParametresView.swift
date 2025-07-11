@@ -4,13 +4,15 @@ import Utilities
 import DataLayer
 struct ParametresView: View {
     var onClose: () -> Void
-    @EnvironmentObject private var dataService: DataService
+    @EnvironmentObject private var dependencyContainer: DependencyContainer
     @State private var entreprise: EntrepriseDTO?
     @State private var editableEntreprise = EditableEntreprise()
     @State private var hasChanges = false
     @State private var showingSaveAlert = false
     @State private var showingResetAlert = false
     @State private var isEditing = false
+    @State private var isLoading = false
+    @State private var errorMessage: String?
 
     var body: some View {
         NavigationStack {
@@ -51,8 +53,7 @@ struct ParametresView: View {
             .onAppear {
                 Task {
                     await loadEntreprise()
-                    let nomIsEmpty = await dataService.getEntreprise()?.nom.isEmpty ?? true
-                    if nomIsEmpty {
+                    if let entreprise = entreprise, entreprise.nom.isEmpty {
                         isEditing = true
                     }
                 }
@@ -66,11 +67,23 @@ struct ParametresView: View {
     }
 
     private func loadEntreprise() async {
-        entreprise = await dataService.getEntreprise()
-        if let entreprise = entreprise {
-            editableEntreprise = EditableEntreprise(from: entreprise)
+        isLoading = true
+        errorMessage = nil
+        
+        let result = await dependencyContainer.fetchEntrepriseUseCase.execute()
+        
+        switch result {
+        case .success(let entrepriseData):
+            entreprise = entrepriseData
+            if let entrepriseData = entrepriseData {
+                editableEntreprise = EditableEntreprise(from: entrepriseData)
+            }
+            hasChanges = false
+        case .failure(let error):
+            errorMessage = "Erreur lors du chargement: \(error.localizedDescription)"
         }
-        hasChanges = false
+        
+        isLoading = false
     }
 
     private func saveChanges() {
@@ -78,13 +91,25 @@ struct ParametresView: View {
 
         // Appliquer la logique "N/A"
         editableEntreprise.prepareForSave()
-
         editableEntreprise.applyTo(&updatedEntreprise)
+        
         Task {
-            await dataService.updateEntrepriseDTO(updatedEntreprise)
-            hasChanges = false
-            isEditing = false
-            showingSaveAlert = true
+            isLoading = true
+            errorMessage = nil
+            
+            let result = await dependencyContainer.updateEntrepriseUseCase.execute(entreprise: updatedEntreprise)
+            
+            switch result {
+            case .success:
+                entreprise = updatedEntreprise
+                hasChanges = false
+                isEditing = false
+                showingSaveAlert = true
+            case .failure(let error):
+                errorMessage = "Erreur lors de la sauvegarde: \(error.localizedDescription)"
+            }
+            
+            isLoading = false
         }
     }
 
@@ -784,8 +809,9 @@ struct ActionsSection: View {
 
 // MARK: - About Section
 struct AboutSection: View {
-    @EnvironmentObject private var dataService: DataService
+    @EnvironmentObject private var dependencyContainer: DependencyContainer
     @State private var statistiques = (totalFactures: 0, totalClients: 0)
+    @State private var isLoading = false
 
     var body: some View {
         VStack(spacing: 15) {
@@ -843,15 +869,26 @@ struct AboutSection: View {
 
     @preconcurrency
     private func loadStatistiques() async {
-        let stats = dataService.getStatistiques()
-        let clients = await dataService.fetchClients()
-        statistiques = (stats.totalFactures, clients.count)
+        isLoading = true
+        
+        let statsResult = await dependencyContainer.getStatistiquesUseCase.execute()
+        let clientsResult = await dependencyContainer.fetchClientsUseCase.execute()
+        
+        switch (statsResult, clientsResult) {
+        case (.success(let stats), .success(let clients)):
+            statistiques = (stats.totalFactures, clients.count)
+        default:
+            // En cas d'erreur, on garde les valeurs par défaut
+            statistiques = (0, 0)
+        }
+        
+        isLoading = false
     }
 }
 
 #Preview {
     ParametresView(onClose: {})
-        .environmentObject(DataService.shared)
+        .environmentObject(DependencyContainer.shared)
 }
 
 

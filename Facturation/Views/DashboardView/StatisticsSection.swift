@@ -1,7 +1,8 @@
 import SwiftUI
+import DataLayer
 
 struct StatisticsSection: View {
-    @ObservedObject var statsService: StatistiquesService
+    @ObservedObject var statsService: StatistiquesService_DTO
 
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -14,32 +15,28 @@ struct StatisticsSection: View {
                     title: "Chiffre d'Affaires",
                     value: statsService.caMensuel.values.reduce(0, +).euroFormatted,
                     icon: "eurosign.circle.fill",
-                    color: .green,
-                    trend: .positive
+                    color: .green
                 )
 
                 StatCard(
                     title: "Total Factures",
                     value: "\(statsService.repartitionStatuts.values.reduce(0) { $0 + $1.count })",
                     icon: "doc.text.fill",
-                    color: .blue,
-                    trend: .neutral
+                    color: .blue
                 )
 
                 StatCard(
                     title: "En Attente",
                     value: "\(statsService.repartitionStatuts[.envoyee, default: []].count)",
                     icon: "clock.fill",
-                    color: .orange,
-                    trend: statsService.repartitionStatuts[.envoyee, default: []].count > 0 ? .negative : .positive
+                    color: .orange
                 )
 
                 StatCard(
                     title: "En Retard",
                     value: "\(statsService.repartitionStatuts[.enRetard, default: []].count)",
                     icon: "exclamationmark.triangle.fill",
-                    color: .red,
-                    trend: statsService.repartitionStatuts[.enRetard, default: []].count > 0 ? .negative : .positive
+                    color: .red
                 )
             }
         }
@@ -47,5 +44,5 @@ struct StatisticsSection: View {
 }
 
 #Preview {
-    StatisticsSection(statsService: StatistiquesService())
+    StatisticsSection(statsService: StatistiquesService_DTO())
 }
