@@ -7,13 +7,13 @@ import PDFEngine
 
 
 struct FacturesView: View {
-    @EnvironmentObject private var dataService: DataService
+    @EnvironmentObject private var dependencyContainer: DependencyContainer
     @Binding var searchText: String
 
     @State private var selectedStatut: StatutFacture? = nil
     @State private var showingAddFacture = false
     @State private var showingFileImporter = false
-    @State private var selectedFactureID: UUID? // Remplacer le DTO par un ID stable
+    @State private var selectedFactureID: UUID?
     @State private var sortOrder = SortOrder.dateDesc
 
     @State private var filterMode: FilterMode = .all
@@ -28,6 +28,12 @@ struct FacturesView: View {
     private let excelImporter = ExcelImporter()
     private let pdfImporter = PDFImporter()
     @State private var importError: Error?
+    
+    @State private var factures: [FactureDTO] = []
+    @State private var clients: [ClientDTO] = []
+    @State private var lignes: [LigneFactureDTO] = []
+    @State private var entreprise: EntrepriseDTO?
+    @State private var isLoading = true
 
     enum FilterMode: String, CaseIterable {
         case all = "Toutes factures"
@@ -70,16 +76,13 @@ struct FacturesView: View {
         }
         // La sheet est maintenant liée à l'ID, pas au DTO
         .sheet(item: $selectedFactureID) { factureID in
-            // On cherche le DTO correspondant à l'ID pour passer à EditFactureView
-            // EditFactureView doit être capable de gérer un DTO potentiellement invalide
-            if let factureDTO = dataService.factures.first(where: { $0.id == factureID }) {
+            if let factureDTO = factures.first(where: { $0.id == factureID }) {
                 EditFactureView(
                     factureDTO: factureDTO,
-                    lignes: dataService.lignes.filter { $0.factureId == factureID },
+                    lignes: lignes.filter { $0.factureId == factureID },
                     isReadOnly: false
                 )
             } else {
-                // Fallback si la facture a été supprimée entre-temps
                 Text("Cette facture n'est plus disponible.")
             }
         }
@@ -100,12 +103,15 @@ struct FacturesView: View {
             do {
                 guard let url = try result.get().first else { return }
                 if url.pathExtension.lowercased() == "pdf" {
-                    // PDF import handles saving to dataService directly
-                    try await pdfImporter.importFacture(from: url, dataService: dataService)
+                    // TODO: Migrer l'import PDF vers les use cases
+                    // try await pdfImporter.importFacture(from: url, dataService: dataService)
+                    print("Import PDF temporairement désactivé pendant la migration")
                 } else {
-                    // Excel import returns DTOs that need to be saved
-                    _ = try await excelImporter.importFactures(from: url)
-                    // TODO: Convert DTOs to models and save using dataService
+                    let facturesDTO = try await excelImporter.importFactures(from: url)
+                    for factureDTO in facturesDTO {
+                        let _ = await dependencyContainer.createFactureUseCase.execute(clientId: factureDTO.clientId, tva: factureDTO.tva)
+                    }
+                    await loadData()
                 }
             } catch {
                 importError = error
@@ -119,22 +125,21 @@ struct FacturesView: View {
             isGeneratingPDF = true
             defer { isGeneratingPDF = false }
             
-            // Debug: Vérifier quelle facture est sélectionnée
             print("🔍 Exportation PDF pour facture: \(facture.numero) (ID: \(facture.id))")
             
-            // Récupérer les données fraîches pour s'assurer qu'elles sont à jour
-            await dataService.fetchData()
+            // Charger les données fraîches
+            await loadData()
             
-            guard let entreprise = dataService.entreprise,
-                  let client = dataService.clients.first(where: { $0.id == facture.clientId }) else {
-                print("❌ Données manquantes: entreprise=\(dataService.entreprise != nil), client trouvé=\(dataService.clients.contains { $0.id == facture.clientId })")
-                return
+            guard let entreprise = entreprise,
+                  let client = clients.first(where: { $0.id == facture.clientId }) else { 
+                print("❌ Données manquantes pour l'export PDF")
+                return 
             }
             
-            let lignes = dataService.lignes.filter { $0.factureId == facture.id }
-            print("📄 Export facture \(facture.numero) avec \(lignes.count) lignes pour client \(client.nom)")
+            let factureLines = lignes.filter { $0.factureId == facture.id }
+            print("📄 Export facture \(facture.numero) avec \(factureLines.count) lignes pour client \(client.nom)")
             
-            if let pdfData = await pdfService.generatePDF(for: facture, lignes: lignes, client: client, entreprise: entreprise) {
+            if let pdfData = await pdfService.generatePDF(for: facture, lignes: factureLines, client: client, entreprise: entreprise) {
                 pdfDocument = GeneratedPDFDocument(data: pdfData)
                 showingSavePanel = true
                 print("✅ PDF généré avec succès pour facture \(facture.numero)")
@@ -145,7 +150,7 @@ struct FacturesView: View {
     }
 
     private var filteredAndSortedFactures: [FactureDTO] {
-        var result = dataService.factures
+        var result = factures
 
         if let statut = selectedStatut {
             result = result.filter { $0.statut == statut.rawValue }
@@ -154,7 +159,7 @@ struct FacturesView: View {
         if !searchText.isEmpty {
             result = result.filter { facture in
                 facture.numero.localizedCaseInsensitiveContains(searchText) ||
-                (dataService.clients.first { $0.id == facture.clientId }?.nomCompletClient.localizedCaseInsensitiveContains(searchText) ?? false)
+                (clients.first { $0.id == facture.clientId }?.nomCompletClient.localizedCaseInsensitiveContains(searchText) ?? false)
             }
         }
 
@@ -167,11 +172,40 @@ struct FacturesView: View {
         case .dateAsc: result.sort { $0.dateFacture < $1.dateFacture }
         case .numeroDesc: result.sort { $0.numero > $1.numero }
         case .numeroAsc: result.sort { $0.numero < $1.numero }
-        case .montantDesc: result.sort { $0.calculateTotalTTC(with: dataService.lignes) > $1.calculateTotalTTC(with: dataService.lignes) }
-        case .montantAsc: result.sort { $0.calculateTotalTTC(with: dataService.lignes) < $1.calculateTotalTTC(with: dataService.lignes) }
+        case .montantDesc: result.sort { $0.calculateTotalTTC(with: lignes) > $1.calculateTotalTTC(with: lignes) }
+        case .montantAsc: result.sort { $0.calculateTotalTTC(with: lignes) < $1.calculateTotalTTC(with: lignes) }
         }
 
         return result
+    }
+    
+    private func loadData() async {
+        isLoading = true
+        
+        async let facturesResult = dependencyContainer.fetchFacturesUseCase.execute()
+        async let clientsResult = dependencyContainer.fetchClientsUseCase.execute()
+        async let lignesResult = dependencyContainer.fetchLignesUseCase.execute()
+        async let entrepriseResult = dependencyContainer.fetchEntrepriseUseCase.execute()
+        
+        let (facturesRes, clientsRes, lignesRes, entrepriseRes) = await (facturesResult, clientsResult, lignesResult, entrepriseResult)
+        
+        if case .success(let facturesData) = facturesRes {
+            factures = facturesData
+        }
+        
+        if case .success(let clientsData) = clientsRes {
+            clients = clientsData
+        }
+        
+        if case .success(let lignesData) = lignesRes {
+            lignes = lignesData
+        }
+        
+        if case .success(let entrepriseData) = entrepriseRes {
+            entreprise = entrepriseData
+        }
+        
+        isLoading = false
     }
 }
 
@@ -180,7 +214,10 @@ private struct FacturesList: View {
     @Binding var selectedFactureID: UUID?
     let exportPDF: (FactureDTO) -> Void
     let isGeneratingPDF: Bool
-    @EnvironmentObject private var dataService: DataService
+    @EnvironmentObject private var dependencyContainer: DependencyContainer
+    
+    @State private var clients: [ClientDTO] = []
+    @State private var lignes: [LigneFactureDTO] = []
 
     var body: some View {
         ScrollView {
@@ -199,8 +236,8 @@ private struct FacturesList: View {
                     ForEach(factures) { facture in
                         FactureRow(
                             facture: facture,
-                            client: dataService.clients.first(where: { $0.id == facture.clientId }),
-                            total: facture.calculateTotalTTC(with: dataService.lignes),
+                            client: clients.first(where: { $0.id == facture.clientId }),
+                            total: facture.calculateTotalTTC(with: lignes),
                             onTap: { selectedFactureID = facture.id },
                             onExport: { exportPDF(facture) },
                             isGeneratingPDF: isGeneratingPDF
@@ -301,7 +338,7 @@ struct FactureContextMenu: View {
     let facture: FactureDTO
     let exportPDF: (FactureDTO) -> Void
     let isGeneratingPDF: Bool
-    @EnvironmentObject private var dataService: DataService
+    @EnvironmentObject private var dependencyContainer: DependencyContainer
 
     var body: some View {
         // L'action de modification doit maintenant utiliser l'ID
@@ -320,7 +357,7 @@ struct FactureContextMenu: View {
                     var updatedFacture = facture
                     updatedFacture.statut = StatutFacture.payee.rawValue
                     updatedFacture.datePaiement = Date()
-                    await dataService.updateFactureDTO(updatedFacture)
+                    let _ = await dependencyContainer.updateFactureUseCase.execute(facture: updatedFacture)
                 }
             }
         }
@@ -330,7 +367,7 @@ struct FactureContextMenu: View {
                 Task {
                     var updatedFacture = facture
                     updatedFacture.statut = StatutFacture.envoyee.rawValue
-                    await dataService.updateFactureDTO(updatedFacture)
+                    let _ = await dependencyContainer.updateFactureUseCase.execute(facture: updatedFacture)
                 }
             }
         }
@@ -338,7 +375,9 @@ struct FactureContextMenu: View {
         Divider()
 
         Button("Supprimer", role: .destructive) {
-            Task { await dataService.deleteFactureDTO(id: facture.id) }
+            Task { 
+                let _ = await dependencyContainer.deleteFactureUseCase.execute(factureId: facture.id)
+            }
         }
     }
 }
@@ -419,7 +458,9 @@ private struct FilterBar: View {
 
 private struct SummaryView: View {
     let factures: [FactureDTO]
-    @EnvironmentObject private var dataService: DataService
+    @EnvironmentObject private var dependencyContainer: DependencyContainer
+    
+    @State private var lignes: [LigneFactureDTO] = []
     
     var body: some View {
         HStack {
@@ -447,11 +488,11 @@ private struct SummaryView: View {
     }
     
     private var totalHT: Double {
-        factures.reduce(0) { $0 + $1.calculateSousTotal(with: dataService.lignes) }
+        factures.reduce(0) { $0 + $1.calculateSousTotal(with: lignes) }
     }
     
     private var totalTTC: Double {
-        factures.reduce(0) { $0 + $1.calculateTotalTTC(with: dataService.lignes) }
+        factures.reduce(0) { $0 + $1.calculateTotalTTC(with: lignes) }
     }
 }
 

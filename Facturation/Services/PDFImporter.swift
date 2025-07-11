@@ -43,7 +43,7 @@ struct PDFImporter {
     }
 
     @preconcurrency
-    func importFacture(from url: URL, dataService: DataService) async throws {
+    func importFacture(from url: URL, dataService: SecureDataService) async throws {
         guard Foundation.FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) else {
             throw ImportError.fileNotFound
         }
@@ -160,7 +160,7 @@ struct PDFImporter {
 
             // Render PDF page to image for OCR
             let pageRect = page.bounds(for: .mediaBox)
-            let renderer = UIGraphicsImageRenderer(bounds: pageRect)
+            let renderer = UIGraphicsImageRenderer(bounds: pageRect) // Use UIGraphicsImageRenderer for macOS
             let image = renderer.image { ctx in
                 ctx.saveGState()
                 ctx.translateBy(x: 0, y: pageRect.height)
@@ -214,7 +214,7 @@ struct PDFImporter {
     }
 
     @preconcurrency
-    private func buildFacture(from rows: ArraySlice<[String]>, headerMap: [String: Int], dataService: DataService) async throws {
+    private func buildFacture(from rows: ArraySlice<[String]>, headerMap: [String: Int], dataService: SecureDataService) async throws {
         // Fonction utilitaire pour accéder de façon sécurisée à une valeur de ligne
         func valueAt(_ map: [String: Int], _ key: String, _ row: [String]) -> String {
             let idx = map[key] ?? -1
@@ -229,7 +229,7 @@ struct PDFImporter {
         let clientName = valueAt(headerMap, "nom", firstDataRow)
         let clientEmail = valueAt(headerMap, "email", firstDataRow)
 
-        let existingClientDTOs = await dataService.fetchClients()
+        let existingClientDTOs = (try? await dataService.fetchClients()) ?? []
         let foundClientDTO = existingClientDTOs.first { c in
             (c.email == clientEmail && !clientEmail.isEmpty) ||
             (c.nom == clientName && !clientName.isEmpty)
@@ -262,7 +262,7 @@ struct PDFImporter {
                 throw ImportError.invalidData(message: "Numéro TVA invalide pour le client \(newClientDTO.nom).")
             }
 
-            await dataService.addClientDTO(newClientDTO)
+            try? await dataService.addClient(newClientDTO)
             clientId = newClientDTO.id
         }
 
@@ -292,15 +292,12 @@ struct PDFImporter {
                 produitId: nil,
                 factureId: nil
             )
-            await dataService.addLigneDTO(ligneDTO)
+            try? await dataService.addLigne(ligneDTO)
             ligneIds.append(ligneDTO.id)
         }
 
-        // Get the client model for numbering
-        guard let foundClientDTO = await dataService.fetchClientDTO(id: clientId) else {
-            throw ImportError.clientNotFound
-        }
-        let numero = await dataService.genererNumeroFacture(clientDTO: foundClientDTO)
+        // Generate invoice number
+        let numero = try await dataService.genererNumeroFacture()
         let factureDTO = FactureDTO(
             id: UUID(),
             numero: numero,
@@ -317,7 +314,7 @@ struct PDFImporter {
             ligneIds: ligneIds
         )
 
-        await dataService.addFactureDTO(factureDTO)
+        try? await dataService.addFacture(factureDTO)
     }
 }
 

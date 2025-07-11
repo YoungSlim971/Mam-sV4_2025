@@ -244,8 +244,8 @@ struct LegalInfoSectionDTO: View {
                         .fontWeight(.medium)
                     TextField("12345678901234", text: $client.siret)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .onChange(of: client.siret) {
-                            isSiretValid = Validator.isValidSIRET(client.siret)
+                        .onChange(of: client.siret) { newValue in
+                            isSiretValid = Validator.isValidSIRET(newValue)
                             siretErrorMessage = isSiretValid ? nil : "Numéro SIRET invalide (14 chiffres)"
                         }
                     if let errorMessage = siretErrorMessage {
@@ -262,8 +262,8 @@ struct LegalInfoSectionDTO: View {
                     TextField("FR12345678901", text: $client.numeroTVA)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
 //                        .autocapitalization(.allCharacters)
-                        .onChange(of: client.numeroTVA) {
-                            isTvaValid = Validator.isValidTVA(client.numeroTVA)
+                        .onChange(of: client.numeroTVA) { newValue in
+                            isTvaValid = Validator.isValidTVA(newValue)
                             tvaErrorMessage = isTvaValid ? nil : "Numéro TVA invalide (FR + 11 caractères)"
                         }
                     if let errorMessage = tvaErrorMessage {

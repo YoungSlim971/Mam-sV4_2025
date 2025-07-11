@@ -267,19 +267,6 @@ public class DataService: ObservableObject {
     }
     
     // MARK: - CRUD Clients DTO (Nouvelles méthodes)
-
-    public func fetchClientDTO(id: UUID) async -> ClientDTO? {
-        let descriptor = FetchDescriptor<ClientModel>(predicate: #Predicate { $0.id == id })
-        do {
-            if let client = try modelContext.fetch(descriptor).first, client.isValidModel {
-                return client.toDTO()
-            }
-            return nil
-        } catch {
-            logger.error("Failed to fetch client", metadata: ["error": "\(error)"])
-            return nil
-        }
-    }
     public func addClientDTO(_ dto: ClientDTO) async {
         // Validate SIRET and TVA before adding
         guard Validator.isValidSIRET(dto.siret) else {
@@ -595,18 +582,6 @@ public class DataService: ObservableObject {
         }
 
         return entrepriseModel.genererNumeroFacture(client: client)
-    }
-
-    public func genererNumeroFacture(clientDTO: ClientDTO) async -> String {
-        let date = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMMdd"
-        let dateString = formatter.string(from: date)
-        
-        let clientPrefix = clientDTO.nom.prefix(3).uppercased()
-        let randomSuffix = String(format: "%04d", Int.random(in: 0..<10000))
-        
-        return "FAC-\(clientPrefix)-\(dateString)-\(randomSuffix)"
     }
 
     // MARK: - Utilitaires
